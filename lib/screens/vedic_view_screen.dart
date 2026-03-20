@@ -1,134 +1,162 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:provider/provider.dart';
 import '../theme.dart';
+import '../providers/app_provider.dart';
+import '../components/vedic_chart_widget.dart';
+import '../models/planet_position.dart';
 
-class VedicViewScreen extends StatelessWidget {
+class VedicViewScreen extends StatefulWidget {
   const VedicViewScreen({super.key});
 
   @override
+  State<VedicViewScreen> createState() => _VedicViewScreenState();
+}
+
+class _VedicViewScreenState extends State<VedicViewScreen> {
+  VedicChartStyle _selectedStyle = VedicChartStyle.northIndian;
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
+    return Consumer<AppProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(color: AppTheme.primary),
+          );
+        }
+
+        final user = provider.currentUser;
+        final chart = provider.currentChart;
+
+        if (user == null || chart == null) {
+          return _buildNoDataView(context);
+        }
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context, user, chart),
+              const SizedBox(height: 24),
+              _buildStyleToggle(context),
+              const SizedBox(height: 48),
+              _buildChartDisplay(context, chart),
+              const SizedBox(height: 48),
+              _buildPlanetaryTable(context, chart),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildNoDataView(BuildContext context) {
+    return Center(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Icon(Symbols.brightness_7, size: 64, color: AppTheme.textMuted.withOpacity(0.5)),
+          const SizedBox(height: 16),
           Text(
-            'Vedic Mode'.toUpperCase(),
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 36, letterSpacing: -1.0),
+            'No Vedic Chart Available',
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 8),
           Text(
-            'Lagna Chart (D1) • Sidereal Zodiac • Lahiri Ayanamsa',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted, fontWeight: FontWeight.w500),
+            'Generate a Vedic chart in settings to view it here',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted),
           ),
           const SizedBox(height: 24),
-
-          // Toggle Style Button Group
-          Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: AppTheme.surfaceContainerLowest,
-              borderRadius: BorderRadius.circular(9999),
-              border: Border.all(color: AppTheme.borderColor),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.primary,
-                    foregroundColor: AppTheme.onPrimary,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                  ),
-                  child: const Text('North Indian'),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppTheme.textMuted,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    textStyle: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  child: const Text('South Indian'),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 48),
-
-          // North Indian Chart
-          _buildChartContainer(
-            context,
-            title: 'North Indian Style (Diamond)',
-            badgeColor: AppTheme.primary,
-            icon: Symbols.brightness_7,
-            child: _buildNorthIndianChart(),
-          ),
-          const SizedBox(height: 32),
-
-          // South Indian Chart
-          _buildChartContainer(
-            context,
-            title: 'South Indian Style (Square)',
-            badgeColor: const Color(0xFF5A805B),
-            icon: Symbols.wb_sunny,
-            child: _buildSouthIndianChart(),
-          ),
-          const SizedBox(height: 48),
-
-          // Planetary Positions Table
-          Container(
-            decoration: BoxDecoration(
-              color: AppTheme.surfaceContainer,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppTheme.borderColor),
-            ),
-            clipBehavior: Clip.hardEdge,
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  color: AppTheme.borderColor.withOpacity(0.2),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Planetary Positions', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 20)),
-                      Text('DOWNLOAD PDF', style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppTheme.primary, letterSpacing: 1.5)),
-                    ],
-                  ),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    headingTextStyle: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppTheme.textMuted, letterSpacing: 1.5),
-                    dataTextStyle: Theme.of(context).textTheme.bodyMedium,
-                    columns: const [
-                      DataColumn(label: Text('PLANET')),
-                      DataColumn(label: Text('RASI')),
-                      DataColumn(label: Text('DEGREE')),
-                      DataColumn(label: Text('NAKSHATRA')),
-                      DataColumn(label: Text('PADA')),
-                      DataColumn(label: Text('STATUS')),
-                    ],
-                    rows: [
-                      _buildTableRow('Ascendant (Lagna)', 'Aries', "14° 22'", 'Bharani', '1', '-'),
-                      _buildTableRow('Sun', 'Aries', "27° 10'", 'Krittika', '1', 'Exalted', statusColor: AppTheme.tertiary),
-                      _buildTableRow('Moon', 'Leo', "05° 44'", 'Magha', '2', 'Neutral'),
-                      _buildTableRow('Mars', 'Capricorn', "12° 15'", 'Shravana', '1', 'Exalted', statusColor: AppTheme.tertiary),
-                      _buildTableRow('Saturn', 'Libra', "19° 30'", 'Swati', '4', 'Retrograde', statusColor: AppTheme.error),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          ElevatedButton.icon(
+            onPressed: () {
+              // Navigate to settings
+            },
+            icon: const Icon(Symbols.settings),
+            label: const Text('Go to Settings'),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildChartContainer(BuildContext context, {required String title, required Color badgeColor, required IconData icon, required Widget child}) {
+  Widget _buildHeader(BuildContext context, dynamic user, dynamic chart) {
+    final ayanamsaName = chart.ayanamsa?.name ?? 'Lahiri';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Vedic Mode'.toUpperCase(),
+          style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 36, letterSpacing: -1.0),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Lagna Chart (D1) • Sidereal Zodiac • ${ayanamsaName.capitalize()} Ayanamsa',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: AppTheme.textMuted,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStyleToggle(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(9999),
+        border: Border.all(color: AppTheme.borderColor),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildToggleButton(
+            label: 'North Indian',
+            isSelected: _selectedStyle == VedicChartStyle.northIndian,
+            onPressed: () => setState(() => _selectedStyle = VedicChartStyle.northIndian),
+          ),
+          _buildToggleButton(
+            label: 'South Indian',
+            isSelected: _selectedStyle == VedicChartStyle.southIndian,
+            onPressed: () => setState(() => _selectedStyle = VedicChartStyle.southIndian),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToggleButton({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isSelected ? AppTheme.primary : Colors.transparent,
+        foregroundColor: isSelected ? AppTheme.onPrimary : AppTheme.textMuted,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        elevation: 0,
+      ),
+      child: Text(label),
+    );
+  }
+
+  Widget _buildChartDisplay(BuildContext context, dynamic chart) {
+    final styleName = _selectedStyle == VedicChartStyle.northIndian
+        ? 'North Indian Style (Diamond)'
+        : 'South Indian Style (Square)';
+    final badgeColor = _selectedStyle == VedicChartStyle.northIndian
+        ? AppTheme.primary
+        : const Color(0xFF5A805B);
+    final icon = _selectedStyle == VedicChartStyle.northIndian
+        ? Symbols.brightness_7
+        : Symbols.wb_sunny;
+
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.surfaceContainer,
@@ -150,9 +178,16 @@ class VedicViewScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Container(width: 8, height: 8, decoration: BoxDecoration(color: badgeColor, shape: BoxShape.circle)),
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(color: badgeColor, shape: BoxShape.circle),
+                    ),
                     const SizedBox(width: 8),
-                    Text(title.toUpperCase(), style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: 2.0)),
+                    Text(
+                      styleName.toUpperCase(),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: 2.0),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 32),
@@ -161,9 +196,10 @@ class VedicViewScreen extends StatelessWidget {
                     constraints: const BoxConstraints(maxWidth: 400),
                     child: AspectRatio(
                       aspectRatio: 1.0,
-                      child: Container(
-                        decoration: BoxDecoration(border: Border.all(color: AppTheme.borderColor.withOpacity(0.5))),
-                        child: child,
+                      child: VedicChartWidget(
+                        chart: chart,
+                        style: _selectedStyle,
+                        size: 400,
                       ),
                     ),
                   ),
@@ -176,153 +212,140 @@ class VedicViewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNorthIndianChart() {
-    return CustomPaint(
-      painter: _NorthIndianChartPainter(),
-      child: const Stack(
+  Widget _buildPlanetaryTable(BuildContext context, dynamic chart) {
+    final positions = chart.positions.toList()
+      ..sort((a, b) => a.planet.index.compareTo(b.planet.index));
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: AppTheme.borderColor),
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: Column(
         children: [
-          // Basic manual placement for demo purposes matching the HTML layout
-          Positioned(top: 80, left: 0, right: 0, child: Text('1', textAlign: TextAlign.center, style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, fontSize: 18))),
-          Positioned(top: 110, left: 0, right: 0, child: Text('Me, Su', textAlign: TextAlign.center, style: TextStyle(color: AppTheme.textMain, fontSize: 12))),
-
-          Positioned(top: 30, left: 80, child: Text('2', style: TextStyle(color: AppTheme.textMuted, fontWeight: FontWeight.bold))),
-          Positioned(top: 80, left: 30, child: Text('3', style: TextStyle(color: AppTheme.textMuted, fontWeight: FontWeight.bold))),
-
-          Positioned(top: 180, left: 80, child: Text('4', style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, fontSize: 18))),
-          Positioned(top: 210, left: 60, child: Text('Mo, Ju', style: TextStyle(color: AppTheme.textMain, fontSize: 12))),
-
-          Positioned(bottom: 80, left: 30, child: Text('5', style: TextStyle(color: AppTheme.textMuted, fontWeight: FontWeight.bold))),
-          Positioned(bottom: 30, left: 80, child: Text('6', style: TextStyle(color: AppTheme.textMuted, fontWeight: FontWeight.bold))),
-
-          Positioned(bottom: 60, left: 0, right: 0, child: Text('7', textAlign: TextAlign.center, style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, fontSize: 18))),
-          Positioned(bottom: 30, left: 0, right: 0, child: Text('Sa (R)', textAlign: TextAlign.center, style: TextStyle(color: AppTheme.textMain, fontSize: 12))),
-
-          Positioned(bottom: 30, right: 80, child: Text('8', style: TextStyle(color: AppTheme.textMuted, fontWeight: FontWeight.bold))),
-          Positioned(bottom: 80, right: 30, child: Text('9', style: TextStyle(color: AppTheme.textMuted, fontWeight: FontWeight.bold))),
-
-          Positioned(top: 180, right: 80, child: Text('10', style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold, fontSize: 18))),
-          Positioned(top: 210, right: 60, child: Text('Ma, Ve', style: TextStyle(color: AppTheme.textMain, fontSize: 12))),
-
-          Positioned(top: 80, right: 30, child: Text('11', style: TextStyle(color: AppTheme.textMuted, fontWeight: FontWeight.bold))),
-          Positioned(top: 30, right: 80, child: Text('12', style: TextStyle(color: AppTheme.textMuted, fontWeight: FontWeight.bold))),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            color: AppTheme.borderColor.withOpacity(0.2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Planetary Positions',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 20),
+                ),
+                Text(
+                  'DOWNLOAD PDF',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: AppTheme.primary,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              headingTextStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: AppTheme.textMuted,
+                letterSpacing: 1.5,
+              ),
+              dataTextStyle: Theme.of(context).textTheme.bodyMedium,
+              columns: const [
+                DataColumn(label: Text('PLANET')),
+                DataColumn(label: Text('RASI')),
+                DataColumn(label: Text('DEGREE')),
+                DataColumn(label: Text('HOUSE')),
+                DataColumn(label: Text('STATUS')),
+              ],
+              rows: positions.where((p) => p.planet != PlanetType.ascendant).map((p) {
+                return _buildTableRow(p);
+              }).toList(),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSouthIndianChart() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final w = constraints.maxWidth;
-        final h = constraints.maxHeight;
-        final cellW = w / 4;
-        final cellH = h / 4;
+  DataRow _buildTableRow(PlanetPosition position) {
+    final status = _getPlanetStatus(position);
+    final statusColor = _getStatusColor(status);
 
-        return Stack(
-          children: [
-            // Center area
-            Positioned(
-              left: cellW, top: cellH, width: cellW * 2, height: cellH * 2,
-              child: Container(
-                color: AppTheme.surfaceContainerLowest.withOpacity(0.5),
-                decoration: BoxDecoration(border: Border.all(color: AppTheme.borderColor.withOpacity(0.5))),
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('LAGNA', style: TextStyle(color: AppTheme.primary, fontSize: 24, fontWeight: FontWeight.w900, fontFamily: 'Public Sans')),
-                    Text('Ascendant in Aries', style: TextStyle(color: AppTheme.textMuted, fontSize: 12)),
-                  ],
-                ),
-              ),
-            ),
-
-            // Outer Cells (12 signs)
-            _buildSouthIndianCell(0, 0, cellW, cellH, 'PIS', ''),
-            _buildSouthIndianCell(1, 0, cellW, cellH, 'ARI', 'Me Su', highlight: true),
-            _buildSouthIndianCell(2, 0, cellW, cellH, 'TAU', ''),
-            _buildSouthIndianCell(3, 0, cellW, cellH, 'GEM', ''),
-
-            _buildSouthIndianCell(0, 1, cellW, cellH, 'AQU', 'Ra'),
-            _buildSouthIndianCell(3, 1, cellW, cellH, 'CAN', ''),
-
-            _buildSouthIndianCell(0, 2, cellW, cellH, 'CAP', 'Ma Ve', highlight: true),
-            _buildSouthIndianCell(3, 2, cellW, cellH, 'LEO', 'Mo Ju'),
-
-            _buildSouthIndianCell(0, 3, cellW, cellH, 'SAG', ''),
-            _buildSouthIndianCell(1, 3, cellW, cellH, 'SCO', 'Ke'),
-            _buildSouthIndianCell(2, 3, cellW, cellH, 'LIB', 'Sa (R)'),
-            _buildSouthIndianCell(3, 3, cellW, cellH, 'VIR', ''),
-          ],
-        );
-      }
-    );
-  }
-
-  Widget _buildSouthIndianCell(int col, int row, double w, double h, String sign, String planets, {bool highlight = false}) {
-    return Positioned(
-      left: col * w,
-      top: row * h,
-      width: w,
-      height: h,
-      child: Container(
-        decoration: BoxDecoration(border: Border.all(color: AppTheme.borderColor.withOpacity(0.5))),
-        padding: const EdgeInsets.all(4),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(sign, style: const TextStyle(fontSize: 10, color: AppTheme.textMuted, fontWeight: FontWeight.bold)),
-            if (planets.isNotEmpty)
-              Text(planets, style: TextStyle(fontSize: 12, color: highlight ? AppTheme.primary : AppTheme.textMain, fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  DataRow _buildTableRow(String planet, String rasi, String degree, String nakshatra, String pada, String status, {Color statusColor = AppTheme.textMain}) {
     return DataRow(
       cells: [
-        DataCell(Text(planet, style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.textMain))),
-        DataCell(Text(rasi, style: const TextStyle(color: AppTheme.primary))),
-        DataCell(Text(degree, style: const TextStyle(fontFamily: 'monospace'))),
-        DataCell(Text(nakshatra)),
-        DataCell(Text(pada)),
-        DataCell(Text(status, style: TextStyle(color: statusColor))),
-      ]
+        DataCell(Text(
+          position.planet.displayName,
+          style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.textMain),
+        )),
+        DataCell(Text(
+          position.sign.name.capitalize(),
+          style: const TextStyle(color: AppTheme.primary),
+        )),
+        DataCell(Text(
+          "${position.degree.toStringAsFixed(1)}°",
+          style: const TextStyle(fontFamily: 'monospace'),
+        )),
+        DataCell(Text('${position.house}')),
+        DataCell(Text(
+          status,
+          style: TextStyle(color: statusColor),
+        )),
+      ],
     );
+  }
+
+  String _getPlanetStatus(PlanetPosition position) {
+    if (position.isRetrograde) return 'Retrograde';
+
+    // Simplified dignity logic
+    final exalted = {
+      PlanetType.sun: ZodiacSign.aries,
+      PlanetType.moon: ZodiacSign.taurus,
+      PlanetType.mars: ZodiacSign.capricorn,
+      PlanetType.mercury: ZodiacSign.virgo,
+      PlanetType.jupiter: ZodiacSign.cancer,
+      PlanetType.venus: ZodiacSign.pisces,
+      PlanetType.saturn: ZodiacSign.libra,
+    };
+
+    if (exalted[position.planet] == position.sign) return 'Exalted';
+
+    // Debilitated positions
+    final debilitated = {
+      PlanetType.sun: ZodiacSign.libra,
+      PlanetType.moon: ZodiacSign.scorpio,
+      PlanetType.mars: ZodiacSign.cancer,
+      PlanetType.mercury: ZodiacSign.pisces,
+      PlanetType.jupiter: ZodiacSign.capricorn,
+      PlanetType.venus: ZodiacSign.virgo,
+      PlanetType.saturn: ZodiacSign.aries,
+    };
+
+    if (debilitated[position.planet] == position.sign) return 'Debilitated';
+
+    return 'Normal';
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'Exalted':
+        return AppTheme.tertiary;
+      case 'Debilitated':
+        return AppTheme.error;
+      case 'Retrograde':
+        return AppTheme.error;
+      default:
+        return AppTheme.textMain;
+    }
   }
 }
 
-class _NorthIndianChartPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = AppTheme.borderColor.withOpacity(0.5)
-      ..strokeWidth = 1.0
-      ..style = PaintingStyle.stroke;
-
-    final w = size.width;
-    final h = size.height;
-
-    // Outer box
-    canvas.drawRect(Rect.fromLTWH(0, 0, w, h), paint);
-
-    // Cross diagonals
-    canvas.drawLine(const Offset(0, 0), Offset(w, h), paint);
-    canvas.drawLine(Offset(w, 0), Offset(0, h), paint);
-
-    // Diamond
-    final path = Path()
-      ..moveTo(w / 2, 0)
-      ..lineTo(w, h / 2)
-      ..lineTo(w / 2, h)
-      ..lineTo(0, h / 2)
-      ..close();
-
-    paint.strokeWidth = 2.0;
-    canvas.drawPath(path, paint);
+extension StringExtension on String {
+  String capitalize() {
+    if (isEmpty) return this;
+    return '${this[0].toUpperCase()}${substring(1)}';
   }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

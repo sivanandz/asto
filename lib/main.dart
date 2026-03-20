@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'theme.dart';
 import 'components/top_app_bar.dart';
 import 'components/bottom_nav_bar.dart';
 import 'components/side_drawer.dart';
+import 'providers/app_provider.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/system_selection_screen.dart';
 import 'screens/vedic_view_screen.dart';
@@ -10,6 +12,7 @@ import 'screens/western_view_screen.dart';
 import 'screens/tarot_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const ObsidianAstroApp());
 }
 
@@ -18,11 +21,14 @@ class ObsidianAstroApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Obsidian Astro',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
-      home: const MainLayout(),
+    return ChangeNotifierProvider(
+      create: (context) => AppProvider()..initialize(),
+      child: MaterialApp(
+        title: 'Obsidian Astro',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.darkTheme,
+        home: const MainLayout(),
+      ),
     );
   }
 }
