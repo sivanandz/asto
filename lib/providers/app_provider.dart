@@ -17,6 +17,10 @@ class AppProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
 
+  // Preferences state
+  VedicChartStyle _vedicChartStyle = VedicChartStyle.northIndian;
+  AyanamsaType _ayanamsaType = AyanamsaType.lahiri;
+
   // Getters
   UserProfile? get currentUser => _currentUser;
   BirthChart? get currentChart => _currentChart;
@@ -24,11 +28,14 @@ class AppProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasUser => _currentUser != null;
+  VedicChartStyle get vedicChartStyle => _vedicChartStyle;
+  AyanamsaType get ayanamsaType => _ayanamsaType;
 
   // Initialize - load default user
   Future<void> initialize() async {
     _setLoading(true);
     try {
+      await _loadPreferences();
       _currentUser = await _db.getDefaultUserProfile();
       if (_currentUser != null) {
         await _loadCurrentChart();
@@ -149,6 +156,35 @@ class AppProvider extends ChangeNotifier {
   // Tarot Methods
   Future<void> _loadTarotReadings() async {
     _tarotReadings = await _db.getAllTarotReadings();
+  }
+
+  Future<void> _loadPreferences() async {
+    final styleValue = await _db.getSetting('vedic_chart_style');
+    if (styleValue != null) {
+      _vedicChartStyle = VedicChartStyle.values.byName(styleValue);
+    }
+
+    final ayanamsaValue = await _db.getSetting('ayanamsa_type');
+    if (ayanamsaValue != null) {
+      _ayanamsaType = AyanamsaType.values.byName(ayanamsaValue);
+    }
+  }
+
+  Future<void> setVedicChartStyle(VedicChartStyle style) async {
+    _vedicChartStyle = style;
+    notifyListeners();
+    await _db.upsertSetting('vedic_chart_style', style.name);
+  }
+
+  Future<void> setAyanamsaType(AyanamsaType type) async {
+    _ayanamsaType = type;
+    notifyListeners();
+    await _db.upsertSetting('ayanamsa_type', type.name);
+
+    // If we have a current user, regenerate the chart with the new ayanamsa
+    if (_currentUser != null) {
+      await generateVedicChart(type);
+    }
   }
 
   Future<TarotReading> drawTarotCards(String question, {int cardCount = 3}) async {

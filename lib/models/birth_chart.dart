@@ -8,6 +8,11 @@ enum ChartType {
   vedicSouthIndian,
 }
 
+enum VedicChartStyle {
+  northIndian,
+  southIndian,
+}
+
 enum AyanamsaType {
   lahiri,
   raman,
