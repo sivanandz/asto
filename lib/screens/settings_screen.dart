@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../theme.dart';
 import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
@@ -9,6 +10,27 @@ import '../database/database_helper.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
+  static const String _privacyUrl = 'https://obsidianastro.app/privacy';
+  static const String _termsUrl = 'https://obsidianastro.app/terms';
+
+  Future<void> _launchURL(BuildContext context, String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    try {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        throw Exception('Could not launch $urlString');
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error opening link: ${e.toString()}'),
+            backgroundColor: AppTheme.error,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -489,17 +511,13 @@ class SettingsScreen extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             title: const Text('Privacy Policy'),
             trailing: const Icon(Symbols.open_in_new, size: 16),
-            onTap: () {
-              // TODO: Open privacy policy
-            },
+            onTap: () => _launchURL(context, _privacyUrl),
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: const Text('Terms of Service'),
             trailing: const Icon(Symbols.open_in_new, size: 16),
-            onTap: () {
-              // TODO: Open terms
-            },
+            onTap: () => _launchURL(context, _termsUrl),
           ),
         ],
       ),
