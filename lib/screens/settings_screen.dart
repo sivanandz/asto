@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../theme.dart';
 import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
@@ -489,21 +490,42 @@ class SettingsScreen extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             title: const Text('Privacy Policy'),
             trailing: const Icon(Symbols.open_in_new, size: 16),
-            onTap: () {
-              // TODO: Open privacy policy
-            },
+            onTap: () => _launchURL(context, 'https://obsidianastro.app/privacy'),
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: const Text('Terms of Service'),
             trailing: const Icon(Symbols.open_in_new, size: 16),
-            onTap: () {
-              // TODO: Open terms
-            },
+            onTap: () => _launchURL(context, 'https://obsidianastro.app/terms'),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _launchURL(BuildContext context, String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    try {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Could not launch the link'),
+              backgroundColor: AppTheme.error,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error opening link'),
+            backgroundColor: AppTheme.error,
+          ),
+        );
+      }
+    }
   }
 
   Widget _buildInfoRow(String label, String value) {
