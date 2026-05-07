@@ -48,9 +48,14 @@ class TarotCard {
 
   String get romanNumeral {
     if (number == null) return '';
-    const numerals = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
-      'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI'];
-    return numerals[number!] ?? number.toString();
+    const numerals = [
+      '0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
+      'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI'
+    ];
+    if (number! >= 0 && number! < numerals.length) {
+      return numerals[number!];
+    }
+    return number.toString();
   }
 }
 
