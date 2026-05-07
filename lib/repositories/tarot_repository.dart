@@ -109,6 +109,10 @@ class TarotRepository {
     await _db.deleteTarotReading(id);
   }
 
+  Future<void> deleteAllReadings() async {
+    await _db.deleteAllTarotReadings();
+  }
+
   String _generateInterpretation(List<TarotDraw> draws, TarotSpreadType spread) {
     final buffer = StringBuffer();
     
