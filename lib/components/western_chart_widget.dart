@@ -74,7 +74,7 @@ class WesternChartPainter extends CustomPainter {
         : 0;
 
     for (int i = 0; i < 12; i++) {
-      final angle = math.radians((i * 30 - ascendantDegree) - 90);
+      final angle = ((i * 30 - ascendantDegree) - 90) * math.pi / 180.0;
       final outer = Offset(
         center.dx + radius * math.cos(angle),
         center.dy + radius * math.sin(angle),
@@ -87,7 +87,7 @@ class WesternChartPainter extends CustomPainter {
 
       // Draw zodiac symbols
       final sign = ZodiacSign.values[i];
-      final textAngle = math.radians((i * 30 + 15 - ascendantDegree) - 90);
+      final textAngle = ((i * 30 + 15 - ascendantDegree) - 90) * math.pi / 180.0;
       final textPos = Offset(
         center.dx + radius * 0.92 * math.cos(textAngle),
         center.dy + radius * 0.92 * math.sin(textAngle),
@@ -110,7 +110,7 @@ class WesternChartPainter extends CustomPainter {
     // Draw house cusps
     for (int i = 0; i < 12; i++) {
       // Simplified house calculation (equal houses)
-      final angle = math.radians((i * 30 - ascendantDegree) - 90);
+      final angle = ((i * 30 - ascendantDegree) - 90) * math.pi / 180.0;
       final outer = Offset(
         center.dx + radius * 0.85 * math.cos(angle),
         center.dy + radius * 0.85 * math.sin(angle),
@@ -122,7 +122,7 @@ class WesternChartPainter extends CustomPainter {
       canvas.drawLine(inner, outer, paint);
 
       // House numbers
-      final textAngle = math.radians((i * 30 + 15 - ascendantDegree) - 90);
+      final textAngle = ((i * 30 + 15 - ascendantDegree) - 90) * math.pi / 180.0;
       final textPos = Offset(
         center.dx + radius * 0.72 * math.cos(textAngle),
         center.dy + radius * 0.72 * math.sin(textAngle),
@@ -153,7 +153,7 @@ class WesternChartPainter extends CustomPainter {
 
     // Draw planets
     for (final entry in planetGroups.entries) {
-      final angle = math.radians(entry.key - 90);
+      final angle = (entry.key - 90) * math.pi / 180.0;
       final basePos = Offset(
         center.dx + radius * math.cos(angle),
         center.dy + radius * math.sin(angle),

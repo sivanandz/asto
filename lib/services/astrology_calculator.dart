@@ -155,7 +155,7 @@ class AstrologyCalculator {
     // Mean longitude
     var l = (280.460 + 0.9856474 * d) % 360;
     // Mean anomaly
-    final g = math.radians((357.528 + 0.9856003 * d) % 360);
+    final g = ((357.528 + 0.9856003 * d) % 360) * math.pi / 180.0;
     // Ecliptic longitude
     l = l + 1.915 * math.sin(g) + 0.020 * math.sin(2 * g);
     return l % 360;
@@ -168,7 +168,7 @@ class AstrologyCalculator {
     // Mean longitude
     var l = (218.316 + 13.176396 * d) % 360;
     // Mean anomaly
-    final m = math.radians((134.963 + 13.064993 * d) % 360);
+    final m = ((134.963 + 13.064993 * d) % 360) * math.pi / 180.0;
     // Ecliptic longitude (simplified)
     l = l + 6.289 * math.sin(m);
     return l % 360;
@@ -208,11 +208,11 @@ class AstrologyCalculator {
     final obliquity = 23.44; // Earth's axial tilt
     
     // Simplified formula
-    var asc = math.degrees(math.atan2(
-      -math.cos(math.radians(lst)),
-      math.tan(math.radians(latitude)) * math.sin(math.radians(obliquity)) -
-      math.sin(math.radians(lst)) * math.cos(math.radians(obliquity)),
-    ));
+    var asc = math.atan2(
+      -math.cos(lst * math.pi / 180.0),
+      math.tan(latitude * math.pi / 180.0) * math.sin(obliquity * math.pi / 180.0) -
+      math.sin(lst * math.pi / 180.0) * math.cos(obliquity * math.pi / 180.0),
+    ) * 180.0 / math.pi;
     
     if (asc < 0) asc += 360;
     return asc;
