@@ -5,6 +5,7 @@ import '../models/birth_chart.dart';
 import '../models/tarot_card.dart';
 import '../services/astrology_calculator.dart';
 import '../data/tarot_deck.dart';
+import '../components/vedic_chart_widget.dart';
 import 'dart:math' as math;
 
 class AppProvider extends ChangeNotifier {
@@ -14,6 +15,7 @@ class AppProvider extends ChangeNotifier {
   UserProfile? _currentUser;
   BirthChart? _currentChart;
   List<TarotReading> _tarotReadings = [];
+  VedicChartStyle _preferredVedicStyle = VedicChartStyle.northIndian;
   bool _isLoading = false;
   String? _error;
 
@@ -21,6 +23,7 @@ class AppProvider extends ChangeNotifier {
   UserProfile? get currentUser => _currentUser;
   BirthChart? get currentChart => _currentChart;
   List<TarotReading> get tarotReadings => _tarotReadings;
+  VedicChartStyle get preferredVedicStyle => _preferredVedicStyle;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasUser => _currentUser != null;
@@ -233,6 +236,11 @@ class AppProvider extends ChangeNotifier {
 
   void _setLoading(bool value) {
     _isLoading = value;
+    notifyListeners();
+  }
+
+  void updateVedicChartStyle(VedicChartStyle style) {
+    _preferredVedicStyle = style;
     notifyListeners();
   }
 
