@@ -11,6 +11,7 @@ class EntropyRandom {
   EntropyRandom._internal();
 
   final List<double> _sensorData = [];
+  final math.Random _secureRandom = math.Random.secure();
   StreamSubscription<AccelerometerEvent>? _accelSubscription;
   StreamSubscription<GyroscopeEvent>? _gyroSubscription;
   bool _isCollecting = false;
@@ -61,10 +62,11 @@ class EntropyRandom {
     final timeEntropy = _getTimeEntropy();
     final sensorEntropy = _getSensorEntropy();
     final mixedEntropy = _mixEntropy(timeEntropy, sensorEntropy);
-    
-    // Create random from mixed entropy
-    final random = math.Random(mixedEntropy);
-    return random.nextInt(max);
+
+    // Use secure random combined with custom entropy for a "magical" feel
+    // while maintaining cryptographic security.
+    final secureValue = _secureRandom.nextInt(max);
+    return (secureValue + mixedEntropy) % max;
   }
 
   /// Generate multiple unique random indices
@@ -80,9 +82,9 @@ class EntropyRandom {
     
     while (result.length < count) {
       final mixedEntropy = _mixEntropy(timeEntropy + result.length, sensorEntropy);
-      final random = math.Random(mixedEntropy);
-      final value = random.nextInt(max);
-      
+      final secureValue = _secureRandom.nextInt(max);
+      final value = (secureValue + mixedEntropy) % max;
+
       result.add(value);
       
       // Mix in more sensor data for next iteration
