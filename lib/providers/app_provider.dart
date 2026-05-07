@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import '../database/database_helper.dart';
 import '../models/user_profile.dart';
 import '../models/birth_chart.dart';
@@ -6,6 +7,8 @@ import '../models/tarot_card.dart';
 import '../services/astrology_calculator.dart';
 import '../data/tarot_deck.dart';
 import 'dart:math' as math;
+import '../services/entropy_random.dart';
+import '../models/planet_position.dart';
 
 class AppProvider extends ChangeNotifier {
   final DatabaseHelper _db = DatabaseHelper.instance;
@@ -185,7 +188,7 @@ class AppProvider extends ChangeNotifier {
       final reading = TarotReading(
         question: question,
         draws: draws,
-        interpretation: _generateInterpretation(draws),
+        interpretation: generateInterpretation(draws),
       );
 
       await _db.insertTarotReading(reading);
@@ -207,7 +210,8 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _generateInterpretation(List<TarotDraw> draws) {
+  @visibleForTesting
+  String generateInterpretation(List<TarotDraw> draws) {
     if (draws.isEmpty) return '';
     
     final buffer = StringBuffer();
