@@ -1,3 +1,5 @@
+import '../data/tarot_deck.dart';
+
 enum TarotSuit {
   majorArcana,
   cups,
@@ -48,9 +50,10 @@ class TarotCard {
 
   String get romanNumeral {
     if (number == null) return '';
+    if (number! < 0 || number! > 21) return number.toString();
     const numerals = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
       'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI'];
-    return numerals[number!] ?? number.toString();
+    return numerals[number!];
   }
 }
 
