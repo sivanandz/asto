@@ -46,7 +46,7 @@ class TarotRepository {
     final reading = TarotReading(
       question: question,
       draws: draws,
-      interpretation: _generateInterpretation(draws, spread),
+      interpretation: generateInterpretation(draws, spread),
     );
 
     await _db.insertTarotReading(reading);
@@ -87,7 +87,7 @@ class TarotRepository {
     final reading = TarotReading(
       question: question,
       draws: draws,
-      interpretation: _generateInterpretation(draws, spread),
+      interpretation: generateInterpretation(draws, spread),
     );
 
     await _db.insertTarotReading(reading);
@@ -109,7 +109,7 @@ class TarotRepository {
     await _db.deleteTarotReading(id);
   }
 
-  String _generateInterpretation(List<TarotDraw> draws, TarotSpreadType spread) {
+  static String generateInterpretation(List<TarotDraw> draws, TarotSpreadType spread) {
     final buffer = StringBuffer();
     
     switch (spread) {
