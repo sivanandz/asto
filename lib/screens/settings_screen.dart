@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../theme.dart';
 import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
@@ -489,21 +490,24 @@ class SettingsScreen extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             title: const Text('Privacy Policy'),
             trailing: const Icon(Symbols.open_in_new, size: 16),
-            onTap: () {
-              // TODO: Open privacy policy
-            },
+            onTap: () => _launchURL('https://example.com/privacy'),
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: const Text('Terms of Service'),
             trailing: const Icon(Symbols.open_in_new, size: 16),
-            onTap: () {
-              // TODO: Open terms
-            },
+            onTap: () => _launchURL('https://example.com/terms'),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _launchURL(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
+    }
   }
 
   Widget _buildInfoRow(String label, String value) {
