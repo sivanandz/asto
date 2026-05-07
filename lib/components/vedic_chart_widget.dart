@@ -3,11 +3,6 @@ import '../models/birth_chart.dart';
 import '../models/planet_position.dart';
 import '../theme.dart';
 
-enum VedicChartStyle {
-  northIndian,
-  southIndian,
-}
-
 class VedicChartWidget extends StatelessWidget {
   final BirthChart chart;
   final VedicChartStyle style;
