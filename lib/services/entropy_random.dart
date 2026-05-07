@@ -54,20 +54,21 @@ class EntropyRandom {
     _gyroSubscription = null;
   }
 
-  /// Generate a random number using sensor entropy + time
+  /// Generate a random number using sensor entropy combined with secure random
   /// Returns a value between 0 (inclusive) and max (exclusive)
   int nextInt(int max) {
-    // Combine multiple entropy sources
-    final timeEntropy = _getTimeEntropy();
     final sensorEntropy = _getSensorEntropy();
-    final mixedEntropy = _mixEntropy(timeEntropy, sensorEntropy);
     
-    // Create random from mixed entropy
-    final random = math.Random(mixedEntropy);
-    return random.nextInt(max);
+    // Use cryptographically secure random number generation
+    final secureRandom = math.Random.secure();
+    final secureValue = secureRandom.nextInt(max);
+
+    // Mix in sensor entropy as an offset to preserve the "magical" feel
+    // while maintaining cryptographic security.
+    return (secureValue + sensorEntropy) % max;
   }
 
-  /// Generate multiple unique random indices
+  /// Generate multiple unique random indices using sensor entropy + secure random
   /// Useful for drawing cards without replacement
   List<int> nextUniqueInts(int count, int max) {
     if (count > max) {
@@ -75,18 +76,17 @@ class EntropyRandom {
     }
 
     final result = <int>{};
-    final timeEntropy = _getTimeEntropy();
+    final secureRandom = math.Random.secure();
     var sensorEntropy = _getSensorEntropy();
     
     while (result.length < count) {
-      final mixedEntropy = _mixEntropy(timeEntropy + result.length, sensorEntropy);
-      final random = math.Random(mixedEntropy);
-      final value = random.nextInt(max);
+      final secureValue = secureRandom.nextInt(max);
+      final value = (secureValue + sensorEntropy) % max;
       
       result.add(value);
       
-      // Mix in more sensor data for next iteration
-      sensorEntropy = _mixEntropy(sensorEntropy, timeEntropy + value);
+      // Mix in more entropy for next iteration
+      sensorEntropy = _mixEntropy(sensorEntropy, value);
     }
     
     return result.toList();
