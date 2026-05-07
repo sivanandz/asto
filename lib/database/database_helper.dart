@@ -126,6 +126,11 @@ class DatabaseHelper {
     );
   }
 
+  Future<int> deleteAllTarotReadings() async {
+    final db = await database;
+    return await db.delete('tarot_readings');
+  }
+
   // Birth Chart CRUD
   Future<String> insertBirthChart(BirthChart chart) async {
     final db = await database;
