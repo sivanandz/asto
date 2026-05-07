@@ -54,20 +54,13 @@ class EntropyRandom {
     _gyroSubscription = null;
   }
 
-  /// Generate a random number using sensor entropy + time
+  /// Generate a random number using cryptographically secure PRNG
   /// Returns a value between 0 (inclusive) and max (exclusive)
   int nextInt(int max) {
-    // Combine multiple entropy sources
-    final timeEntropy = _getTimeEntropy();
-    final sensorEntropy = _getSensorEntropy();
-    final mixedEntropy = _mixEntropy(timeEntropy, sensorEntropy);
-    
-    // Create random from mixed entropy
-    final random = math.Random(mixedEntropy);
-    return random.nextInt(max);
+    return math.Random.secure().nextInt(max);
   }
 
-  /// Generate multiple unique random indices
+  /// Generate multiple unique random indices using cryptographically secure PRNG
   /// Useful for drawing cards without replacement
   List<int> nextUniqueInts(int count, int max) {
     if (count > max) {
@@ -75,18 +68,10 @@ class EntropyRandom {
     }
 
     final result = <int>{};
-    final timeEntropy = _getTimeEntropy();
-    var sensorEntropy = _getSensorEntropy();
+    final random = math.Random.secure();
     
     while (result.length < count) {
-      final mixedEntropy = _mixEntropy(timeEntropy + result.length, sensorEntropy);
-      final random = math.Random(mixedEntropy);
-      final value = random.nextInt(max);
-      
-      result.add(value);
-      
-      // Mix in more sensor data for next iteration
-      sensorEntropy = _mixEntropy(sensorEntropy, timeEntropy + value);
+      result.add(random.nextInt(max));
     }
     
     return result.toList();
