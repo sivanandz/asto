@@ -26,7 +26,7 @@ class EntropyRandom {
       _sensorData.add(event.x);
       _sensorData.add(event.y);
       _sensorData.add(event.z);
-      
+
       // Keep only last 100 readings to prevent memory issues
       if (_sensorData.length > 300) {
         _sensorData.removeRange(0, 3);
@@ -38,7 +38,7 @@ class EntropyRandom {
       _sensorData.add(event.x);
       _sensorData.add(event.y);
       _sensorData.add(event.z);
-      
+
       if (_sensorData.length > 300) {
         _sensorData.removeRange(0, 3);
       }
@@ -57,14 +57,18 @@ class EntropyRandom {
   /// Generate a random number using sensor entropy + time
   /// Returns a value between 0 (inclusive) and max (exclusive)
   int nextInt(int max) {
-    // Combine multiple entropy sources
+    // Combine multiple entropy sources for the 'magical' feel
     final timeEntropy = _getTimeEntropy();
     final sensorEntropy = _getSensorEntropy();
     final mixedEntropy = _mixEntropy(timeEntropy, sensorEntropy);
-    
-    // Create random from mixed entropy
-    final random = math.Random(mixedEntropy);
-    return random.nextInt(max);
+
+    // SECURITY: Use math.Random.secure() to ensure cryptographic security
+    // We combine the secure random value with the entropy offset to maintain
+    // the influence of sensor data without compromising predictability.
+    final secureRandom = math.Random.secure();
+    final secureValue = secureRandom.nextInt(max);
+
+    return (secureValue + mixedEntropy.abs()) % max;
   }
 
   /// Generate multiple unique random indices
@@ -77,18 +81,24 @@ class EntropyRandom {
     final result = <int>{};
     final timeEntropy = _getTimeEntropy();
     var sensorEntropy = _getSensorEntropy();
-    
+
     while (result.length < count) {
-      final mixedEntropy = _mixEntropy(timeEntropy + result.length, sensorEntropy);
-      final random = math.Random(mixedEntropy);
-      final value = random.nextInt(max);
-      
+      final mixedEntropy = _mixEntropy(
+        timeEntropy + result.length,
+        sensorEntropy,
+      );
+
+      // SECURITY: Use math.Random.secure() to ensure cryptographic security
+      final secureRandom = math.Random.secure();
+      final secureValue = secureRandom.nextInt(max);
+      final value = (secureValue + mixedEntropy.abs()) % max;
+
       result.add(value);
-      
+
       // Mix in more sensor data for next iteration
       sensorEntropy = _mixEntropy(sensorEntropy, timeEntropy + value);
     }
-    
+
     return result.toList();
   }
 
@@ -112,7 +122,7 @@ class EntropyRandom {
       final weight = (i + 1) / _sensorData.length;
       sum += _sensorData[i] * weight;
     }
-    
+
     // Convert to int, handling both positive and negative values
     return (sum * 1000000).toInt().abs();
   }
@@ -134,17 +144,17 @@ class EntropyRandom {
   /// Shake detection - returns true if device was shaken
   /// Can be used to trigger card draws
   Stream<bool> get shakeEvents {
-    return accelerometerEventStream().map((event) {
-      // Calculate magnitude of acceleration
-      final magnitude = math.sqrt(
-        event.x * event.x + 
-        event.y * event.y + 
-        event.z * event.z
-      );
-      
-      // Shake detected if magnitude exceeds threshold (roughly 2x gravity)
-      return magnitude > 20;
-    }).where((isShaking) => isShaking);
+    return accelerometerEventStream()
+        .map((event) {
+          // Calculate magnitude of acceleration
+          final magnitude = math.sqrt(
+            event.x * event.x + event.y * event.y + event.z * event.z,
+          );
+
+          // Shake detected if magnitude exceeds threshold (roughly 2x gravity)
+          return magnitude > 20;
+        })
+        .where((isShaking) => isShaking);
   }
 
   /// Get a "fortune score" based on current entropy
@@ -169,10 +179,7 @@ extension TarotEntropy on EntropyRandom {
   }
 
   /// Quick draw using current entropy without waiting
-  List<int> quickDraw({
-    required int cardCount,
-    required int deckSize,
-  }) {
+  List<int> quickDraw({required int cardCount, required int deckSize}) {
     return nextUniqueInts(cardCount, deckSize);
   }
 }
