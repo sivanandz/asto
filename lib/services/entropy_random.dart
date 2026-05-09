@@ -54,20 +54,19 @@ class EntropyRandom {
     _gyroSubscription = null;
   }
 
-  /// Generate a random number using sensor entropy + time
+  /// Generate a random number using sensor entropy + cryptographically secure random
   /// Returns a value between 0 (inclusive) and max (exclusive)
   int nextInt(int max) {
-    // Combine multiple entropy sources
-    final timeEntropy = _getTimeEntropy();
-    final sensorEntropy = _getSensorEntropy();
-    final mixedEntropy = _mixEntropy(timeEntropy, sensorEntropy);
+    // Use secure random as base
+    final secureValue = math.Random.secure().nextInt(max);
     
-    // Create random from mixed entropy
-    final random = math.Random(mixedEntropy);
-    return random.nextInt(max);
+    // Mix in sensor entropy to preserve the "magical" physical feel
+    // Use modulo max to ensure result is still within bounds
+    final sensorEntropy = _getSensorEntropy();
+    return (secureValue + sensorEntropy.abs()) % max;
   }
 
-  /// Generate multiple unique random indices
+  /// Generate multiple unique random indices securely
   /// Useful for drawing cards without replacement
   List<int> nextUniqueInts(int count, int max) {
     if (count > max) {
@@ -75,34 +74,29 @@ class EntropyRandom {
     }
 
     final result = <int>{};
-    final timeEntropy = _getTimeEntropy();
     var sensorEntropy = _getSensorEntropy();
+    final secureRandom = math.Random.secure();
     
     while (result.length < count) {
-      final mixedEntropy = _mixEntropy(timeEntropy + result.length, sensorEntropy);
-      final random = math.Random(mixedEntropy);
-      final value = random.nextInt(max);
+      // Use secure random as base
+      final secureValue = secureRandom.nextInt(max);
       
+      // Mix in sensor entropy
+      final value = (secureValue + sensorEntropy.abs()) % max;
       result.add(value);
       
-      // Mix in more sensor data for next iteration
-      sensorEntropy = _mixEntropy(sensorEntropy, timeEntropy + value);
+      // Mix in more sensor data for next iteration using a safe offset
+      sensorEntropy = _mixEntropy(sensorEntropy, secureValue);
     }
     
     return result.toList();
   }
 
-  /// Get entropy from current time (nanoseconds + microseconds)
-  int _getTimeEntropy() {
-    final now = DateTime.now();
-    return now.millisecondsSinceEpoch + now.microsecond;
-  }
-
   /// Get entropy from collected sensor data
   int _getSensorEntropy() {
     if (_sensorData.isEmpty) {
-      // Fallback to time-based entropy if no sensor data
-      return _getTimeEntropy();
+      // Fallback to secure random if no sensor data
+      return math.Random.secure().nextInt(1000000);
     }
 
     // Combine sensor readings into a single hash-like value
