@@ -1,0 +1,3 @@
+## 2024-05-09 - Added Tooltips to IconButtons for Accessibility
+**Learning:** Icon-only buttons (like those with `Symbols.close` and `Symbols.arrow_back`) lack explicit labels, meaning they are inaccessible or unhelpful to screen readers and also lack hover hints for desktop users. By taking advantage of the native `tooltip` property on the `IconButton` widget in Flutter, we provide both an accessibility label and a visual text label upon hovering.
+**Action:** When adding new icon-only buttons (`IconButton`) across the app, always provide a descriptive, actionable string via the `tooltip` parameter.
