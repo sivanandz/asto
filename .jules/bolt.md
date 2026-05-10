@@ -1,0 +1,3 @@
+## 2024-05-10 - O(N) grouping in rendering
+**Learning:** Rendering complex visualizations like the Vedic chart can involve nested loops. The `_drawNorthIndianHouses` function was repeatedly iterating over the `chart.positions` list using `.where()` to find planets for each house inside the grid rendering loop, resulting in redundant O(H * P) iterations.
+**Action:** Pre-group data items using `Map.putIfAbsent(key, () => []).add(value)` prior to the rendering loops and replace `.where()` inside the loop with simple Map lookups (`O(H + P)`). This drastically improves rendering frame times when redrawing the canvas.
