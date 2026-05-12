@@ -15,6 +15,7 @@ class LocationService {
     if (query.trim().length < 2) return [];
 
     try {
+      // 🛡️ Sentinel: Enforce a timeout to prevent application hangs and resource exhaustion
       final response = await http.get(
         Uri.parse(
           '$_baseUrl/search?q=${Uri.encodeComponent(query)}&format=json&addressdetails=1&limit=$limit',
@@ -23,7 +24,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final List<dynamic> results = json.decode(response.body);
@@ -44,6 +45,7 @@ class LocationService {
     double longitude,
   ) async {
     try {
+      // 🛡️ Sentinel: Enforce a timeout to prevent application hangs and resource exhaustion
       final response = await http.get(
         Uri.parse(
           '$_baseUrl/reverse?lat=$latitude&lon=$longitude&format=json&addressdetails=1',
@@ -52,7 +54,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
