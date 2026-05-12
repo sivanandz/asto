@@ -1,0 +1,3 @@
+## 2024-05-12 - Optimize Array Lookup in Nested Loops
+**Learning:** In Dart and Flutter, using `.where()` inside nested rendering loops (such as drawing charts based on an array of objects) can cause performance bottlenecks due to O(n) array traversal in hot paths.
+**Action:** Replace repeated `.where()` operations with an O(1) dictionary/Map lookup by pre-grouping items using `map.putIfAbsent(key, () => []).add(item)` before the loop starts.
