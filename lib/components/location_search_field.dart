@@ -152,6 +152,7 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
                     )
                   : _controller.text.isNotEmpty
                       ? IconButton(
+                          tooltip: 'Clear selection',
                           icon: const Icon(
                             Symbols.close,
                             color: AppTheme.textMuted,
