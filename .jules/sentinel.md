@@ -1,0 +1,4 @@
+## 2024-06-25 - Insecure RNG for Tarot Card Draws
+**Vulnerability:** Weak, predictable random number generation was used for core app features like Tarot drawing via `math.Random(mixedEntropy)`.
+**Learning:** Even when mixing environment/sensor noise (entropy) manually, seeding Dart's default `math.Random` provides only weak pseudorandomness and is subject to state predictability if the algorithm or inputs are known. Using device entropy manually without an underlying secure RNG doesn't make it cryptographically secure.
+**Prevention:** Always use `math.Random.secure()` as the base for generating unpredictable randomness. When combining it with external entropy (like sensors), do so by applying the entropy to a securely generated value (`math.Random.secure().nextInt(max) + entropy`) to maintain true cryptographic unpredictability.
