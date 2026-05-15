@@ -113,6 +113,14 @@ class VedicChartPainter extends CustomPainter {
   }
 
   void _drawNorthIndianHouses(Canvas canvas, Size size, double padding, double cellSize) {
+    // Pre-group planets by house to avoid O(N) filtering inside the rendering loop
+    final List<List<PlanetPosition>> planetsByHouse = List.generate(13, (_) => []);
+    for (final p in chart.positions) {
+      if (p.house >= 1 && p.house <= 12) {
+        planetsByHouse[p.house].add(p);
+      }
+    }
+
     // North Indian house arrangement (diamond pattern)
     // House 1 (Ascendant) is typically top-center or center-left
     final ascendant = chart.ascendant;
@@ -153,7 +161,7 @@ class VedicChartPainter extends CustomPainter {
         );
 
         // Draw planets in this house
-        final planets = chart.positions.where((p) => p.house == actualHouse).toList();
+        final planets = planetsByHouse[actualHouse];
         _drawPlanetsInCell(canvas, planets, Offset(x, y), cellSize);
       }
     }
