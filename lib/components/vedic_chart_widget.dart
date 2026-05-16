@@ -127,6 +127,14 @@ class VedicChartPainter extends CustomPainter {
       [null, 5, 4],
     ];
 
+    // Pre-group planets by house to avoid O(N) filtering inside the rendering loop
+    final planetsByHouse = List.generate(13, (_) => <PlanetPosition>[]);
+    for (final p in chart.positions) {
+      if (p.house >= 1 && p.house <= 12) {
+        planetsByHouse[p.house].add(p);
+      }
+    }
+
     for (int row = 0; row < 3; row++) {
       for (int col = 0; col < 3; col++) {
         int? houseNum;
@@ -153,7 +161,7 @@ class VedicChartPainter extends CustomPainter {
         );
 
         // Draw planets in this house
-        final planets = chart.positions.where((p) => p.house == actualHouse).toList();
+        final planets = planetsByHouse[actualHouse];
         _drawPlanetsInCell(canvas, planets, Offset(x, y), cellSize);
       }
     }
