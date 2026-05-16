@@ -1,0 +1,4 @@
+## 2024-05-18 - [Secure Randomization with Device Entropy]
+**Vulnerability:** The `EntropyRandom` class was using a predictable `math.Random()` seed to generate numbers for tarot draws. Even though it was mixing time and sensor data for entropy, standard `math.Random` is fundamentally predictable and not cryptographically secure, which poses a security/integrity risk for randomization operations.
+**Learning:** For sensitive randomization like card draws, even if we want to include "physical" entropy from device sensors to make it feel more "magical" and tied to the user's environment, we cannot sacrifice baseline cryptographic security.
+**Prevention:** Use the hybrid pattern: `(math.Random.secure().nextInt(max) + entropyOffset.abs()) % max`. This ensures that the generated number starts with a cryptographically secure base, while still incorporating the physical device entropy offset without compromising the randomness predictability.
