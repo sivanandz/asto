@@ -57,14 +57,15 @@ class EntropyRandom {
   /// Generate a random number using sensor entropy + time
   /// Returns a value between 0 (inclusive) and max (exclusive)
   int nextInt(int max) {
-    // Combine multiple entropy sources
-    final timeEntropy = _getTimeEntropy();
+    // SECURITY: Use secure random combined with device entropy
+    // This hybrid pattern ensures cryptographic security while maintaining the "magical" physical feel
     final sensorEntropy = _getSensorEntropy();
-    final mixedEntropy = _mixEntropy(timeEntropy, sensorEntropy);
     
-    // Create random from mixed entropy
-    final random = math.Random(mixedEntropy);
-    return random.nextInt(max);
+    // Create secure random
+    final secureRandom = math.Random.secure();
+
+    // Apply hybrid pattern: (secure_random + sensor_entropy) % max
+    return (secureRandom.nextInt(max) + sensorEntropy.abs()) % max;
   }
 
   /// Generate multiple unique random indices
@@ -77,15 +78,15 @@ class EntropyRandom {
     final result = <int>{};
     final timeEntropy = _getTimeEntropy();
     var sensorEntropy = _getSensorEntropy();
+    final secureRandom = math.Random.secure();
     
     while (result.length < count) {
-      final mixedEntropy = _mixEntropy(timeEntropy + result.length, sensorEntropy);
-      final random = math.Random(mixedEntropy);
-      final value = random.nextInt(max);
+      // SECURITY: Use secure random with hybrid pattern for each draw
+      final value = (secureRandom.nextInt(max) + sensorEntropy.abs()) % max;
       
       result.add(value);
       
-      // Mix in more sensor data for next iteration
+      // Mix in more sensor data for next iteration to keep entropy evolving
       sensorEntropy = _mixEntropy(sensorEntropy, timeEntropy + value);
     }
     
