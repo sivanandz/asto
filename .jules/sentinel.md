@@ -1,0 +1,4 @@
+## 2025-05-18 - Insecure Randomization for Sensitive Entropy Generation
+**Vulnerability:** The application used `math.Random(seed)` with predictable seeds derived from time and device sensors to generate entropy for Tarot draws, which could theoretically allow predictability in the output.
+**Learning:** Using predictable sources like system time and basic sensor readings as seeds to `math.Random()` does not provide cryptographic security, especially for sensitive functions like randomization in astrology/tarot contexts where unpredictability is key.
+**Prevention:** For secure random generation, always use `math.Random.secure()`. When incorporating physical entropy like sensor data, use a hybrid approach that ensures cryptographic security while still incorporating the unique device data: `(math.Random.secure().nextInt(max) + physicalEntropy.abs()) % max`.
