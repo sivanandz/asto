@@ -1,0 +1,4 @@
+## 2024-05-24 - Secure PRNG with Sensor Entropy Offset
+**Vulnerability:** The application used predictability seeding `math.Random()` to generate entropy for random operations like drawing tarot cards. Although sensor data and time were combined to create the seed, generating a seeded PRNG is still cryptographically insecure and predictable.
+**Learning:** PRNG generated using `math.Random(seed)` remains predictable and vulnerable, regardless of how complex the seed generation process is.
+**Prevention:** Always use `math.Random.secure()` for cryptographically secure random number generation. When incorporating additional sensor entropy, use the hybrid pattern by adding the absolute value of the entropy offset and taking the modulus to avoid negative modulus issues: `(math.Random.secure().nextInt(max) + entropyOffset.abs()) % max`.
