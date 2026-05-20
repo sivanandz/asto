@@ -1,0 +1,3 @@
+## 2024-05-14 - Optimize O(N) List Filtering inside CustomPainter
+**Learning:** Performing `O(N)` list filtering operations, like `.where().toList()`, inside inner loops of `CustomPainter` rendering methods causes performance bottlenecks during frequent repaints. This app's specific architecture uses these painters for complex Vedic and Western charts that repaint often.
+**Action:** When rendering nested data or performing lookups in Dart loops (especially inside UI layout or `CustomPainter` loops), pre-group the list items outside the loop. For small, fixed integer ranges (like the 12 astrological houses), use a pre-allocated list of lists (`List.generate(13, (_) => [])`). For general cases, use a Map (`map.putIfAbsent...`).
