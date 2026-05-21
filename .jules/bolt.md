@@ -1,0 +1,3 @@
+## 2026-05-21 - CustomPainter rendering loop optimization
+**Learning:** Found a specific performance bottleneck where `CustomPainter` rendering loops for charts (e.g., Vedic North Indian) were performing O(N) array filtering (`chart.positions.where((p) => p.house == actualHouse).toList()`) inside nested grid loops (e.g., 3x3 layout), causing redundant operations on every repaint frame.
+**Action:** Always pre-allocate and pre-group arrays/lists (e.g., `List.generate(13, (_) => <PlanetPosition>[])`) outside the rendering loop before iterating through grid or rendering coordinates to ensure an O(N) initial pass followed by O(1) lookups during the actual paint calls.
