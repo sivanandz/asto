@@ -1,0 +1,3 @@
+## 2025-01-20 - CustomPainter Optimization in Flutter
+**Learning:** Performing O(N) operations like `List.where()` inside the rendering loops of a `CustomPainter` (e.g., repeatedly filtering planets by house while iterating through a grid layout) causes a severe performance bottleneck during repaints. Since `CustomPainter.paint` runs frequently (e.g. 60fps during animations), these calculations add up quickly.
+**Action:** When a bounded number of categories exists (like the 12 astrological houses), pre-allocate a list of lists (`List.generate(13, (_) => [])`) and group the items once *before* starting the render loop. This transforms repetitive O(N) list traversal into O(1) array lookups during the painting pass.
