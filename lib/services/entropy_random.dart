@@ -62,9 +62,12 @@ class EntropyRandom {
     final sensorEntropy = _getSensorEntropy();
     final mixedEntropy = _mixEntropy(timeEntropy, sensorEntropy);
     
-    // Create random from mixed entropy
-    final random = math.Random(mixedEntropy);
-    return random.nextInt(max);
+    // Create secure random and mix in our entropy
+    // Security Fix: Avoid predictable math.Random(seed) for tarot draws.
+    // Use math.Random.secure() for cryptographic security, combined with
+    // sensor entropy via modulo arithmetic to preserve the "physical" feel.
+    final secureRandom = math.Random.secure();
+    return (secureRandom.nextInt(max) + mixedEntropy.abs()) % max;
   }
 
   /// Generate multiple unique random indices
@@ -77,11 +80,13 @@ class EntropyRandom {
     final result = <int>{};
     final timeEntropy = _getTimeEntropy();
     var sensorEntropy = _getSensorEntropy();
+    final secureRandom = math.Random.secure();
     
     while (result.length < count) {
       final mixedEntropy = _mixEntropy(timeEntropy + result.length, sensorEntropy);
-      final random = math.Random(mixedEntropy);
-      final value = random.nextInt(max);
+
+      // Security Fix: Use secure random combined with physical entropy
+      final value = (secureRandom.nextInt(max) + mixedEntropy.abs()) % max;
       
       result.add(value);
       
