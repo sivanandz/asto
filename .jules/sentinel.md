@@ -1,0 +1,4 @@
+## 2025-05-25 - Fix Predictable Random Generation in Tarot Drawing
+**Vulnerability:** `EntropyRandom` used `math.Random(seed)` based on a mix of time and sensor data to generate tarot card draws. This makes the draws potentially predictable and insecure for sensitive applications.
+**Learning:** For sensitive randomization like tarot card drawing, standard `math.Random` initialized with a seed is not sufficiently secure, even when seeded with sensor entropy. Predictability in the seed generation or extraction could compromise the randomness.
+**Prevention:** Always use `math.Random.secure()` for cryptographically secure randomization. To maintain the "physical" feel of sensor entropy, combine the secure random output with the sensor entropy offset using modulo arithmetic: `(math.Random.secure().nextInt(max) + entropyOffset.abs()) % max`. This ensures the randomness remains mathematically secure while still incorporating environmental noise.
