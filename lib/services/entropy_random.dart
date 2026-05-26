@@ -62,9 +62,10 @@ class EntropyRandom {
     final sensorEntropy = _getSensorEntropy();
     final mixedEntropy = _mixEntropy(timeEntropy, sensorEntropy);
     
-    // Create random from mixed entropy
-    final random = math.Random(mixedEntropy);
-    return random.nextInt(max);
+    // SECURITY: Use math.Random.secure() to prevent predictable number generation.
+    // The hybrid pattern incorporates sensor entropy to maintain a physical feel,
+    // without compromising cryptographic security by seeding a deterministic PRNG.
+    return (math.Random.secure().nextInt(max) + mixedEntropy.abs()) % max;
   }
 
   /// Generate multiple unique random indices
@@ -80,8 +81,9 @@ class EntropyRandom {
     
     while (result.length < count) {
       final mixedEntropy = _mixEntropy(timeEntropy + result.length, sensorEntropy);
-      final random = math.Random(mixedEntropy);
-      final value = random.nextInt(max);
+
+      // SECURITY: Hybrid pattern using cryptographically secure PRNG + sensor entropy
+      final value = (math.Random.secure().nextInt(max) + mixedEntropy.abs()) % max;
       
       result.add(value);
       

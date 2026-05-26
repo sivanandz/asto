@@ -1,0 +1,4 @@
+## 2026-05-26 - Fix predictable pseudo-random number generator
+**Vulnerability:** The random numbers for the entropy module were generated using deterministic seeded PRNG `math.Random(seed)`, allowing for predictable outputs that compromise cryptographic security.
+**Learning:** This occurred because although physical sensor data was being collected to ensure "magical/physical" randomness, the values were ultimately fed as a seed to an insecure mathematical random generator. Predictable outcomes based on collected inputs create deterministic, replayable outputs if internal state is leaked or inferred.
+**Prevention:** Always use `math.Random.secure()` when outcomes must not be predictable. When a "hybrid" physical-entropy pattern is required, incorporate the physical entropy via an absolute offset modulo calculation: `(math.Random.secure().nextInt(max) + entropyOffset.abs()) % max` rather than using the physical data as a seed.
