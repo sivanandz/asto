@@ -21,6 +21,7 @@ class SettingsScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Symbols.arrow_back),
           onPressed: () => Navigator.pop(context),
+          tooltip: 'Go back',
         ),
       ),
       body: SingleChildScrollView(
