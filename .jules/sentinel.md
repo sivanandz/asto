@@ -1,0 +1,4 @@
+## 2023-10-27 - Predictable Randomness in EntropyRandom
+**Vulnerability:** The application was using the standard, insecure `math.Random` class initialized with a deterministic seed (device entropy and time) to generate pseudo-random numbers for Tarot card drawing operations.
+**Learning:** Standard PRNGs are not cryptographically secure and can be predictably reproduced if the seed is known. Although sensor data was used, replacing `math.Random` with `math.Random.secure()` ensures cryptographic security, while still mixing in the app's custom entropy to preserve the "magical" physical feel without compromising unpredictability.
+**Prevention:** Always default to `math.Random.secure()` for security-sensitive random generation (like card draws that affect outcomes) and combine custom entropy offsets carefully (e.g., using modulo addition with absolute values).
