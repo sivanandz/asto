@@ -5,6 +5,7 @@ import '../models/birth_chart.dart';
 import '../models/tarot_card.dart';
 import '../services/astrology_calculator.dart';
 import '../data/tarot_deck.dart';
+import '../components/vedic_chart_widget.dart';
 import 'dart:math' as math;
 
 class AppProvider extends ChangeNotifier {
@@ -14,6 +15,8 @@ class AppProvider extends ChangeNotifier {
   UserProfile? _currentUser;
   BirthChart? _currentChart;
   List<TarotReading> _tarotReadings = [];
+  VedicChartStyle _vedicChartStyle = VedicChartStyle.northIndian;
+  AyanamsaType _ayanamsaType = AyanamsaType.lahiri;
   bool _isLoading = false;
   String? _error;
 
@@ -21,6 +24,8 @@ class AppProvider extends ChangeNotifier {
   UserProfile? get currentUser => _currentUser;
   BirthChart? get currentChart => _currentChart;
   List<TarotReading> get tarotReadings => _tarotReadings;
+  VedicChartStyle get vedicChartStyle => _vedicChartStyle;
+  AyanamsaType get ayanamsaType => _ayanamsaType;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasUser => _currentUser != null;
@@ -29,6 +34,7 @@ class AppProvider extends ChangeNotifier {
   Future<void> initialize() async {
     _setLoading(true);
     try {
+      await _loadSettings();
       _currentUser = await _db.getDefaultUserProfile();
       if (_currentUser != null) {
         await _loadCurrentChart();
@@ -39,6 +45,36 @@ class AppProvider extends ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  Future<void> _loadSettings() async {
+    final styleStr = await _db.getSetting('vedicChartStyle');
+    if (styleStr != null) {
+      _vedicChartStyle = VedicChartStyle.values.firstWhere(
+        (e) => e.toString() == styleStr,
+        orElse: () => VedicChartStyle.northIndian,
+      );
+    }
+
+    final ayanamsaStr = await _db.getSetting('ayanamsaType');
+    if (ayanamsaStr != null) {
+      _ayanamsaType = AyanamsaType.values.firstWhere(
+        (e) => e.toString() == ayanamsaStr,
+        orElse: () => AyanamsaType.lahiri,
+      );
+    }
+  }
+
+  Future<void> setVedicChartStyle(VedicChartStyle style) async {
+    _vedicChartStyle = style;
+    await _db.upsertSetting('vedicChartStyle', style.toString());
+    notifyListeners();
+  }
+
+  Future<void> setAyanamsaType(AyanamsaType type) async {
+    _ayanamsaType = type;
+    await _db.upsertSetting('ayanamsaType', type.toString());
+    notifyListeners();
   }
 
   // User Profile Methods

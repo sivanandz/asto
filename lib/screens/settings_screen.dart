@@ -6,6 +6,7 @@ import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
 import '../providers/app_provider.dart';
 import '../database/database_helper.dart';
+import '../components/vedic_chart_widget.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -202,71 +203,77 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildAyanamsaSelector(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.borderColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Consumer<AppProvider>(
+      builder: (context, provider, child) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppTheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppTheme.borderColor),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Symbols.format_align_center, color: AppTheme.primary, size: 20),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Ayanamsa',
-                      style: Theme.of(context).textTheme.titleSmall,
+              Row(
+                children: [
+                  const Icon(Symbols.format_align_center, color: AppTheme.primary, size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Ayanamsa',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Used for Vedic chart calculations',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppTheme.textMuted,
+                              ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Used for Vedic chart calculations',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textMuted,
-                          ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 16),
+              ...AyanamsaType.values.map((type) {
+                return RadioListTile<AyanamsaType>(
+                  title: Text(
+                    _getAyanamsaName(type),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  subtitle: Text(
+                    _getAyanamsaDescription(type),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppTheme.textMuted,
+                        ),
+                  ),
+                  value: type,
+                  groupValue: provider.ayanamsaType,
+                  onChanged: (value) {
+                    if (value != null) {
+                      provider.setAyanamsaType(value);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${_getAyanamsaName(value)} selected'),
+                          backgroundColor: AppTheme.primary,
+                        ),
+                      );
+                    }
+                  },
+                  activeColor: AppTheme.primary,
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                );
+              }),
             ],
           ),
-          const SizedBox(height: 16),
-          ...AyanamsaType.values.map((type) {
-            return RadioListTile<AyanamsaType>(
-              title: Text(
-                _getAyanamsaName(type),
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              subtitle: Text(
-                _getAyanamsaDescription(type),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.textMuted,
-                    ),
-              ),
-              value: type,
-              groupValue: AyanamsaType.lahiri, // Default, should come from settings
-              onChanged: (value) {
-                // TODO: Save preference
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${_getAyanamsaName(value!)} selected'),
-                    backgroundColor: AppTheme.primary,
-                  ),
-                );
-              },
-              activeColor: AppTheme.primary,
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-            );
-          }),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -287,59 +294,67 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildChartStyleSelector(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.borderColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Consumer<AppProvider>(
+      builder: (context, provider, child) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppTheme.surfaceContainerLow,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppTheme.borderColor),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Symbols.grid_view, color: AppTheme.primary, size: 20),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Default Vedic Chart Style',
-                      style: Theme.of(context).textTheme.titleSmall,
+              Row(
+                children: [
+                  const Icon(Symbols.grid_view, color: AppTheme.primary, size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Default Vedic Chart Style',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Preferred visualization for Vedic charts',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: AppTheme.textMuted,
+                              ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Preferred visualization for Vedic charts',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textMuted,
-                          ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              ListTile(
+                title: const Text('North Indian'),
+                subtitle: const Text('Diamond-style chart'),
+                trailing: provider.vedicChartStyle == VedicChartStyle.northIndian
+                    ? const Icon(Icons.check, color: AppTheme.primary)
+                    : const Icon(Icons.radio_button_unchecked, color: AppTheme.textMuted),
+                onTap: () {
+                  provider.setVedicChartStyle(VedicChartStyle.northIndian);
+                },
+              ),
+              ListTile(
+                title: const Text('South Indian'),
+                subtitle: const Text('Square-style chart'),
+                trailing: provider.vedicChartStyle == VedicChartStyle.southIndian
+                    ? const Icon(Icons.check, color: AppTheme.primary)
+                    : const Icon(Icons.radio_button_unchecked, color: AppTheme.textMuted),
+                onTap: () {
+                  provider.setVedicChartStyle(VedicChartStyle.southIndian);
+                },
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          ListTile(
-            title: const Text('North Indian'),
-            subtitle: const Text('Diamond-style chart'),
-            trailing: const Icon(Icons.check, color: AppTheme.primary),
-            onTap: () {
-              // TODO: Set preference
-            },
-          ),
-          ListTile(
-            title: const Text('South Indian'),
-            subtitle: const Text('Square-style chart'),
-            trailing: const Icon(Icons.radio_button_unchecked, color: AppTheme.textMuted),
-            onTap: () {
-              // TODO: Set preference
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
