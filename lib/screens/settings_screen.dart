@@ -6,6 +6,7 @@ import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
 import '../providers/app_provider.dart';
 import '../database/database_helper.dart';
+import '../components/vedic_chart_widget.dart' show VedicChartStyle;
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -237,34 +238,42 @@ class SettingsScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          ...AyanamsaType.values.map((type) {
-            return RadioListTile<AyanamsaType>(
-              title: Text(
-                _getAyanamsaName(type),
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              subtitle: Text(
-                _getAyanamsaDescription(type),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.textMuted,
+          Consumer<AppProvider>(
+            builder: (context, provider, child) {
+              return Column(
+                children: AyanamsaType.values.map((type) {
+                  return RadioListTile<AyanamsaType>(
+                    title: Text(
+                      _getAyanamsaName(type),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
-              ),
-              value: type,
-              groupValue: AyanamsaType.lahiri, // Default, should come from settings
-              onChanged: (value) {
-                // TODO: Save preference
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${_getAyanamsaName(value!)} selected'),
-                    backgroundColor: AppTheme.primary,
-                  ),
-                );
-              },
-              activeColor: AppTheme.primary,
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-            );
-          }),
+                    subtitle: Text(
+                      _getAyanamsaDescription(type),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppTheme.textMuted,
+                          ),
+                    ),
+                    value: type,
+                    groupValue: provider.ayanamsaType,
+                    onChanged: (value) {
+                      if (value != null) {
+                        provider.setAyanamsaType(value);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('${_getAyanamsaName(value)} selected'),
+                            backgroundColor: AppTheme.primary,
+                          ),
+                        );
+                      }
+                    },
+                    activeColor: AppTheme.primary,
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  );
+                }).toList(),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -322,20 +331,31 @@ class SettingsScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          ListTile(
-            title: const Text('North Indian'),
-            subtitle: const Text('Diamond-style chart'),
-            trailing: const Icon(Icons.check, color: AppTheme.primary),
-            onTap: () {
-              // TODO: Set preference
-            },
-          ),
-          ListTile(
-            title: const Text('South Indian'),
-            subtitle: const Text('Square-style chart'),
-            trailing: const Icon(Icons.radio_button_unchecked, color: AppTheme.textMuted),
-            onTap: () {
-              // TODO: Set preference
+          Consumer<AppProvider>(
+            builder: (context, provider, child) {
+              final style = provider.vedicChartStyle;
+              return Column(
+                children: [
+                  ListTile(
+                    title: const Text('North Indian'),
+                    subtitle: const Text('Diamond-style chart'),
+                    trailing: Icon(
+                      style == VedicChartStyle.northIndian ? Icons.check : Icons.radio_button_unchecked,
+                      color: style == VedicChartStyle.northIndian ? AppTheme.primary : AppTheme.textMuted,
+                    ),
+                    onTap: () => provider.setVedicChartStyle(VedicChartStyle.northIndian),
+                  ),
+                  ListTile(
+                    title: const Text('South Indian'),
+                    subtitle: const Text('Square-style chart'),
+                    trailing: Icon(
+                      style == VedicChartStyle.southIndian ? Icons.check : Icons.radio_button_unchecked,
+                      color: style == VedicChartStyle.southIndian ? AppTheme.primary : AppTheme.textMuted,
+                    ),
+                    onTap: () => provider.setVedicChartStyle(VedicChartStyle.southIndian),
+                  ),
+                ],
+              );
             },
           ),
         ],

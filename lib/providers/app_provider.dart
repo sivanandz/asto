@@ -5,6 +5,7 @@ import '../models/birth_chart.dart';
 import '../models/tarot_card.dart';
 import '../services/astrology_calculator.dart';
 import '../data/tarot_deck.dart';
+import '../components/vedic_chart_widget.dart' show VedicChartStyle;
 import 'dart:math' as math;
 
 class AppProvider extends ChangeNotifier {
@@ -16,6 +17,8 @@ class AppProvider extends ChangeNotifier {
   List<TarotReading> _tarotReadings = [];
   bool _isLoading = false;
   String? _error;
+  AyanamsaType _ayanamsaType = AyanamsaType.lahiri;
+  VedicChartStyle _vedicChartStyle = VedicChartStyle.northIndian;
 
   // Getters
   UserProfile? get currentUser => _currentUser;
@@ -24,11 +27,14 @@ class AppProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasUser => _currentUser != null;
+  AyanamsaType get ayanamsaType => _ayanamsaType;
+  VedicChartStyle get vedicChartStyle => _vedicChartStyle;
 
   // Initialize - load default user
   Future<void> initialize() async {
     _setLoading(true);
     try {
+      await _loadSettings();
       _currentUser = await _db.getDefaultUserProfile();
       if (_currentUser != null) {
         await _loadCurrentChart();
@@ -39,6 +45,39 @@ class AppProvider extends ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  Future<void> _loadSettings() async {
+    final ayanamsaSetting = await _db.getSetting('ayanamsaType');
+    if (ayanamsaSetting != null) {
+      try {
+        _ayanamsaType = AyanamsaType.values.byName(ayanamsaSetting);
+      } catch (_) {}
+    }
+
+    final vedicChartStyleSetting = await _db.getSetting('vedicChartStyle');
+    if (vedicChartStyleSetting != null) {
+      try {
+        _vedicChartStyle = VedicChartStyle.values.byName(vedicChartStyleSetting);
+      } catch (_) {}
+    }
+  }
+
+  Future<void> setAyanamsaType(AyanamsaType type) async {
+    _ayanamsaType = type;
+    await _db.upsertSetting('ayanamsaType', type.name);
+    notifyListeners();
+
+    // Regenerate current chart if there is one
+    if (_currentUser != null) {
+      await generateVedicChart(type);
+    }
+  }
+
+  Future<void> setVedicChartStyle(VedicChartStyle style) async {
+    _vedicChartStyle = style;
+    await _db.upsertSetting('vedicChartStyle', style.name);
+    notifyListeners();
   }
 
   // User Profile Methods
