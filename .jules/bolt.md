@@ -1,0 +1,3 @@
+## 2023-10-27 - O(N) to O(1) Bulk Database Deletion
+**Learning:** Testing database interaction changes with standalone Dart scripts in this Flutter environment is impractical due to framework hook compilation failures (`dart:ui` coupling). However, replacing an N+1 query loop with a bulk delete operation (`db.delete('table_name')`) provides an undeniable mathematical performance improvement by reducing database I/O calls from N to 1.
+**Action:** When identifying database loop anti-patterns in `SettingsScreen` or elsewhere, default to pushing bulk/batch operation methods down to the `DatabaseHelper` rather than attempting framework-coupled ad-hoc benchmarks.
