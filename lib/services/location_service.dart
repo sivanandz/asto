@@ -12,18 +12,27 @@ class LocationService {
     String query, {
     int limit = 5,
   }) async {
-    if (query.trim().length < 2) return [];
+    final cleanQuery = query.trim();
+    if (cleanQuery.length < 2) return [];
+
+    // Security: Limit input length to prevent potential denial of service
+    if (cleanQuery.length > 100) return [];
+
+    // Security: Validate input characters (allow letters, numbers, spaces, and basic punctuation)
+    // using Unicode properties to support international city names.
+    final validQueryRegex = RegExp(r"^[\p{L}\p{N}\s\.,'\-]+$", unicode: true);
+    if (!validQueryRegex.hasMatch(cleanQuery)) return [];
 
     try {
       final response = await http.get(
         Uri.parse(
-          '$_baseUrl/search?q=${Uri.encodeComponent(query)}&format=json&addressdetails=1&limit=$limit',
+          '$_baseUrl/search?q=${Uri.encodeComponent(cleanQuery)}&format=json&addressdetails=1&limit=$limit',
         ),
         headers: {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10)); // Security: Enforce network timeout
 
       if (response.statusCode == 200) {
         final List<dynamic> results = json.decode(response.body);
@@ -52,7 +61,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10)); // Security: Enforce network timeout
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
