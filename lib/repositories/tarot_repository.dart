@@ -5,9 +5,9 @@ import '../services/entropy_random.dart';
 
 class TarotRepository {
   final DatabaseHelper _db;
-  final EntropyRandom _entropyRandom = EntropyRandom();
+  final EntropyRandom _entropyRandom;
 
-  TarotRepository(this._db);
+  TarotRepository(this._db, {EntropyRandom? entropyRandom}) : _entropyRandom = entropyRandom ?? EntropyRandom();
 
   Future<TarotReading> createReading(
     String question, {
