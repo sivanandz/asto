@@ -14,7 +14,7 @@ class VedicViewScreen extends StatefulWidget {
 }
 
 class _VedicViewScreenState extends State<VedicViewScreen> {
-  VedicChartStyle _selectedStyle = VedicChartStyle.northIndian;
+  VedicChartStyle? _selectedStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -116,12 +116,12 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
         children: [
           _buildToggleButton(
             label: 'North Indian',
-            isSelected: _selectedStyle == VedicChartStyle.northIndian,
+            isSelected: (_selectedStyle ?? provider.vedicChartStyle) == VedicChartStyle.northIndian,
             onPressed: () => setState(() => _selectedStyle = VedicChartStyle.northIndian),
           ),
           _buildToggleButton(
             label: 'South Indian',
-            isSelected: _selectedStyle == VedicChartStyle.southIndian,
+            isSelected: (_selectedStyle ?? provider.vedicChartStyle) == VedicChartStyle.southIndian,
             onPressed: () => setState(() => _selectedStyle = VedicChartStyle.southIndian),
           ),
         ],
@@ -147,13 +147,14 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
   }
 
   Widget _buildChartDisplay(BuildContext context, dynamic chart) {
-    final styleName = _selectedStyle == VedicChartStyle.northIndian
+    final provider = context.watch<AppProvider>();
+    final styleName = (_selectedStyle ?? provider.vedicChartStyle) == VedicChartStyle.northIndian
         ? 'North Indian Style (Diamond)'
         : 'South Indian Style (Square)';
-    final badgeColor = _selectedStyle == VedicChartStyle.northIndian
+    final badgeColor = (_selectedStyle ?? provider.vedicChartStyle) == VedicChartStyle.northIndian
         ? AppTheme.primary
         : const Color(0xFF5A805B);
-    final icon = _selectedStyle == VedicChartStyle.northIndian
+    final icon = (_selectedStyle ?? provider.vedicChartStyle) == VedicChartStyle.northIndian
         ? Symbols.brightness_7
         : Symbols.wb_sunny;
 
@@ -198,7 +199,7 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
                       aspectRatio: 1.0,
                       child: VedicChartWidget(
                         chart: chart,
-                        style: _selectedStyle,
+                        style: _selectedStyle ?? provider.vedicChartStyle,
                         size: 400,
                       ),
                     ),

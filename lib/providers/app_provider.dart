@@ -3,6 +3,7 @@ import '../database/database_helper.dart';
 import '../models/user_profile.dart';
 import '../models/birth_chart.dart';
 import '../models/tarot_card.dart';
+import '../components/vedic_chart_widget.dart';
 import '../services/astrology_calculator.dart';
 import '../data/tarot_deck.dart';
 import 'dart:math' as math;
@@ -16,6 +17,8 @@ class AppProvider extends ChangeNotifier {
   List<TarotReading> _tarotReadings = [];
   bool _isLoading = false;
   String? _error;
+  VedicChartStyle _vedicChartStyle = VedicChartStyle.northIndian;
+  AyanamsaType _ayanamsaType = AyanamsaType.lahiri;
 
   // Getters
   UserProfile? get currentUser => _currentUser;
@@ -24,6 +27,8 @@ class AppProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasUser => _currentUser != null;
+  VedicChartStyle get vedicChartStyle => _vedicChartStyle;
+  AyanamsaType get ayanamsaType => _ayanamsaType;
 
   // Initialize - load default user
   Future<void> initialize() async {
@@ -34,11 +39,42 @@ class AppProvider extends ChangeNotifier {
         await _loadCurrentChart();
       }
       await _loadTarotReadings();
+      await _loadSettings();
     } catch (e) {
       _error = e.toString();
     } finally {
       _setLoading(false);
     }
+  }
+
+  Future<void> _loadSettings() async {
+    final styleStr = await _db.getSetting('vedicChartStyle');
+    if (styleStr != null) {
+      _vedicChartStyle = VedicChartStyle.values.firstWhere(
+        (e) => e.name == styleStr,
+        orElse: () => VedicChartStyle.northIndian,
+      );
+    }
+
+    final ayanamsaStr = await _db.getSetting('ayanamsaType');
+    if (ayanamsaStr != null) {
+      _ayanamsaType = AyanamsaType.values.firstWhere(
+        (e) => e.name == ayanamsaStr,
+        orElse: () => AyanamsaType.lahiri,
+      );
+    }
+  }
+
+  Future<void> setVedicChartStyle(VedicChartStyle style) async {
+    _vedicChartStyle = style;
+    await _db.upsertSetting('vedicChartStyle', style.name);
+    notifyListeners();
+  }
+
+  Future<void> setAyanamsaType(AyanamsaType type) async {
+    _ayanamsaType = type;
+    await _db.upsertSetting('ayanamsaType', type.name);
+    notifyListeners();
   }
 
   // User Profile Methods
