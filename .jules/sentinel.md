@@ -1,0 +1,4 @@
+## 2024-05-28 - Cryptographically Secure Hybrid Randomization for Tarot Draws
+**Vulnerability:** Weak PRNG (Predictable Random Number Generator) used for sensitive tarot card draws. The `math.Random` was seeded with predictable time and sensor entropy, making it theoretically possible to predict or manipulate draws.
+**Learning:** The previous implementation relied purely on device sensor and time entropy to seed a non-secure PRNG. While creative, this bypassed cryptographic security. A hybrid approach allows us to keep the "magical" physical entropy feel while relying on `math.Random.secure()` as the cryptographic base.
+**Prevention:** For sensitive randomization, always use `math.Random.secure()` combined with a hybrid pattern `(math.Random.secure().nextInt(max) + entropyOffset.abs()) % max` to incorporate sensor entropy without compromising the cryptographic security baseline or causing negative modulus issues.
