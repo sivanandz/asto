@@ -6,6 +6,7 @@ import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
 import '../providers/app_provider.dart';
 import '../database/database_helper.dart';
+import '../components/vedic_chart_widget.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -250,15 +251,17 @@ class SettingsScreen extends StatelessWidget {
                     ),
               ),
               value: type,
-              groupValue: AyanamsaType.lahiri, // Default, should come from settings
+              groupValue: context.watch<AppProvider>().ayanamsaType,
               onChanged: (value) {
-                // TODO: Save preference
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${_getAyanamsaName(value!)} selected'),
-                    backgroundColor: AppTheme.primary,
-                  ),
-                );
+                if (value != null) {
+                  context.read<AppProvider>().setAyanamsaType(value);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${_getAyanamsaName(value)} selected'),
+                      backgroundColor: AppTheme.primary,
+                    ),
+                  );
+                }
               },
               activeColor: AppTheme.primary,
               contentPadding: EdgeInsets.zero,
@@ -325,17 +328,31 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             title: const Text('North Indian'),
             subtitle: const Text('Diamond-style chart'),
-            trailing: const Icon(Icons.check, color: AppTheme.primary),
+            trailing: Icon(
+              context.watch<AppProvider>().vedicChartStyle == VedicChartStyle.northIndian
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_unchecked,
+              color: context.watch<AppProvider>().vedicChartStyle == VedicChartStyle.northIndian
+                  ? AppTheme.primary
+                  : AppTheme.textMuted,
+            ),
             onTap: () {
-              // TODO: Set preference
+              context.read<AppProvider>().setVedicChartStyle(VedicChartStyle.northIndian);
             },
           ),
           ListTile(
             title: const Text('South Indian'),
             subtitle: const Text('Square-style chart'),
-            trailing: const Icon(Icons.radio_button_unchecked, color: AppTheme.textMuted),
+            trailing: Icon(
+              context.watch<AppProvider>().vedicChartStyle == VedicChartStyle.southIndian
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_unchecked,
+              color: context.watch<AppProvider>().vedicChartStyle == VedicChartStyle.southIndian
+                  ? AppTheme.primary
+                  : AppTheme.textMuted,
+            ),
             onTap: () {
-              // TODO: Set preference
+              context.read<AppProvider>().setVedicChartStyle(VedicChartStyle.southIndian);
             },
           ),
         ],
