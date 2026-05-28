@@ -36,9 +36,6 @@ class _TarotScreenState extends State<TarotScreen> {
       _currentReading = null;
     });
 
-    // Simulate card drawing animation delay
-    await Future.delayed(const Duration(seconds: 2));
-
     final provider = context.read<AppProvider>();
     final reading = await provider.drawTarotCards(question);
 
