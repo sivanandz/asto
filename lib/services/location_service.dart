@@ -6,6 +6,15 @@ class LocationService {
   static const String _baseUrl = 'https://nominatim.openstreetmap.org';
   static const String _userAgent = 'ObsidianAstro/1.0';
 
+  // Allow injecting an http.Client for testing
+  static http.Client? _httpClient;
+
+  static http.Client get httpClient => _httpClient ??= http.Client();
+
+  static void setHttpClient(http.Client? client) {
+    _httpClient = client;
+  }
+
   /// Search for locations by query string
   /// Returns list of matching locations with coordinates
   static Future<List<LocationModel>> searchLocations(
@@ -15,7 +24,7 @@ class LocationService {
     if (query.trim().length < 2) return [];
 
     try {
-      final response = await http.get(
+      final response = await httpClient.get(
         Uri.parse(
           '$_baseUrl/search?q=${Uri.encodeComponent(query)}&format=json&addressdetails=1&limit=$limit',
         ),
@@ -44,7 +53,7 @@ class LocationService {
     double longitude,
   ) async {
     try {
-      final response = await http.get(
+      final response = await httpClient.get(
         Uri.parse(
           '$_baseUrl/reverse?lat=$latitude&lon=$longitude&format=json&addressdetails=1',
         ),
