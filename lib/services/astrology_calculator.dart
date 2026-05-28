@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'package:vector_math/vector_math.dart' as vmath;
 import '../models/planet_position.dart';
 import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
@@ -155,7 +156,7 @@ class AstrologyCalculator {
     // Mean longitude
     var l = (280.460 + 0.9856474 * d) % 360;
     // Mean anomaly
-    final g = math.radians((357.528 + 0.9856003 * d) % 360);
+    final g = vmath.radians((357.528 + 0.9856003 * d) % 360);
     // Ecliptic longitude
     l = l + 1.915 * math.sin(g) + 0.020 * math.sin(2 * g);
     return l % 360;
@@ -168,7 +169,7 @@ class AstrologyCalculator {
     // Mean longitude
     var l = (218.316 + 13.176396 * d) % 360;
     // Mean anomaly
-    final m = math.radians((134.963 + 13.064993 * d) % 360);
+    final m = vmath.radians((134.963 + 13.064993 * d) % 360);
     // Ecliptic longitude (simplified)
     l = l + 6.289 * math.sin(m);
     return l % 360;
@@ -208,10 +209,10 @@ class AstrologyCalculator {
     final obliquity = 23.44; // Earth's axial tilt
     
     // Simplified formula
-    var asc = math.degrees(math.atan2(
-      -math.cos(math.radians(lst)),
-      math.tan(math.radians(latitude)) * math.sin(math.radians(obliquity)) -
-      math.sin(math.radians(lst)) * math.cos(math.radians(obliquity)),
+    var asc = vmath.degrees(math.atan2(
+      -math.cos(vmath.radians(lst)),
+      math.tan(vmath.radians(latitude)) * math.sin(vmath.radians(obliquity)) -
+      math.sin(vmath.radians(lst)) * math.cos(vmath.radians(obliquity)),
     ));
     
     if (asc < 0) asc += 360;
