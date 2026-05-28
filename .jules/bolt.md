@@ -1,0 +1,3 @@
+## 2024-05-28 - Optimize VedicChartPainter rendering loop
+**Learning:** Avoid repeated O(N) operations like `.where()` filtering inside Flutter's `CustomPainter` rendering loops. These operations are computationally expensive during frequent repaints, creating measurable performance bottlenecks.
+**Action:** Pre-group list items outside rendering loops. Use a Map (`map.putIfAbsent...`) or a pre-allocated list of lists (`List.generate(size, (_) => [])`) for fixed-size integer ranges to avoid inner-loop recomputations.
