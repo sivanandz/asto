@@ -3,8 +3,12 @@ import '../database/database_helper.dart';
 import '../models/user_profile.dart';
 import '../models/birth_chart.dart';
 import '../models/tarot_card.dart';
+import '../models/planet_position.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/astrology_calculator.dart';
+import '../services/entropy_random.dart';
 import '../data/tarot_deck.dart';
+import '../components/vedic_chart_widget.dart';
 import 'dart:math' as math;
 
 class AppProvider extends ChangeNotifier {
@@ -16,6 +20,8 @@ class AppProvider extends ChangeNotifier {
   List<TarotReading> _tarotReadings = [];
   bool _isLoading = false;
   String? _error;
+  AyanamsaType _ayanamsaType = AyanamsaType.lahiri;
+  VedicChartStyle _vedicChartStyle = VedicChartStyle.northIndian;
 
   // Getters
   UserProfile? get currentUser => _currentUser;
@@ -24,11 +30,31 @@ class AppProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasUser => _currentUser != null;
+  AyanamsaType get ayanamsaType => _ayanamsaType;
+  VedicChartStyle get vedicChartStyle => _vedicChartStyle;
 
   // Initialize - load default user
   Future<void> initialize() async {
     _setLoading(true);
     try {
+      final prefs = await SharedPreferences.getInstance();
+
+      final ayanamsaStr = prefs.getString('ayanamsa_type');
+      if (ayanamsaStr != null) {
+        _ayanamsaType = AyanamsaType.values.firstWhere(
+          (e) => e.name == ayanamsaStr,
+          orElse: () => AyanamsaType.lahiri,
+        );
+      }
+
+      final styleStr = prefs.getString('vedic_chart_style');
+      if (styleStr != null) {
+        _vedicChartStyle = VedicChartStyle.values.firstWhere(
+          (e) => e.name == styleStr,
+          orElse: () => VedicChartStyle.northIndian,
+        );
+      }
+
       _currentUser = await _db.getDefaultUserProfile();
       if (_currentUser != null) {
         await _loadCurrentChart();
@@ -123,6 +149,20 @@ class AppProvider extends ChangeNotifier {
 
     await _db.insertBirthChart(chart);
     _currentChart = chart;
+  }
+
+  Future<void> setAyanamsaType(AyanamsaType type) async {
+    _ayanamsaType = type;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('ayanamsa_type', type.name);
+    notifyListeners();
+  }
+
+  Future<void> setVedicChartStyle(VedicChartStyle style) async {
+    _vedicChartStyle = style;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('vedic_chart_style', style.name);
+    notifyListeners();
   }
 
   Future<void> generateVedicChart(AyanamsaType ayanamsa) async {

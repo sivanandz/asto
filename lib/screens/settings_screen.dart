@@ -6,6 +6,8 @@ import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
 import '../providers/app_provider.dart';
 import '../database/database_helper.dart';
+import '../components/vedic_chart_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -250,15 +252,17 @@ class SettingsScreen extends StatelessWidget {
                     ),
               ),
               value: type,
-              groupValue: AyanamsaType.lahiri, // Default, should come from settings
+              groupValue: context.watch<AppProvider>().ayanamsaType,
               onChanged: (value) {
-                // TODO: Save preference
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${_getAyanamsaName(value!)} selected'),
-                    backgroundColor: AppTheme.primary,
-                  ),
-                );
+                if (value != null) {
+                  context.read<AppProvider>().setAyanamsaType(value);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${_getAyanamsaName(value)} selected'),
+                      backgroundColor: AppTheme.primary,
+                    ),
+                  );
+                }
               },
               activeColor: AppTheme.primary,
               contentPadding: EdgeInsets.zero,
@@ -325,17 +329,31 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             title: const Text('North Indian'),
             subtitle: const Text('Diamond-style chart'),
-            trailing: const Icon(Icons.check, color: AppTheme.primary),
+            trailing: Icon(
+              context.watch<AppProvider>().vedicChartStyle == VedicChartStyle.northIndian
+                  ? Icons.check_circle
+                  : Icons.radio_button_unchecked,
+              color: context.watch<AppProvider>().vedicChartStyle == VedicChartStyle.northIndian
+                  ? AppTheme.primary
+                  : AppTheme.textMuted,
+            ),
             onTap: () {
-              // TODO: Set preference
+              context.read<AppProvider>().setVedicChartStyle(VedicChartStyle.northIndian);
             },
           ),
           ListTile(
             title: const Text('South Indian'),
             subtitle: const Text('Square-style chart'),
-            trailing: const Icon(Icons.radio_button_unchecked, color: AppTheme.textMuted),
+            trailing: Icon(
+              context.watch<AppProvider>().vedicChartStyle == VedicChartStyle.southIndian
+                  ? Icons.check_circle
+                  : Icons.radio_button_unchecked,
+              color: context.watch<AppProvider>().vedicChartStyle == VedicChartStyle.southIndian
+                  ? AppTheme.primary
+                  : AppTheme.textMuted,
+            ),
             onTap: () {
-              // TODO: Set preference
+              context.read<AppProvider>().setVedicChartStyle(VedicChartStyle.southIndian);
             },
           ),
         ],
@@ -489,16 +507,36 @@ class SettingsScreen extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             title: const Text('Privacy Policy'),
             trailing: const Icon(Symbols.open_in_new, size: 16),
-            onTap: () {
-              // TODO: Open privacy policy
+            onTap: () async {
+              final url = Uri.parse('https://obsidianastro.app/privacy');
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              } else if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Could not open Privacy Policy'),
+                    backgroundColor: AppTheme.error,
+                  ),
+                );
+              }
             },
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: const Text('Terms of Service'),
             trailing: const Icon(Symbols.open_in_new, size: 16),
-            onTap: () {
-              // TODO: Open terms
+            onTap: () async {
+              final url = Uri.parse('https://obsidianastro.app/terms');
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              } else if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Could not open Terms of Service'),
+                    backgroundColor: AppTheme.error,
+                  ),
+                );
+              }
             },
           ),
         ],
