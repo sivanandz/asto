@@ -1,0 +1,1 @@
+## 2026-05-29 - Pre-grouping data in CustomPainter avoids O(N^2) bottlenecks\n**Learning:** Using `.where()` inside rendering loops (like a 3x3 grid) causes O(N*M) performance drops on every frame. \n**Action:** Group data into Map or List *before* iterating over grid positions.
