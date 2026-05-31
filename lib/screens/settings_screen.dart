@@ -20,6 +20,7 @@ class SettingsScreen extends StatelessWidget {
         title: const Text('SETTINGS'),
         leading: IconButton(
           icon: const Icon(Symbols.arrow_back),
+          tooltip: 'Go back',
           onPressed: () => Navigator.pop(context),
         ),
       ),
