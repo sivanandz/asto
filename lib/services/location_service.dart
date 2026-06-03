@@ -15,6 +15,7 @@ class LocationService {
     if (query.trim().length < 2) return [];
 
     try {
+      // SECURITY: Added timeout to prevent resource exhaustion from hanging network requests
       final response = await http.get(
         Uri.parse(
           '$_baseUrl/search?q=${Uri.encodeComponent(query)}&format=json&addressdetails=1&limit=$limit',
@@ -23,7 +24,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final List<dynamic> results = json.decode(response.body);
@@ -31,10 +32,12 @@ class LocationService {
             .map((json) => LocationModel.fromNominatimJson(json))
             .toList();
       } else {
-        throw Exception('Failed to search locations: ${response.statusCode}');
+        // SECURITY: Throw generic error message instead of leaking HTTP status codes
+        throw Exception('Failed to search locations. Please try again later.');
       }
     } catch (e) {
-      throw Exception('Location search error: $e');
+      // SECURITY: Throw generic error message instead of leaking internal exception details
+      throw Exception('An unexpected error occurred during location search.');
     }
   }
 
@@ -44,6 +47,7 @@ class LocationService {
     double longitude,
   ) async {
     try {
+      // SECURITY: Added timeout to prevent resource exhaustion from hanging network requests
       final response = await http.get(
         Uri.parse(
           '$_baseUrl/reverse?lat=$latitude&lon=$longitude&format=json&addressdetails=1',
@@ -52,7 +56,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
@@ -62,7 +66,8 @@ class LocationService {
       }
       return null;
     } catch (e) {
-      throw Exception('Reverse geocoding error: $e');
+      // SECURITY: Throw generic error message instead of leaking internal exception details
+      throw Exception('An unexpected error occurred during reverse geocoding.');
     }
   }
 
