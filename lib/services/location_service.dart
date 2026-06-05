@@ -5,6 +5,7 @@ import '../models/location_model.dart';
 class LocationService {
   static const String _baseUrl = 'https://nominatim.openstreetmap.org';
   static const String _userAgent = 'ObsidianAstro/1.0';
+  static const Duration _timeout = Duration(seconds: 10);
 
   /// Search for locations by query string
   /// Returns list of matching locations with coordinates
@@ -23,7 +24,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(_timeout);
 
       if (response.statusCode == 200) {
         final List<dynamic> results = json.decode(response.body);
@@ -31,10 +32,12 @@ class LocationService {
             .map((json) => LocationModel.fromNominatimJson(json))
             .toList();
       } else {
-        throw Exception('Failed to search locations: ${response.statusCode}');
+        // Security: Don't leak specific HTTP status codes to the UI/logs
+        throw Exception('Failed to fetch location data.');
       }
     } catch (e) {
-      throw Exception('Location search error: $e');
+      // Security: Sanitize error messages, don't leak raw exception details
+      throw Exception('Location search failed. Please try again later.');
     }
   }
 
@@ -52,7 +55,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(_timeout);
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
@@ -62,7 +65,8 @@ class LocationService {
       }
       return null;
     } catch (e) {
-      throw Exception('Reverse geocoding error: $e');
+      // Security: Sanitize error messages, don't leak raw exception details
+      throw Exception('Reverse geocoding failed. Please try again later.');
     }
   }
 
