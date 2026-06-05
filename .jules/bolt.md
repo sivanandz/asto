@@ -1,0 +1,3 @@
+## 2025-02-20 - Pre-allocating Arrays for O(1) Lookups in Flutter CustomPainters
+**Learning:** Performing `O(N)` list filtering operations (like `.where()`) inside the nested `x`/`y` loops of a `CustomPainter` `paint` method is a major codebase-specific performance bottleneck, as these methods are called frequently during repaints (e.g. 60fps animations or state updates).
+**Action:** When drawing complex grids or charts (like the North Indian Vedic chart), pre-group the data before the loops. For fixed, small integer ranges (like astrological houses 1-12), use a pre-allocated array of lists (`List.generate(size, (_) => [])`) rather than a Map to achieve perfect `O(1)` array indexing instead of `O(N)` list scanning.
