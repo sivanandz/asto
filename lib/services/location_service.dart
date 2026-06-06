@@ -15,6 +15,7 @@ class LocationService {
     if (query.trim().length < 2) return [];
 
     try {
+      // SECURITY: Add explicit timeout to prevent resource exhaustion
       final response = await http.get(
         Uri.parse(
           '$_baseUrl/search?q=${Uri.encodeComponent(query)}&format=json&addressdetails=1&limit=$limit',
@@ -23,7 +24,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final List<dynamic> results = json.decode(response.body);
@@ -31,10 +32,12 @@ class LocationService {
             .map((json) => LocationModel.fromNominatimJson(json))
             .toList();
       } else {
-        throw Exception('Failed to search locations: ${response.statusCode}');
+        // SECURITY: Do not leak exact status codes in generic errors
+        throw Exception('Failed to search locations. Please try again later.');
       }
     } catch (e) {
-      throw Exception('Location search error: $e');
+      // SECURITY: Do not leak raw exception details in generic errors
+      throw Exception('An error occurred during location search.');
     }
   }
 
@@ -44,6 +47,7 @@ class LocationService {
     double longitude,
   ) async {
     try {
+      // SECURITY: Add explicit timeout to prevent resource exhaustion
       final response = await http.get(
         Uri.parse(
           '$_baseUrl/reverse?lat=$latitude&lon=$longitude&format=json&addressdetails=1',
@@ -52,7 +56,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
@@ -62,7 +66,8 @@ class LocationService {
       }
       return null;
     } catch (e) {
-      throw Exception('Reverse geocoding error: $e');
+      // SECURITY: Do not leak raw exception details in generic errors
+      throw Exception('An error occurred during reverse geocoding.');
     }
   }
 
