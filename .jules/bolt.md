@@ -1,0 +1,3 @@
+## 2023-11-09 - Avoid O(N) operations in CustomPainter paint loop
+**Learning:** Found an anti-pattern in the codebase where an O(N) operation `chart.positions.where(...).toList()` was being used inside a nested rendering loop within a `CustomPainter` `paint` method (specifically in `VedicChartPainter`). Since `paint` runs very frequently during layout passes and animations in Flutter, this creates a performance bottleneck during repaints.
+**Action:** Always pre-group lists or data into a fixed-size hash map or array representation (e.g. `List.generate(...)`) *before* entering nested rendering loops. This reduces the lookups inside the loop from O(N) to O(1), making repaints much faster and smoother.
