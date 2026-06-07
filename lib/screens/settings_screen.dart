@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../theme.dart';
 import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/app_provider.dart';
 import '../database/database_helper.dart';
 
@@ -489,16 +490,30 @@ class SettingsScreen extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             title: const Text('Privacy Policy'),
             trailing: const Icon(Symbols.open_in_new, size: 16),
-            onTap: () {
-              // TODO: Open privacy policy
+            onTap: () async {
+              final url = Uri.parse('https://obsidianastro.app/privacy');
+              if (!await launchUrl(url)) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Could not open Privacy Policy')),
+                  );
+                }
+              }
             },
           ),
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: const Text('Terms of Service'),
             trailing: const Icon(Symbols.open_in_new, size: 16),
-            onTap: () {
-              // TODO: Open terms
+            onTap: () async {
+              final url = Uri.parse('https://obsidianastro.app/terms');
+              if (!await launchUrl(url)) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Could not open Terms of Service')),
+                  );
+                }
+              }
             },
           ),
         ],
