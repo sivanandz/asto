@@ -3,9 +3,12 @@ import '../database/database_helper.dart';
 import '../models/user_profile.dart';
 import '../models/birth_chart.dart';
 import '../models/tarot_card.dart';
+import '../models/planet_position.dart';
 import '../services/astrology_calculator.dart';
 import '../data/tarot_deck.dart';
-import 'dart:math' as math;
+import '../services/entropy_random.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../components/vedic_chart_widget.dart';
 
 class AppProvider extends ChangeNotifier {
   final DatabaseHelper _db = DatabaseHelper.instance;
@@ -16,6 +19,7 @@ class AppProvider extends ChangeNotifier {
   List<TarotReading> _tarotReadings = [];
   bool _isLoading = false;
   String? _error;
+  VedicChartStyle _vedicChartStyle = VedicChartStyle.northIndian;
 
   // Getters
   UserProfile? get currentUser => _currentUser;
@@ -24,9 +28,11 @@ class AppProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasUser => _currentUser != null;
+  VedicChartStyle get vedicChartStyle => _vedicChartStyle;
 
   // Initialize - load default user
   Future<void> initialize() async {
+    await _loadPreferences();
     _setLoading(true);
     try {
       _currentUser = await _db.getDefaultUserProfile();
@@ -38,6 +44,30 @@ class AppProvider extends ChangeNotifier {
       _error = e.toString();
     } finally {
       _setLoading(false);
+    }
+  }
+
+  // Preferences Methods
+  Future<void> _loadPreferences() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final styleIndex = prefs.getInt('vedicChartStyle');
+      if (styleIndex != null && styleIndex >= 0 && styleIndex < VedicChartStyle.values.length) {
+        _vedicChartStyle = VedicChartStyle.values[styleIndex];
+      }
+    } catch (e) {
+      print('Error loading preferences: $e');
+    }
+  }
+
+  Future<void> setVedicChartStyle(VedicChartStyle style) async {
+    _vedicChartStyle = style;
+    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('vedicChartStyle', style.index);
+    } catch (e) {
+      print('Error saving preferences: $e');
     }
   }
 

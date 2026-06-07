@@ -5,6 +5,7 @@ import '../theme.dart';
 import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
 import '../providers/app_provider.dart';
+import '../components/vedic_chart_widget.dart';
 import '../database/database_helper.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -287,6 +288,9 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildChartStyleSelector(BuildContext context) {
+    final provider = context.watch<AppProvider>();
+    final currentStyle = provider.vedicChartStyle;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -325,17 +329,23 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             title: const Text('North Indian'),
             subtitle: const Text('Diamond-style chart'),
-            trailing: const Icon(Icons.check, color: AppTheme.primary),
+            trailing: Icon(
+              currentStyle == VedicChartStyle.northIndian ? Icons.check : Icons.radio_button_unchecked,
+              color: currentStyle == VedicChartStyle.northIndian ? AppTheme.primary : AppTheme.textMuted,
+            ),
             onTap: () {
-              // TODO: Set preference
+              context.read<AppProvider>().setVedicChartStyle(VedicChartStyle.northIndian);
             },
           ),
           ListTile(
             title: const Text('South Indian'),
             subtitle: const Text('Square-style chart'),
-            trailing: const Icon(Icons.radio_button_unchecked, color: AppTheme.textMuted),
+            trailing: Icon(
+              currentStyle == VedicChartStyle.southIndian ? Icons.check : Icons.radio_button_unchecked,
+              color: currentStyle == VedicChartStyle.southIndian ? AppTheme.primary : AppTheme.textMuted,
+            ),
             onTap: () {
-              // TODO: Set preference
+              context.read<AppProvider>().setVedicChartStyle(VedicChartStyle.southIndian);
             },
           ),
         ],
