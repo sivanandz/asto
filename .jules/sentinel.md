@@ -1,0 +1,4 @@
+## 2024-05-24 - Cryptographic PRNG Migration
+**Vulnerability:** Weak PRNG using `math.Random` initialized with predictable entropy (system time + device sensors) was used for generating random numbers in sensitive operations (e.g., tarot drawing).
+**Learning:** In Dart, `math.Random` is purely a PRNG and insufficient for secure tasks, even if the seed logic attempts to simulate entropy manually. Furthermore, other features (`fortuneScore` and `shakeEvents`) unexpectedly rely on the underlying raw entropy functions (`_getSensorEntropy` and `_getTimeEntropy`), so they cannot simply be deleted without full codebase analysis.
+**Prevention:** Always use `math.Random.secure()` when unpredictable, cryptographically strong randomness is required, rather than attempting to roll custom entropy-mixing algorithms. Carefully verify dead-code assumptions before deleting old helper methods.
