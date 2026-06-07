@@ -23,7 +23,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final List<dynamic> results = json.decode(response.body);
@@ -31,10 +31,12 @@ class LocationService {
             .map((json) => LocationModel.fromNominatimJson(json))
             .toList();
       } else {
-        throw Exception('Failed to search locations: ${response.statusCode}');
+        // Sentinel: Prevent leaking HTTP status codes
+        throw Exception('Location search failed. Please try again.');
       }
     } catch (e) {
-      throw Exception('Location search error: $e');
+      // Sentinel: Prevent leaking raw exception details
+      throw Exception('Location search error occurred. Please try again.');
     }
   }
 
@@ -52,7 +54,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
@@ -62,7 +64,8 @@ class LocationService {
       }
       return null;
     } catch (e) {
-      throw Exception('Reverse geocoding error: $e');
+      // Sentinel: Prevent leaking raw exception details
+      throw Exception('Reverse geocoding failed. Please try again.');
     }
   }
 
