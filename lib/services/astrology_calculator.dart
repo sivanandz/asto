@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import '../utils/math_utils.dart' as math_utils;
 import '../models/planet_position.dart';
 import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
@@ -34,7 +35,7 @@ class AstrologyCalculator {
     // Parse birth time
     final timeParts = user.birthTime.split(':');
     final birthHour = int.tryParse(timeParts[0]) ?? 12;
-    final birthMinute = int.tryParse(timeParts[1]) ?? 0;
+    final birthMinute = int.tryParse(timeParts.length > 1 ? timeParts[1] : '0') ?? 0;
 
     // Calculate Julian Day (simplified)
     final jd = _calculateJulianDay(
@@ -47,27 +48,53 @@ class AstrologyCalculator {
     // Calculate planet positions
     final positions = <PlanetPosition>[];
 
+    // Ascendant calculation (simplified)
+    final ascendantLongitude = _calculateAscendant(
+      jd,
+      user.latitude ?? 0,
+      user.longitude ?? 0,
+    );
+    final adjustedAscendant = type == ChartType.vedicNorthIndian ||
+                              type == ChartType.vedicSouthIndian
+        ? _applyAyanamsa(ascendantLongitude, ayanamsa ?? AyanamsaType.lahiri)
+        : ascendantLongitude;
+
+    positions.add(PlanetPosition(
+      planet: PlanetType.ascendant,
+      sign: _longitudeToSign(adjustedAscendant),
+      degree: adjustedAscendant % 30,
+      house: 1,
+    ));
+
     // Sun position (simplified - actual position based on date)
     final sunLongitude = _calculateSunLongitude(jd);
+    final adjustedSun = type == ChartType.vedicNorthIndian || type == ChartType.vedicSouthIndian
+        ? _applyAyanamsa(sunLongitude, ayanamsa ?? AyanamsaType.lahiri)
+        : sunLongitude;
+
     positions.add(PlanetPosition(
       planet: PlanetType.sun,
-      sign: _longitudeToSign(sunLongitude),
-      degree: sunLongitude % 30,
-      house: _calculateHouse(sunLongitude, sunLongitude),
+      sign: _longitudeToSign(adjustedSun),
+      degree: adjustedSun % 30,
+      house: _calculateHouse(adjustedSun, adjustedAscendant),
     ));
 
     // Moon position
     final moonLongitude = _calculateMoonLongitude(jd);
+    final adjustedMoon = type == ChartType.vedicNorthIndian || type == ChartType.vedicSouthIndian
+        ? _applyAyanamsa(moonLongitude, ayanamsa ?? AyanamsaType.lahiri)
+        : moonLongitude;
+
     positions.add(PlanetPosition(
       planet: PlanetType.moon,
-      sign: _longitudeToSign(moonLongitude),
-      degree: moonLongitude % 30,
-      house: _calculateHouse(moonLongitude, sunLongitude),
+      sign: _longitudeToSign(adjustedMoon),
+      degree: adjustedMoon % 30,
+      house: _calculateHouse(adjustedMoon, adjustedAscendant),
     ));
 
     // Calculate other planets
     for (final entry in _orbitalPeriods.entries) {
-      if (entry.key == PlanetType.sun) continue;
+      if (entry.key == PlanetType.sun || entry.key == PlanetType.moon) continue;
       
       final longitude = _calculatePlanetLongitude(jd, entry.key, entry.value);
       final adjustedLongitude = type == ChartType.vedicNorthIndian || 
@@ -79,29 +106,13 @@ class AstrologyCalculator {
         planet: entry.key,
         sign: _longitudeToSign(adjustedLongitude),
         degree: adjustedLongitude % 30,
-        house: _calculateHouse(adjustedLongitude, sunLongitude),
+        house: _calculateHouse(adjustedLongitude, adjustedAscendant),
         speed: _calculateRetrograde(jd, entry.key),
         isRetrograde: _calculateRetrograde(jd, entry.key) < 0,
       ));
     }
 
-    // Ascendant calculation (simplified)
-    final ascendantLongitude = _calculateAscendant(
-      jd,
-      user.latitude ?? 0,
-      user.longitude ?? 0,
-    );
-    final adjustedAscendant = type == ChartType.vedicNorthIndian || 
-                              type == ChartType.vedicSouthIndian
-        ? _applyAyanamsa(ascendantLongitude, ayanamsa ?? AyanamsaType.lahiri)
-        : ascendantLongitude;
 
-    positions.add(PlanetPosition(
-      planet: PlanetType.ascendant,
-      sign: _longitudeToSign(adjustedAscendant),
-      degree: adjustedAscendant % 30,
-      house: 1,
-    ));
 
     // Rahu and Ketu (simplified - always opposite)
     final rahuLongitude = (moonLongitude + 180) % 360;
@@ -114,7 +125,7 @@ class AstrologyCalculator {
       planet: PlanetType.rahu,
       sign: _longitudeToSign(adjustedRahu),
       degree: adjustedRahu % 30,
-      house: _calculateHouse(adjustedRahu, sunLongitude),
+      house: _calculateHouse(adjustedRahu, adjustedAscendant),
       isRetrograde: true,
     ));
 
@@ -123,7 +134,7 @@ class AstrologyCalculator {
       planet: PlanetType.ketu,
       sign: _longitudeToSign(ketuLongitude),
       degree: ketuLongitude % 30,
-      house: _calculateHouse(ketuLongitude, sunLongitude),
+      house: _calculateHouse(ketuLongitude, adjustedAscendant),
       isRetrograde: true,
     ));
 
@@ -155,7 +166,7 @@ class AstrologyCalculator {
     // Mean longitude
     var l = (280.460 + 0.9856474 * d) % 360;
     // Mean anomaly
-    final g = math.radians((357.528 + 0.9856003 * d) % 360);
+    final g = math_utils.radians((357.528 + 0.9856003 * d) % 360);
     // Ecliptic longitude
     l = l + 1.915 * math.sin(g) + 0.020 * math.sin(2 * g);
     return l % 360;
@@ -168,7 +179,7 @@ class AstrologyCalculator {
     // Mean longitude
     var l = (218.316 + 13.176396 * d) % 360;
     // Mean anomaly
-    final m = math.radians((134.963 + 13.064993 * d) % 360);
+    final m = math_utils.radians((134.963 + 13.064993 * d) % 360);
     // Ecliptic longitude (simplified)
     l = l + 6.289 * math.sin(m);
     return l % 360;
@@ -208,10 +219,10 @@ class AstrologyCalculator {
     final obliquity = 23.44; // Earth's axial tilt
     
     // Simplified formula
-    var asc = math.degrees(math.atan2(
-      -math.cos(math.radians(lst)),
-      math.tan(math.radians(latitude)) * math.sin(math.radians(obliquity)) -
-      math.sin(math.radians(lst)) * math.cos(math.radians(obliquity)),
+    var asc = math_utils.degrees(math.atan2(
+      -math.cos(math_utils.radians(lst)),
+      math.tan(math_utils.radians(latitude)) * math.sin(math_utils.radians(obliquity)) -
+      math.sin(math_utils.radians(lst)) * math.cos(math_utils.radians(obliquity)),
     ));
     
     if (asc < 0) asc += 360;
