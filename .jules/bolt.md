@@ -1,0 +1,3 @@
+## 2024-06-13 - [Debouncing Search Fields]
+**Learning:** [In Flutter, when building custom autocomplete or search fields, a `TextEditingController` onChanged listener fires on every keystroke. Making a network request on every keystroke (like to the Nominatim geocoding API) can lead to rate limiting, UI jank, and wasted bandwidth.]
+**Action:** [Always implement a `Timer` based debounce mechanism (e.g., 500ms) for any text input that triggers network requests or expensive operations. Crucially, ensure the `Timer` is canceled in the `dispose` method to prevent memory leaks and exceptions from updating unmounted widgets.]
