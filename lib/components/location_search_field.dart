@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../models/location_model.dart';
@@ -28,6 +29,7 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
   final LayerLink _layerLink = LayerLink();
   List<LocationModel> _suggestions = [];
   bool _isLoading = false;
+  Timer? _debounce;
   bool _showSuggestions = false;
   LocationModel? _selectedLocation;
 
@@ -43,6 +45,7 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     _controller.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
@@ -57,7 +60,9 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
     }
   }
 
-  Future<void> _onSearchChanged(String query) async {
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
     if (query.length < 2) {
       setState(() {
         _suggestions = [];
@@ -70,22 +75,24 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
       _isLoading = true;
     });
 
-    try {
-      final results = await LocationService.searchLocations(query);
-      if (mounted) {
-        setState(() {
-          _suggestions = results;
-          _showSuggestions = results.isNotEmpty;
-          _isLoading = false;
-        });
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      try {
+        final results = await LocationService.searchLocations(query);
+        if (mounted) {
+          setState(() {
+            _suggestions = results;
+            _showSuggestions = results.isNotEmpty;
+            _isLoading = false;
+          });
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+    });
   }
 
   void _onLocationSelected(LocationModel location) {
