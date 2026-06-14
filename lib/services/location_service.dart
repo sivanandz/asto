@@ -19,10 +19,7 @@ class LocationService {
         Uri.parse(
           '$_baseUrl/search?q=${Uri.encodeComponent(query)}&format=json&addressdetails=1&limit=$limit',
         ),
-        headers: {
-          'User-Agent': _userAgent,
-          'Accept': 'application/json',
-        },
+        headers: {'User-Agent': _userAgent, 'Accept': 'application/json'},
       );
 
       if (response.statusCode == 200) {
@@ -48,10 +45,7 @@ class LocationService {
         Uri.parse(
           '$_baseUrl/reverse?lat=$latitude&lon=$longitude&format=json&addressdetails=1',
         ),
-        headers: {
-          'User-Agent': _userAgent,
-          'Accept': 'application/json',
-        },
+        headers: {'User-Agent': _userAgent, 'Accept': 'application/json'},
       );
 
       if (response.statusCode == 200) {

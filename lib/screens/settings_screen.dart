@@ -60,9 +60,9 @@ class SettingsScreen extends StatelessWidget {
       child: Text(
         title.toUpperCase(),
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppTheme.textMuted,
-              letterSpacing: 1.5,
-            ),
+          color: AppTheme.textMuted,
+          letterSpacing: 1.5,
+        ),
       ),
     );
   }
@@ -71,7 +71,7 @@ class SettingsScreen extends StatelessWidget {
     return Consumer<AppProvider>(
       builder: (context, provider, child) {
         final user = provider.currentUser;
-        
+
         if (user == null) {
           return _buildInfoCard(
             context,
@@ -125,16 +125,14 @@ class SettingsScreen extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           '${user.birthDate.day}/${user.birthDate.month}/${user.birthDate.year} • ${user.birthTime}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppTheme.textMuted,
-                              ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: AppTheme.textMuted),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           user.birthLocation,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: AppTheme.textMuted,
-                              ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: AppTheme.textMuted),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -180,22 +178,26 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem(BuildContext context, {required String label, required String value}) {
+  Widget _buildStatItem(
+    BuildContext context, {
+    required String label,
+    required String value,
+  }) {
     return Column(
       children: [
         Text(
           value,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: AppTheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
+            color: AppTheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           label,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppTheme.textMuted,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.labelSmall?.copyWith(color: AppTheme.textMuted),
         ),
       ],
     );
@@ -214,7 +216,11 @@ class SettingsScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Symbols.format_align_center, color: AppTheme.primary, size: 20),
+              const Icon(
+                Symbols.format_align_center,
+                color: AppTheme.primary,
+                size: 20,
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -228,8 +234,8 @@ class SettingsScreen extends StatelessWidget {
                     Text(
                       'Used for Vedic chart calculations',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textMuted,
-                          ),
+                        color: AppTheme.textMuted,
+                      ),
                     ),
                   ],
                 ),
@@ -245,12 +251,13 @@ class SettingsScreen extends StatelessWidget {
               ),
               subtitle: Text(
                 _getAyanamsaDescription(type),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.textMuted,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: AppTheme.textMuted),
               ),
               value: type,
-              groupValue: AyanamsaType.lahiri, // Default, should come from settings
+              groupValue:
+                  AyanamsaType.lahiri, // Default, should come from settings
               onChanged: (value) {
                 // TODO: Save preference
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -313,8 +320,8 @@ class SettingsScreen extends StatelessWidget {
                     Text(
                       'Preferred visualization for Vedic charts',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppTheme.textMuted,
-                          ),
+                        color: AppTheme.textMuted,
+                      ),
                     ),
                   ],
                 ),
@@ -333,7 +340,10 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             title: const Text('South Indian'),
             subtitle: const Text('Square-style chart'),
-            trailing: const Icon(Icons.radio_button_unchecked, color: AppTheme.textMuted),
+            trailing: const Icon(
+              Icons.radio_button_unchecked,
+              color: AppTheme.textMuted,
+            ),
             onTap: () {
               // TODO: Set preference
             },
@@ -382,7 +392,10 @@ class SettingsScreen extends StatelessWidget {
     bool isDestructive = false,
   }) {
     return ListTile(
-      leading: Icon(icon, color: isDestructive ? AppTheme.error : AppTheme.textMuted),
+      leading: Icon(
+        icon,
+        color: isDestructive ? AppTheme.error : AppTheme.textMuted,
+      ),
       title: Text(
         title,
         style: TextStyle(
@@ -391,9 +404,9 @@ class SettingsScreen extends StatelessWidget {
       ),
       subtitle: Text(
         subtitle,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: AppTheme.textMuted,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(color: AppTheme.textMuted),
       ),
       trailing: const Icon(Symbols.chevron_right, color: AppTheme.textMuted),
       onTap: onTap,
@@ -413,9 +426,9 @@ class SettingsScreen extends StatelessWidget {
           type == 'all'
               ? 'This will permanently delete your profile, all charts, and tarot readings. This action cannot be undone.'
               : 'This will delete all your saved tarot readings. This action cannot be undone.',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppTheme.textMuted,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted),
         ),
         actions: [
           TextButton(
@@ -425,7 +438,7 @@ class SettingsScreen extends StatelessWidget {
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
-              
+
               if (type == 'all') {
                 final provider = context.read<AppProvider>();
                 final user = provider.currentUser;
@@ -444,10 +457,8 @@ class SettingsScreen extends StatelessWidget {
                 }
               } else {
                 // Clear tarot history
-                final readings = context.read<AppProvider>().tarotReadings;
-                for (final reading in readings) {
-                  await context.read<AppProvider>().deleteTarotReading(reading.id);
-                }
+                await context.read<AppProvider>().clearTarotHistory();
+
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -519,7 +530,8 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard(BuildContext context, {
+  Widget _buildInfoCard(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required String subtitle,
@@ -543,9 +555,9 @@ class SettingsScreen extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.textMuted,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: AppTheme.textMuted),
                 ),
               ],
             ),

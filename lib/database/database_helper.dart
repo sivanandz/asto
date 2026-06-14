@@ -20,11 +20,7 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-    );
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -119,11 +115,7 @@ class DatabaseHelper {
 
   Future<int> deleteUserProfile(String id) async {
     final db = await database;
-    return await db.delete(
-      'user_profiles',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('user_profiles', where: 'id = ?', whereArgs: [id]);
   }
 
   // Birth Chart CRUD
@@ -160,11 +152,7 @@ class DatabaseHelper {
 
   Future<int> deleteBirthChart(String id) async {
     final db = await database;
-    return await db.delete(
-      'birth_charts',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('birth_charts', where: 'id = ?', whereArgs: [id]);
   }
 
   // Tarot Reading CRUD
@@ -176,10 +164,7 @@ class DatabaseHelper {
 
   Future<List<TarotReading>> getAllTarotReadings() async {
     final db = await database;
-    final maps = await db.query(
-      'tarot_readings',
-      orderBy: 'createdAt DESC',
-    );
+    final maps = await db.query('tarot_readings', orderBy: 'createdAt DESC');
     return maps.map((map) => TarotReading.fromMap(map)).toList();
   }
 
@@ -199,11 +184,12 @@ class DatabaseHelper {
 
   Future<int> deleteTarotReading(String id) async {
     final db = await database;
-    return await db.delete(
-      'tarot_readings',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    return await db.delete('tarot_readings', where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<int> deleteAllTarotReadings() async {
+    final db = await database;
+    return await db.delete('tarot_readings');
   }
 
   Future close() async {

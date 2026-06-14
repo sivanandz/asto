@@ -11,7 +11,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Beginnings, innocence, spontaneity, free spirit',
     meaningUpright: 'New beginnings, adventure, idealism, innocence',
     meaningReversed: 'Recklessness, risk-taking, inconsideration',
-    description: 'The Fool represents new beginnings, having faith in the future, being inexperienced, not knowing what to expect, having beginner\'s luck, improvisation and believing in the universe.',
+    description:
+        'The Fool represents new beginnings, having faith in the future, being inexperienced, not knowing what to expect, having beginner\'s luck, improvisation and believing in the universe.',
   ),
   TarotCard(
     id: 1,
@@ -22,7 +23,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Manifestation, resourcefulness, power, inspired action',
     meaningUpright: 'Manifestation, resourcefulness, power, inspired action',
     meaningReversed: 'Manipulation, poor planning, untapped talents',
-    description: 'The Magician signifies that you have all the skills and tools you need to be successful. The universe is aligning to bring positive changes.',
+    description:
+        'The Magician signifies that you have all the skills and tools you need to be successful. The universe is aligning to bring positive changes.',
   ),
   TarotCard(
     id: 2,
@@ -33,7 +35,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Intuition, sacred knowledge, divine feminine, subconscious',
     meaningUpright: 'Intuition, unconscious knowledge, mystery, spirituality',
     meaningReversed: 'Secrets, disconnected from intuition, withdrawal',
-    description: 'The High Priestess represents wisdom, serenity, knowledge and understanding. She is the guardian of the unconscious.',
+    description:
+        'The High Priestess represents wisdom, serenity, knowledge and understanding. She is the guardian of the unconscious.',
   ),
   TarotCard(
     id: 3,
@@ -44,7 +47,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Femininity, beauty, nature, nurturing, abundance',
     meaningUpright: 'Fertility, femininity, nature, abundance, creativity',
     meaningReversed: 'Creative block, dependence on others, emptiness',
-    description: 'The Empress is a call to connect with your feminine side. This can translate to fertility, expression of creativity, and nurturing.',
+    description:
+        'The Empress is a call to connect with your feminine side. This can translate to fertility, expression of creativity, and nurturing.',
   ),
   TarotCard(
     id: 4,
@@ -55,7 +59,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Authority, structure, father figure, solid foundation',
     meaningUpright: 'Authority, structure, control, fatherhood, stability',
     meaningReversed: 'Tyranny, rigidity, coldness, lack of discipline',
-    description: 'The Emperor represents structure, order and regulation. He symbolizes fatherhood and the government.',
+    description:
+        'The Emperor represents structure, order and regulation. He symbolizes fatherhood and the government.',
   ),
   TarotCard(
     id: 5,
@@ -66,7 +71,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Spiritual wisdom, religious beliefs, conformity, tradition',
     meaningUpright: 'Tradition, conformity, morality, ethics, education',
     meaningReversed: 'Rebellion, subversiveness, freedom, personal beliefs',
-    description: 'The Hierophant represents traditional values and institutions. He can represent a need to follow established social structures.',
+    description:
+        'The Hierophant represents traditional values and institutions. He can represent a need to follow established social structures.',
   ),
   TarotCard(
     id: 6,
@@ -77,7 +83,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Love, harmony, relationships, choices, alignment',
     meaningUpright: 'Love, harmony, relationships, values alignment, choices',
     meaningReversed: 'Self-love, disharmony, imbalance, misalignment',
-    description: 'The Lovers represent relationships and choices. Its appearance in a spread indicates some decision about an existing relationship.',
+    description:
+        'The Lovers represent relationships and choices. Its appearance in a spread indicates some decision about an existing relationship.',
   ),
   TarotCard(
     id: 7,
@@ -88,7 +95,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Control, willpower, success, action, determination',
     meaningUpright: 'Control, willpower, victory, assertion, determination',
     meaningReversed: 'Self-discipline, opposition, lack of direction',
-    description: 'The Chariot represents victory through control and discipline. It suggests you must use your willpower to overcome obstacles.',
+    description:
+        'The Chariot represents victory through control and discipline. It suggests you must use your willpower to overcome obstacles.',
   ),
   TarotCard(
     id: 8,
@@ -99,7 +107,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Strength, courage, persuasion, influence, compassion',
     meaningUpright: 'Strength, courage, patience, control, compassion',
     meaningReversed: 'Self-doubt, weakness, insecurity, low energy',
-    description: 'Strength predicts the triumphant conclusion to a major life problem, situation or temptation through strength of character.',
+    description:
+        'Strength predicts the triumphant conclusion to a major life problem, situation or temptation through strength of character.',
   ),
   TarotCard(
     id: 9,
@@ -108,9 +117,11 @@ const List<TarotCard> tarotDeck = [
     suit: TarotSuit.majorArcana,
     number: 9,
     keywords: 'Soul-searching, introspection, being alone, inner guidance',
-    meaningUpright: 'Soul-searching, introspection, being alone, inner guidance',
+    meaningUpright:
+        'Soul-searching, introspection, being alone, inner guidance',
     meaningReversed: 'Isolation, loneliness, withdrawal, rejection',
-    description: 'The Hermit suggests that you are in a phase of introspection where you are drawing your attention inwards.',
+    description:
+        'The Hermit suggests that you are in a phase of introspection where you are drawing your attention inwards.',
   ),
   TarotCard(
     id: 10,
@@ -121,7 +132,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Good luck, karma, life cycles, destiny, turning point',
     meaningUpright: 'Good luck, karma, life cycles, destiny, turning point',
     meaningReversed: 'Bad luck, negative external forces, out of control',
-    description: 'The Wheel of Fortune indicates that life is made up of cycles. Good times and bad times are part of life.',
+    description:
+        'The Wheel of Fortune indicates that life is made up of cycles. Good times and bad times are part of life.',
   ),
   TarotCard(
     id: 11,
@@ -132,7 +144,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Justice, fairness, truth, cause and effect, law',
     meaningUpright: 'Justice, fairness, truth, cause and effect, law',
     meaningReversed: 'Unfairness, lack of accountability, dishonesty',
-    description: 'Justice represents the idea that the fairest decision will be made. You are being called to account for your actions.',
+    description:
+        'Justice represents the idea that the fairest decision will be made. You are being called to account for your actions.',
   ),
   TarotCard(
     id: 12,
@@ -143,7 +156,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Pause, surrender, letting go, new perspectives',
     meaningUpright: 'Pause, surrender, letting go, new perspectives',
     meaningReversed: 'Delays, resistance, stalling, indecision',
-    description: 'The Hanged Man indicates that you are in a state of suspension and waiting. It calls for a pause and surrender.',
+    description:
+        'The Hanged Man indicates that you are in a state of suspension and waiting. It calls for a pause and surrender.',
   ),
   TarotCard(
     id: 13,
@@ -154,7 +168,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Endings, change, transformation, transition',
     meaningUpright: 'Endings, beginnings, change, transformation, transition',
     meaningReversed: 'Resistance to change, inability to move on, stagnation',
-    description: 'Death indicates transformation and change. It represents the end of something to make way for new beginnings.',
+    description:
+        'Death indicates transformation and change. It represents the end of something to make way for new beginnings.',
   ),
   TarotCard(
     id: 14,
@@ -165,7 +180,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Balance, moderation, patience, purpose, meaning',
     meaningUpright: 'Balance, moderation, patience, purpose, meaning',
     meaningReversed: 'Imbalance, excess, lack of harmony, discord',
-    description: 'Temperance is a card about balance, in many forms. It suggests you need to remain calm and moderate.',
+    description:
+        'Temperance is a card about balance, in many forms. It suggests you need to remain calm and moderate.',
   ),
   TarotCard(
     id: 15,
@@ -176,7 +192,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Shadow self, attachment, addiction, restriction',
     meaningUpright: 'Shadow self, attachment, addiction, restriction',
     meaningReversed: 'Releasing limiting beliefs, detachment, freedom',
-    description: 'The Devil represents being seduced by the material world and physical pleasures. It warns against addiction and unhealthy attachments.',
+    description:
+        'The Devil represents being seduced by the material world and physical pleasures. It warns against addiction and unhealthy attachments.',
   ),
   TarotCard(
     id: 16,
@@ -186,8 +203,10 @@ const List<TarotCard> tarotDeck = [
     number: 16,
     keywords: 'Sudden change, upheaval, chaos, revelation, awakening',
     meaningUpright: 'Sudden change, upheaval, chaos, revelation, awakening',
-    meaningReversed: 'Avoidance of disaster, fear of change, delaying the inevitable',
-    description: 'The Tower represents sudden, dramatic change. It suggests destruction of the old to make way for the new.',
+    meaningReversed:
+        'Avoidance of disaster, fear of change, delaying the inevitable',
+    description:
+        'The Tower represents sudden, dramatic change. It suggests destruction of the old to make way for the new.',
   ),
   TarotCard(
     id: 17,
@@ -198,7 +217,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Hope, faith, purpose, renewal, spirituality',
     meaningUpright: 'Hope, faith, purpose, renewal, spirituality',
     meaningReversed: 'Lack of faith, despair, discouragement, insecurity',
-    description: 'The Star brings hope, renewed power, and strength to carry on with life. It shows how abundantly blessed you are.',
+    description:
+        'The Star brings hope, renewed power, and strength to carry on with life. It shows how abundantly blessed you are.',
   ),
   TarotCard(
     id: 18,
@@ -209,7 +229,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Illusion, fear, anxiety, subconscious, intuition',
     meaningUpright: 'Illusion, fear, anxiety, subconscious, intuition',
     meaningReversed: 'Release of fear, repressed emotion, inner confusion',
-    description: 'The Moon represents illusion, fear and anxiety. Things may not be as they seem. Trust your intuition.',
+    description:
+        'The Moon represents illusion, fear and anxiety. Things may not be as they seem. Trust your intuition.',
   ),
   TarotCard(
     id: 19,
@@ -220,7 +241,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Positivity, fun, warmth, success, vitality',
     meaningUpright: 'Positivity, fun, warmth, success, vitality',
     meaningReversed: 'Temporary depression, lack of success, sadness',
-    description: 'The Sun represents success, radiance and abundance. It gives you strength and tells you that no matter where you go, you will shine.',
+    description:
+        'The Sun represents success, radiance and abundance. It gives you strength and tells you that no matter where you go, you will shine.',
   ),
   TarotCard(
     id: 20,
@@ -231,7 +253,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Judgement, rebirth, inner calling, absolution',
     meaningUpright: 'Judgement, rebirth, inner calling, absolution',
     meaningReversed: 'Self-doubt, refusal of self-examination, unjustness',
-    description: 'Judgement indicates that you have come to a significant stage in your life where you need to review yourself.',
+    description:
+        'Judgement indicates that you have come to a significant stage in your life where you need to review yourself.',
   ),
   TarotCard(
     id: 21,
@@ -242,7 +265,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Completion, integration, accomplishment, travel',
     meaningUpright: 'Completion, integration, accomplishment, travel',
     meaningReversed: 'Seeking personal closure, short-cuts, delays',
-    description: 'The World signifies completion, achievement, and fulfillment. All of your efforts are finally paying off.',
+    description:
+        'The World signifies completion, achievement, and fulfillment. All of your efforts are finally paying off.',
   ),
 
   // Minor Arcana - Cups (22-35)
@@ -255,7 +279,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'New feelings, spirituality, intuition',
     meaningUpright: 'New feelings, emotional awakening, intuition, love',
     meaningReversed: 'Emotional loss, blocked creativity, emptiness',
-    description: 'The Ace of Cups represents new beginnings in emotional and spiritual realms. Love is coming your way.',
+    description:
+        'The Ace of Cups represents new beginnings in emotional and spiritual realms. Love is coming your way.',
   ),
   TarotCard(
     id: 23,
@@ -266,7 +291,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Unity, partnership, mutual attraction',
     meaningUpright: 'Unity, partnership, mutual attraction, connection',
     meaningReversed: 'Broken relationships, disharmony, distrust',
-    description: 'The Two of Cups represents a strong bond between two people. It signifies mutual attraction and partnership.',
+    description:
+        'The Two of Cups represents a strong bond between two people. It signifies mutual attraction and partnership.',
   ),
   TarotCard(
     id: 24,
@@ -277,7 +303,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Celebration, friendship, creativity, community',
     meaningUpright: 'Celebration, friendship, creativity, community',
     meaningReversed: 'Gossip, isolation, partying, excess',
-    description: 'The Three of Cups represents celebration and community. Time to enjoy the company of friends and loved ones.',
+    description:
+        'The Three of Cups represents celebration and community. Time to enjoy the company of friends and loved ones.',
   ),
   TarotCard(
     id: 25,
@@ -288,7 +315,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Apathy, contemplation, disconnectedness',
     meaningUpright: 'Apathy, contemplation, disconnectedness, meditation',
     meaningReversed: 'Awareness, wake-up call, clarity, choosing happiness',
-    description: 'The Four of Cups suggests a period of contemplation and dissatisfaction. You may be feeling disconnected.',
+    description:
+        'The Four of Cups suggests a period of contemplation and dissatisfaction. You may be feeling disconnected.',
   ),
   TarotCard(
     id: 26,
@@ -299,7 +327,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Regret, failure, disappointment, pessimism',
     meaningUpright: 'Regret, failure, disappointment, pessimism',
     meaningReversed: 'Acceptance, moving on, finding peace, contentment',
-    description: 'The Five of Cups represents disappointment and grief. However, not all is lost - look at what remains.',
+    description:
+        'The Five of Cups represents disappointment and grief. However, not all is lost - look at what remains.',
   ),
   TarotCard(
     id: 27,
@@ -310,7 +339,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Nostalgia, innocence, childhood memories',
     meaningUpright: 'Nostalgia, innocence, childhood memories, joy',
     meaningReversed: 'Living in the past, forgiveness, lacking playfulness',
-    description: 'The Six of Cups represents nostalgia and childhood memories. It may indicate someone from your past returning.',
+    description:
+        'The Six of Cups represents nostalgia and childhood memories. It may indicate someone from your past returning.',
   ),
   TarotCard(
     id: 28,
@@ -321,7 +351,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Choices, fantasy, wishful thinking, illusion',
     meaningUpright: 'Choices, fantasy, wishful thinking, illusion',
     meaningReversed: 'Clarity, making choices, facing reality',
-    description: 'The Seven of Cups represents having many options but needing to make a choice. Beware of illusions.',
+    description:
+        'The Seven of Cups represents having many options but needing to make a choice. Beware of illusions.',
   ),
   TarotCard(
     id: 29,
@@ -332,7 +363,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Walking away, disillusionment, leaving behind',
     meaningUpright: 'Walking away, disillusionment, seeking truth, leaving',
     meaningReversed: 'Avoidance, fear of moving on, stagnation',
-    description: 'The Eight of Cups suggests walking away from something that no longer serves you in search of deeper meaning.',
+    description:
+        'The Eight of Cups suggests walking away from something that no longer serves you in search of deeper meaning.',
   ),
   TarotCard(
     id: 30,
@@ -343,7 +375,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Contentment, satisfaction, emotional stability',
     meaningUpright: 'Contentment, satisfaction, emotional stability, luxury',
     meaningReversed: 'Inner emptiness, dissatisfaction, indulgence',
-    description: 'The Nine of Cups represents emotional fulfillment and contentment. Your wishes are coming true.',
+    description:
+        'The Nine of Cups represents emotional fulfillment and contentment. Your wishes are coming true.',
   ),
   TarotCard(
     id: 31,
@@ -354,7 +387,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Divine love, blissful relationships, harmony',
     meaningUpright: 'Divine love, blissful relationships, harmony, alignment',
     meaningReversed: 'Broken relationships, misalignment, conflict',
-    description: 'The Ten of Cups represents ultimate emotional fulfillment and happy family life. True harmony achieved.',
+    description:
+        'The Ten of Cups represents ultimate emotional fulfillment and happy family life. True harmony achieved.',
   ),
   TarotCard(
     id: 32,
@@ -365,7 +399,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Creative opportunities, intuitive messages, curiosity',
     meaningUpright: 'Creative opportunities, intuitive messages, curiosity',
     meaningReversed: 'Emotional immaturity, insecurity, disappointment',
-    description: 'The Page of Cups brings creative inspiration and intuitive messages. Stay open to new possibilities.',
+    description:
+        'The Page of Cups brings creative inspiration and intuitive messages. Stay open to new possibilities.',
   ),
   TarotCard(
     id: 33,
@@ -376,7 +411,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Romance, charm, imagination, beauty',
     meaningUpright: 'Romance, charm, imagination, beauty, pursuit',
     meaningReversed: 'Unrealistic, jealousy, moodiness, disappointment',
-    description: 'The Knight of Cups represents a romantic suitor or the pursuit of creative endeavors with passion.',
+    description:
+        'The Knight of Cups represents a romantic suitor or the pursuit of creative endeavors with passion.',
   ),
   TarotCard(
     id: 34,
@@ -387,7 +423,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Compassion, warmth, intuitive, gentle',
     meaningUpright: 'Compassion, warmth, intuitive, gentle, healing',
     meaningReversed: 'Martyrdom, insecurity, dependence, manipulation',
-    description: 'The Queen of Cups represents emotional maturity and intuition. She is compassionate and understanding.',
+    description:
+        'The Queen of Cups represents emotional maturity and intuition. She is compassionate and understanding.',
   ),
   TarotCard(
     id: 35,
@@ -398,7 +435,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Emotional balance, diplomacy, compassion, control',
     meaningUpright: 'Emotional balance, diplomacy, compassion, control',
     meaningReversed: 'Emotional manipulation, moodiness, volatility',
-    description: 'The King of Cups represents emotional balance and mastery. He leads with compassion and understanding.',
+    description:
+        'The King of Cups represents emotional balance and mastery. He leads with compassion and understanding.',
   ),
 
   // Minor Arcana - Wands (36-49)
@@ -411,7 +449,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Inspiration, new opportunities, growth, potential',
     meaningUpright: 'Inspiration, new opportunities, growth, potential',
     meaningReversed: 'Delays, lack of motivation, weighed down',
-    description: 'The Ace of Wands represents a spark of inspiration and new creative energy. A time of exciting opportunities.',
+    description:
+        'The Ace of Wands represents a spark of inspiration and new creative energy. A time of exciting opportunities.',
   ),
   TarotCard(
     id: 37,
@@ -422,7 +461,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Future planning, progress, decisions, discovery',
     meaningUpright: 'Future planning, progress, decisions, discovery',
     meaningReversed: 'Fear of unknown, lack of planning, playing it safe',
-    description: 'The Two of Wands indicates planning for the future and making decisions about which path to take.',
+    description:
+        'The Two of Wands indicates planning for the future and making decisions about which path to take.',
   ),
   TarotCard(
     id: 38,
@@ -433,7 +473,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Expansion, foresight, overseas opportunities',
     meaningUpright: 'Expansion, foresight, overseas opportunities, progress',
     meaningReversed: 'Obstacles, delays, frustration,限制',
-    description: 'The Three of Wands shows your plans coming to fruition. Opportunities may come from afar.',
+    description:
+        'The Three of Wands shows your plans coming to fruition. Opportunities may come from afar.',
   ),
   TarotCard(
     id: 39,
@@ -444,7 +485,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Celebration, joy, harmony, relaxation',
     meaningUpright: 'Celebration, joy, harmony, relaxation, homecoming',
     meaningReversed: 'Lack of support, transience, unfinished celebrations',
-    description: 'The Four of Wands represents celebration and harmony. A time of joy with family and friends.',
+    description:
+        'The Four of Wands represents celebration and harmony. A time of joy with family and friends.',
   ),
   TarotCard(
     id: 40,
@@ -455,7 +497,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Conflict, competition, tension, diversity',
     meaningUpright: 'Conflict, competition, tension, disagreement',
     meaningReversed: 'Avoiding conflict, resolution, agreement',
-    description: 'The Five of Wands indicates conflict and competition. Different opinions are creating tension.',
+    description:
+        'The Five of Wands indicates conflict and competition. Different opinions are creating tension.',
   ),
   TarotCard(
     id: 41,
@@ -466,7 +509,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Victory, success, public recognition, progress',
     meaningUpright: 'Victory, success, public recognition, progress',
     meaningReversed: 'Private achievement, fall from grace, egotism',
-    description: 'The Six of Wands represents victory and public recognition. Your efforts are being rewarded.',
+    description:
+        'The Six of Wands represents victory and public recognition. Your efforts are being rewarded.',
   ),
   TarotCard(
     id: 42,
@@ -477,7 +521,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Defense, perseverance, maintaining control',
     meaningUpright: 'Defense, perseverance, maintaining control, advantage',
     meaningReversed: 'Giving up, overwhelmed, defensiveness',
-    description: 'The Seven of Wands suggests you need to defend your position. Stand your ground against opposition.',
+    description:
+        'The Seven of Wands suggests you need to defend your position. Stand your ground against opposition.',
   ),
   TarotCard(
     id: 43,
@@ -488,7 +533,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Speed, action, air travel, movement',
     meaningUpright: 'Speed, action, air travel, movement, swift change',
     meaningReversed: 'Delays, frustration, holding off, slowing down',
-    description: 'The Eight of Wands indicates rapid movement and swift action. Things are happening quickly.',
+    description:
+        'The Eight of Wands indicates rapid movement and swift action. Things are happening quickly.',
   ),
   TarotCard(
     id: 44,
@@ -499,7 +545,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Resilience, courage, persistence, test of faith',
     meaningUpright: 'Resilience, courage, persistence, last stand',
     meaningReversed: 'Exhaustion, giving up, chronic fatigue',
-    description: 'The Nine of Wands represents resilience in the face of adversity. You have the strength to persevere.',
+    description:
+        'The Nine of Wands represents resilience in the face of adversity. You have the strength to persevere.',
   ),
   TarotCard(
     id: 45,
@@ -510,7 +557,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Burden, responsibility, hard work, stress',
     meaningUpright: 'Burden, responsibility, hard work, completion',
     meaningReversed: 'Doing it all, delegation, release',
-    description: 'The Ten of Wands suggests you are carrying a heavy burden. It may be time to delegate or release.',
+    description:
+        'The Ten of Wands suggests you are carrying a heavy burden. It may be time to delegate or release.',
   ),
   TarotCard(
     id: 46,
@@ -521,7 +569,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Inspiration, ideas, discovery, limitless potential',
     meaningUpright: 'Inspiration, ideas, discovery, enthusiasm',
     meaningReversed: 'Hasty actions, delays, bad news, impatience',
-    description: 'The Page of Wands brings new ideas and inspiration. A messenger of creative opportunities.',
+    description:
+        'The Page of Wands brings new ideas and inspiration. A messenger of creative opportunities.',
   ),
   TarotCard(
     id: 47,
@@ -532,7 +581,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Energy, passion, lust, action, adventure',
     meaningUpright: 'Energy, passion, lust, action, adventure',
     meaningReversed: 'Anger, impulsiveness, recklessness, delays',
-    description: 'The Knight of Wands represents energetic action and adventure. He pursues his goals with passion.',
+    description:
+        'The Knight of Wands represents energetic action and adventure. He pursues his goals with passion.',
   ),
   TarotCard(
     id: 48,
@@ -543,7 +593,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Courage, confidence, independence, social butterfly',
     meaningUpright: 'Courage, confidence, independence, determination',
     meaningReversed: 'Selfishness, jealousy, insecurities, manipulation',
-    description: 'The Queen of Wands is confident and charismatic. She attracts others with her warm personality.',
+    description:
+        'The Queen of Wands is confident and charismatic. She attracts others with her warm personality.',
   ),
   TarotCard(
     id: 49,
@@ -554,7 +605,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Leadership, vision, entrepreneur, honor',
     meaningUpright: 'Leadership, vision, entrepreneur, honor',
     meaningReversed: 'Impulsiveness, haste, ruthlessness, tyranny',
-    description: 'The King of Wands is a natural leader with a clear vision. He takes charge and inspires others.',
+    description:
+        'The King of Wands is a natural leader with a clear vision. He takes charge and inspires others.',
   ),
 
   // Minor Arcana - Swords (50-63)
@@ -567,7 +619,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Breakthrough, clarity, sharp mind, new idea',
     meaningUpright: 'Breakthrough, clarity, sharp mind, new idea',
     meaningReversed: 'Confusion, chaos, lack of clarity, misinformation',
-    description: 'The Ace of Swords represents a breakthrough in thinking. Mental clarity and new understanding.',
+    description:
+        'The Ace of Swords represents a breakthrough in thinking. Mental clarity and new understanding.',
   ),
   TarotCard(
     id: 51,
@@ -578,7 +631,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Indecision, difficult choices, stalemate, avoidance',
     meaningUpright: 'Indecision, difficult choices, stalemate, avoidance',
     meaningReversed: 'Information overload, indecision, confusion',
-    description: 'The Two of Swords represents a difficult decision. You may be avoiding making a choice.',
+    description:
+        'The Two of Swords represents a difficult decision. You may be avoiding making a choice.',
   ),
   TarotCard(
     id: 52,
@@ -589,7 +643,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Heartbreak, grief, sorrow, emotional pain',
     meaningUpright: 'Heartbreak, grief, sorrow, emotional pain',
     meaningReversed: 'Recovery, forgiveness, moving on, releasing pain',
-    description: 'The Three of Swords represents heartbreak and sorrow. A time of emotional healing is needed.',
+    description:
+        'The Three of Swords represents heartbreak and sorrow. A time of emotional healing is needed.',
   ),
   TarotCard(
     id: 53,
@@ -600,7 +655,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Rest, relaxation, meditation, recuperation',
     meaningUpright: 'Rest, relaxation, meditation, recuperation',
     meaningReversed: 'Restlessness, burnout, lack of progress, stagnation',
-    description: 'The Four of Swords suggests a need for rest and recovery. Take time to heal and rejuvenate.',
+    description:
+        'The Four of Swords suggests a need for rest and recovery. Take time to heal and rejuvenate.',
   ),
   TarotCard(
     id: 54,
@@ -611,7 +667,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Conflict, defeat, winning at all costs, betrayal',
     meaningUpright: 'Conflict, defeat, winning at all costs, betrayal',
     meaningReversed: 'Reconciliation, making amends, past resentment',
-    description: 'The Five of Swords represents conflict and tension. Be careful not to win at too high a cost.',
+    description:
+        'The Five of Swords represents conflict and tension. Be careful not to win at too high a cost.',
   ),
   TarotCard(
     id: 55,
@@ -622,7 +679,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Transition, change, moving on, leaving behind',
     meaningUpright: 'Transition, change, moving on, leaving behind',
     meaningReversed: 'Resistance to change, unfinished business, baggage',
-    description: 'The Six of Swords indicates a transition or journey. You are moving away from difficulties toward calmer waters.',
+    description:
+        'The Six of Swords indicates a transition or journey. You are moving away from difficulties toward calmer waters.',
   ),
   TarotCard(
     id: 56,
@@ -633,7 +691,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Deception, strategy, sneakiness, getting away with',
     meaningUpright: 'Deception, strategy, sneakiness, getting away with',
     meaningReversed: 'Coming clean, rethinking approach, conscience',
-    description: 'The Seven of Swords suggests deception or strategy. Someone may be acting dishonestly.',
+    description:
+        'The Seven of Swords suggests deception or strategy. Someone may be acting dishonestly.',
   ),
   TarotCard(
     id: 57,
@@ -644,7 +703,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Restriction, imprisonment, self-victimization',
     meaningUpright: 'Restriction, imprisonment, self-victimization',
     meaningReversed: 'Freedom, release, taking control, new perspective',
-    description: 'The Eight of Swords represents feeling trapped or restricted. The limitations may be self-imposed.',
+    description:
+        'The Eight of Swords represents feeling trapped or restricted. The limitations may be self-imposed.',
   ),
   TarotCard(
     id: 58,
@@ -655,7 +715,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Anxiety, worry, fear, nightmares, isolation',
     meaningUpright: 'Anxiety, worry, fear, nightmares, isolation',
     meaningReversed: 'Hope, reaching out, despair, inner turmoil',
-    description: 'The Nine of Swords represents anxiety and worry. You may be kept awake at night by your fears.',
+    description:
+        'The Nine of Swords represents anxiety and worry. You may be kept awake at night by your fears.',
   ),
   TarotCard(
     id: 59,
@@ -666,7 +727,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Painful endings, deep wounds, betrayal, loss, crisis',
     meaningUpright: 'Painful endings, deep wounds, betrayal, loss, crisis',
     meaningReversed: 'Recovery, regeneration, resisting an inevitable end',
-    description: 'The Ten of Swords represents a painful ending or betrayal. The worst is over and recovery can begin.',
+    description:
+        'The Ten of Swords represents a painful ending or betrayal. The worst is over and recovery can begin.',
   ),
   TarotCard(
     id: 60,
@@ -677,7 +739,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Curiosity, restlessness, mental energy, new ideas',
     meaningUpright: 'Curiosity, restlessness, mental energy, new ideas',
     meaningReversed: 'Deception, manipulation, all talk and no action',
-    description: 'The Page of Swords brings mental energy and curiosity. He represents new ideas and thirst for knowledge.',
+    description:
+        'The Page of Swords brings mental energy and curiosity. He represents new ideas and thirst for knowledge.',
   ),
   TarotCard(
     id: 61,
@@ -688,7 +751,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Action, impulsiveness, defending beliefs, haste',
     meaningUpright: 'Action, impulsiveness, defending beliefs, haste',
     meaningReversed: 'No direction, disregard for consequences, unprepared',
-    description: 'The Knight of Swords charges forward with determination. He acts quickly, sometimes without thinking.',
+    description:
+        'The Knight of Swords charges forward with determination. He acts quickly, sometimes without thinking.',
   ),
   TarotCard(
     id: 62,
@@ -699,7 +763,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Independent, unbiased judgement, clear boundaries',
     meaningUpright: 'Independent, unbiased judgement, clear boundaries',
     meaningReversed: 'Cold-hearted, cruel, bitterness, overly emotional',
-    description: 'The Queen of Swords is independent and perceptive. She cuts through deception with clarity.',
+    description:
+        'The Queen of Swords is independent and perceptive. She cuts through deception with clarity.',
   ),
   TarotCard(
     id: 63,
@@ -710,7 +775,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Mental clarity, intellectual power, authority, truth',
     meaningUpright: 'Mental clarity, intellectual power, authority, truth',
     meaningReversed: 'Quiet power, inner truth, misuse of power, manipulation',
-    description: 'The King of Swords represents intellectual authority and truth. He makes decisions based on logic and fairness.',
+    description:
+        'The King of Swords represents intellectual authority and truth. He makes decisions based on logic and fairness.',
   ),
 
   // Minor Arcana - Pentacles (64-77)
@@ -723,7 +789,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'New financial opportunity, prosperity, security',
     meaningUpright: 'New financial opportunity, prosperity, security',
     meaningReversed: 'Lost opportunity, lack of planning, scarcity',
-    description: 'The Ace of Pentacles represents a new financial or material opportunity. Prosperity and abundance are available.',
+    description:
+        'The Ace of Pentacles represents a new financial or material opportunity. Prosperity and abundance are available.',
   ),
   TarotCard(
     id: 65,
@@ -734,7 +801,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Balance, adaptability, time management, prioritization',
     meaningUpright: 'Balance, adaptability, time management, prioritization',
     meaningReversed: 'Overwhelm, disorganization, reprioritization',
-    description: 'The Two of Pentacles suggests juggling multiple priorities. You need to balance your responsibilities.',
+    description:
+        'The Two of Pentacles suggests juggling multiple priorities. You need to balance your responsibilities.',
   ),
   TarotCard(
     id: 66,
@@ -745,7 +813,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Teamwork, collaboration, learning, implementation',
     meaningUpright: 'Teamwork, collaboration, learning, implementation',
     meaningReversed: 'Lack of teamwork, disregard for skills, poor quality',
-    description: 'The Three of Pentacles represents teamwork and collaboration. Your skills are recognized and valued.',
+    description:
+        'The Three of Pentacles represents teamwork and collaboration. Your skills are recognized and valued.',
   ),
   TarotCard(
     id: 67,
@@ -756,7 +825,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Security, conservation, frugality, control',
     meaningUpright: 'Security, conservation, frugality, control',
     meaningReversed: 'Greed, materialism, self-protection, possessiveness',
-    description: 'The Four of Pentacles suggests holding on tightly to resources. Be careful not to be too controlling.',
+    description:
+        'The Four of Pentacles suggests holding on tightly to resources. Be careful not to be too controlling.',
   ),
   TarotCard(
     id: 68,
@@ -767,7 +837,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Financial loss, poverty, lack mindset, isolation',
     meaningUpright: 'Financial loss, poverty, lack mindset, isolation',
     meaningReversed: 'Recovery from loss, spiritual poverty, finding help',
-    description: 'The Five of Pentacles represents financial hardship or feeling left out in the cold. Help may be closer than you think.',
+    description:
+        'The Five of Pentacles represents financial hardship or feeling left out in the cold. Help may be closer than you think.',
   ),
   TarotCard(
     id: 69,
@@ -778,7 +849,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Generosity, charity, giving, prosperity, sharing wealth',
     meaningUpright: 'Generosity, charity, giving, prosperity, sharing wealth',
     meaningReversed: 'Debt, selfishness, one-sided charity, strings attached',
-    description: 'The Six of Pentacles represents generosity and sharing. You may be giving or receiving help.',
+    description:
+        'The Six of Pentacles represents generosity and sharing. You may be giving or receiving help.',
   ),
   TarotCard(
     id: 70,
@@ -787,9 +859,11 @@ const List<TarotCard> tarotDeck = [
     suit: TarotSuit.pentacles,
     number: 7,
     keywords: 'Long-term view, sustainable results, perseverance, investment',
-    meaningUpright: 'Long-term view, sustainable results, perseverance, investment',
+    meaningUpright:
+        'Long-term view, sustainable results, perseverance, investment',
     meaningReversed: 'Lack of long-term vision, limited success, impatience',
-    description: 'The Seven of Pentacles suggests patience and long-term planning. Your efforts will bear fruit in time.',
+    description:
+        'The Seven of Pentacles suggests patience and long-term planning. Your efforts will bear fruit in time.',
   ),
   TarotCard(
     id: 71,
@@ -798,9 +872,11 @@ const List<TarotCard> tarotDeck = [
     suit: TarotSuit.pentacles,
     number: 8,
     keywords: 'Apprenticeship, repetitive tasks, mastery, skill development',
-    meaningUpright: 'Apprenticeship, repetitive tasks, mastery, skill development',
+    meaningUpright:
+        'Apprenticeship, repetitive tasks, mastery, skill development',
     meaningReversed: 'Self-development, perfectionism, misdirected activity',
-    description: 'The Eight of Pentacles represents dedication to your craft. Hard work and practice lead to mastery.',
+    description:
+        'The Eight of Pentacles represents dedication to your craft. Hard work and practice lead to mastery.',
   ),
   TarotCard(
     id: 72,
@@ -809,9 +885,11 @@ const List<TarotCard> tarotDeck = [
     suit: TarotSuit.pentacles,
     number: 9,
     keywords: 'Abundance, luxury, self-sufficiency, financial independence',
-    meaningUpright: 'Abundance, luxury, self-sufficiency, financial independence',
+    meaningUpright:
+        'Abundance, luxury, self-sufficiency, financial independence',
     meaningReversed: 'Self-worth issues, superficiality, living beyond means',
-    description: 'The Nine of Pentacles represents financial independence and luxury. You have achieved a level of comfort and security.',
+    description:
+        'The Nine of Pentacles represents financial independence and luxury. You have achieved a level of comfort and security.',
   ),
   TarotCard(
     id: 73,
@@ -822,7 +900,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Wealth, financial security, family, long-term success',
     meaningUpright: 'Wealth, financial security, family, long-term success',
     meaningReversed: 'Financial failure, loneliness, loss, family issues',
-    description: 'The Ten of Pentacles represents lasting wealth and family legacy. Financial security for generations.',
+    description:
+        'The Ten of Pentacles represents lasting wealth and family legacy. Financial security for generations.',
   ),
   TarotCard(
     id: 74,
@@ -833,7 +912,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Manifestation, financial opportunity, skill development',
     meaningUpright: 'Manifestation, financial opportunity, skill development',
     meaningReversed: 'Lack of progress, procrastination, learn from failure',
-    description: 'The Page of Pentacles brings news of financial opportunity. A time to manifest your goals.',
+    description:
+        'The Page of Pentacles brings news of financial opportunity. A time to manifest your goals.',
   ),
   TarotCard(
     id: 75,
@@ -844,7 +924,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Hard work, productivity, routine, conservatism',
     meaningUpright: 'Hard work, productivity, routine, conservatism',
     meaningReversed: 'Self-discipline, boredom, feeling stuck, perfectionism',
-    description: 'The Knight of Pentacles is methodical and hardworking. Slow and steady progress toward your goals.',
+    description:
+        'The Knight of Pentacles is methodical and hardworking. Slow and steady progress toward your goals.',
   ),
   TarotCard(
     id: 76,
@@ -853,9 +934,11 @@ const List<TarotCard> tarotDeck = [
     suit: TarotSuit.pentacles,
     number: 13,
     keywords: 'Nurturing, practical, providing financially, working parent',
-    meaningUpright: 'Nurturing, practical, providing financially, working parent',
+    meaningUpright:
+        'Nurturing, practical, providing financially, working parent',
     meaningReversed: 'Financial independence, self-care, work-home conflict',
-    description: 'The Queen of Pentacles is nurturing and practical. She creates a comfortable and secure environment.',
+    description:
+        'The Queen of Pentacles is nurturing and practical. She creates a comfortable and secure environment.',
   ),
   TarotCard(
     id: 77,
@@ -866,7 +949,8 @@ const List<TarotCard> tarotDeck = [
     keywords: 'Wealth, business, leadership, security, discipline',
     meaningUpright: 'Wealth, business, leadership, security, discipline',
     meaningReversed: 'Financially inept, obsessed with wealth, stubborn',
-    description: 'The King of Pentacles represents material success and business acumen. A master of wealth and security.',
+    description:
+        'The King of Pentacles represents material success and business acumen. A master of wealth and security.',
   ),
 ];
 

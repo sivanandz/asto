@@ -26,21 +26,23 @@ class TarotRepository {
     );
 
     final draws = <TarotDraw>[];
-    
+
     for (int i = 0; i < cardIndices.length; i++) {
       final card = tarotDeck[cardIndices[i]];
-      
+
       // Use entropy for upright/reversed
       final isReversed = _entropyRandom.nextInt(2) == 0;
       final position = isReversed
           ? TarotPosition.reversed
           : TarotPosition.upright;
 
-      draws.add(TarotDraw(
-        card: card,
-        position: position,
-        positionName: positionNames[i % positionNames.length],
-      ));
+      draws.add(
+        TarotDraw(
+          card: card,
+          position: position,
+          positionName: positionNames[i % positionNames.length],
+        ),
+      );
     }
 
     final reading = TarotReading(
@@ -69,7 +71,7 @@ class TarotRepository {
     );
 
     final draws = <TarotDraw>[];
-    
+
     for (int i = 0; i < cardIndices.length; i++) {
       final card = tarotDeck[cardIndices[i]];
       final isReversed = _entropyRandom.nextInt(2) == 0;
@@ -77,11 +79,13 @@ class TarotRepository {
           ? TarotPosition.reversed
           : TarotPosition.upright;
 
-      draws.add(TarotDraw(
-        card: card,
-        position: position,
-        positionName: positionNames[i % positionNames.length],
-      ));
+      draws.add(
+        TarotDraw(
+          card: card,
+          position: position,
+          positionName: positionNames[i % positionNames.length],
+        ),
+      );
     }
 
     final reading = TarotReading(
@@ -109,28 +113,37 @@ class TarotRepository {
     await _db.deleteTarotReading(id);
   }
 
-  String _generateInterpretation(List<TarotDraw> draws, TarotSpreadType spread) {
+  String _generateInterpretation(
+    List<TarotDraw> draws,
+    TarotSpreadType spread,
+  ) {
     final buffer = StringBuffer();
-    
+
     switch (spread) {
       case TarotSpreadType.pastPresentFuture:
         buffer.writeln('## Past, Present & Future');
         buffer.writeln();
-        buffer.writeln('This three-card spread reveals the trajectory of your inquiry:');
+        buffer.writeln(
+          'This three-card spread reveals the trajectory of your inquiry:',
+        );
         break;
       case TarotSpreadType.celticCross:
         buffer.writeln('## Celtic Cross');
         buffer.writeln();
-        buffer.writeln('This comprehensive spread explores all aspects of your situation:');
+        buffer.writeln(
+          'This comprehensive spread explores all aspects of your situation:',
+        );
         break;
       case TarotSpreadType.relationship:
         buffer.writeln('## Relationship Spread');
         buffer.writeln();
-        buffer.writeln('This spread illuminates the dynamics between you and another:');
+        buffer.writeln(
+          'This spread illuminates the dynamics between you and another:',
+        );
         break;
     }
     buffer.writeln();
-    
+
     for (final draw in draws) {
       buffer.writeln('**${draw.positionName}:** ${draw.card.displayName}');
       if (draw.position == TarotPosition.reversed) {
@@ -139,22 +152,18 @@ class TarotRepository {
       buffer.writeln('> ${draw.meaning}');
       buffer.writeln();
     }
-    
+
     // Add overall guidance
     buffer.writeln('---');
     buffer.writeln();
     buffer.writeln('**Guidance:**');
     buffer.writeln(draws.first.card.description);
-    
+
     return buffer.toString();
   }
 }
 
-enum TarotSpreadType {
-  pastPresentFuture,
-  celticCross,
-  relationship,
-}
+enum TarotSpreadType { pastPresentFuture, celticCross, relationship }
 
 extension TarotSpreadTypeExtension on TarotSpreadType {
   int get cardCount {

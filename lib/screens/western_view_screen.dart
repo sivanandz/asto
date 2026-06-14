@@ -40,9 +40,15 @@ class WesternViewScreen extends StatelessWidget {
                       ? Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(flex: 8, child: _buildAstroWheel(context, chart)),
+                            Expanded(
+                              flex: 8,
+                              child: _buildAstroWheel(context, chart),
+                            ),
                             const SizedBox(width: 32),
-                            Expanded(flex: 4, child: _buildRightColumn(context, provider)),
+                            Expanded(
+                              flex: 4,
+                              child: _buildRightColumn(context, provider),
+                            ),
                           ],
                         )
                       : Column(
@@ -67,7 +73,11 @@ class WesternViewScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Symbols.auto_graph, size: 64, color: AppTheme.textMuted.withOpacity(0.5)),
+          Icon(
+            Symbols.auto_graph,
+            size: 64,
+            color: AppTheme.textMuted.withOpacity(0.5),
+          ),
           const SizedBox(height: 16),
           Text(
             'No Chart Data Available',
@@ -76,7 +86,9 @@ class WesternViewScreen extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'Complete the onboarding to generate your chart',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -92,8 +104,10 @@ class WesternViewScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context, dynamic user, dynamic chart) {
-    final dateStr = '${user.birthDate.day} ${_monthName(user.birthDate.month)} ${user.birthDate.year}';
-    final timeStr = '${user.birthDate.hour.toString().padLeft(2, '0')}:${user.birthDate.minute.toString().padLeft(2, '0')}';
+    final dateStr =
+        '${user.birthDate.day} ${_monthName(user.birthDate.month)} ${user.birthDate.year}';
+    final timeStr =
+        '${user.birthDate.hour.toString().padLeft(2, '0')}:${user.birthDate.minute.toString().padLeft(2, '0')}';
     final locationStr = user.birthPlace;
 
     return Row(
@@ -106,12 +120,17 @@ class WesternViewScreen extends StatelessWidget {
             children: [
               Text(
                 'Western Natal Chart',
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 32, letterSpacing: -1.0),
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  fontSize: 32,
+                  letterSpacing: -1.0,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 '${user.name.toUpperCase()} • $dateStr • $timeStr • ${locationStr.toUpperCase()}',
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: 2.0),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelSmall?.copyWith(letterSpacing: 2.0),
               ),
             ],
           ),
@@ -135,7 +154,7 @@ class WesternViewScreen extends StatelessWidget {
               label: const Text('Adjust'),
             ),
           ],
-        )
+        ),
       ],
     );
   }
@@ -173,16 +192,19 @@ class WesternViewScreen extends StatelessWidget {
                         children: [
                           Text(
                             'ASCENDANT',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: AppTheme.primary,
-                              letterSpacing: 3.0,
-                              fontSize: 10,
-                            ),
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(
+                                  color: AppTheme.primary,
+                                  letterSpacing: 3.0,
+                                  fontSize: 10,
+                                ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             ascendantText,
-                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 28),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineMedium?.copyWith(fontSize: 28),
                           ),
                         ],
                       ),
@@ -202,10 +224,30 @@ class WesternViewScreen extends StatelessWidget {
   Widget _buildPlanetIndicators(dynamic chart) {
     final planets = [
       _PlanetIndicator(Symbols.wb_sunny, AppTheme.primary, chart.sun, 'SUN'),
-      _PlanetIndicator(Symbols.nights_stay, AppTheme.tertiary, chart.moon, 'MOON'),
-      _PlanetIndicator(Symbols.brightness_7, AppTheme.error, chart.mars, 'MARS'),
-      _PlanetIndicator(Symbols.star, const Color(0xFFFFD700), chart.jupiter, 'JUPITER'),
-      _PlanetIndicator(Symbols.schedule, AppTheme.textMuted, chart.saturn, 'SATURN'),
+      _PlanetIndicator(
+        Symbols.nights_stay,
+        AppTheme.tertiary,
+        chart.moon,
+        'MOON',
+      ),
+      _PlanetIndicator(
+        Symbols.brightness_7,
+        AppTheme.error,
+        chart.mars,
+        'MARS',
+      ),
+      _PlanetIndicator(
+        Symbols.star,
+        const Color(0xFFFFD700),
+        chart.jupiter,
+        'JUPITER',
+      ),
+      _PlanetIndicator(
+        Symbols.schedule,
+        AppTheme.textMuted,
+        chart.saturn,
+        'SATURN',
+      ),
     ];
 
     return Wrap(
@@ -284,16 +326,15 @@ class WesternViewScreen extends StatelessWidget {
             width: double.infinity,
             child: Text(
               'PLANETARY POSITIONS',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: 2.0),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(letterSpacing: 2.0),
             ),
           ),
           const Divider(height: 1),
           ...positions.take(6).map((p) {
             return Column(
-              children: [
-                _buildPlanetRow(context, p),
-                const Divider(height: 1),
-              ],
+              children: [_buildPlanetRow(context, p), const Divider(height: 1)],
             );
           }),
         ],
@@ -332,11 +373,15 @@ class WesternViewScreen extends StatelessWidget {
               children: [
                 Text(
                   position.planet.displayName,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(fontSize: 14),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontSize: 14),
                 ),
                 Text(
                   'House ${position.house}',
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(fontSize: 10),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(fontSize: 10),
                 ),
               ],
             ),
@@ -392,7 +437,9 @@ class WesternViewScreen extends StatelessWidget {
         children: [
           Text(
             'DOMINANT HOUSES',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: 2.0),
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(letterSpacing: 2.0),
           ),
           const SizedBox(height: 24),
           ...topHouses.map((h) {
@@ -474,12 +521,16 @@ class WesternViewScreen extends StatelessWidget {
               children: [
                 Text(
                   'Your Cosmic Signature',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppTheme.textMain),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(color: AppTheme.textMain),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Sun in ${sun.sign.name} shapes your core identity, Moon in ${moon.sign.name} guides your emotional nature, and ${rising.isNotEmpty ? '$rising rising' : 'your ascendant'} colors how others perceive you.',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 12, height: 1.5),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(fontSize: 12, height: 1.5),
                 ),
               ],
             ),
@@ -490,15 +541,39 @@ class WesternViewScreen extends StatelessWidget {
   }
 
   String _monthName(int month) {
-    const months = ['', 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    const months = [
+      '',
+      'JAN',
+      'FEB',
+      'MAR',
+      'APR',
+      'MAY',
+      'JUN',
+      'JUL',
+      'AUG',
+      'SEP',
+      'OCT',
+      'NOV',
+      'DEC',
+    ];
     return months[month];
   }
 
   String _houseName(int house) {
     const names = [
-      '', 'Self', 'Values', 'Communication', 'Home', 'Creativity',
-      'Health', 'Partnership', 'Transformation', 'Philosophy', 'Career',
-      'Community', 'Spirituality'
+      '',
+      'Self',
+      'Values',
+      'Communication',
+      'Home',
+      'Creativity',
+      'Health',
+      'Partnership',
+      'Transformation',
+      'Philosophy',
+      'Career',
+      'Community',
+      'Spirituality',
     ];
     return names[house];
   }
@@ -506,10 +581,14 @@ class WesternViewScreen extends StatelessWidget {
   String _ordinal(int n) {
     if (n >= 11 && n <= 13) return 'th';
     switch (n % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
     }
   }
 }
