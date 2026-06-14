@@ -69,9 +69,21 @@ class _TarotScreenState extends State<TarotScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Symbols.stars, color: AppTheme.primary, fill: 1.0, size: 14),
+                const Icon(
+                  Symbols.stars,
+                  color: AppTheme.primary,
+                  fill: 1.0,
+                  size: 14,
+                ),
                 const SizedBox(width: 8),
-                Text('DAILY TAROT SPREAD', style: Theme.of(context).textTheme.labelSmall?.copyWith(fontSize: 10, letterSpacing: 2.0, color: AppTheme.onSurfaceVariant)),
+                Text(
+                  'DAILY TAROT SPREAD',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontSize: 10,
+                    letterSpacing: 2.0,
+                    color: AppTheme.onSurfaceVariant,
+                  ),
+                ),
               ],
             ),
           ),
@@ -79,7 +91,10 @@ class _TarotScreenState extends State<TarotScreen> {
           Text(
             'Past, Present, & Future',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 48, letterSpacing: -2.0),
+            style: Theme.of(context).textTheme.displayLarge?.copyWith(
+              fontSize: 48,
+              letterSpacing: -2.0,
+            ),
           ),
           const SizedBox(height: 16),
           Padding(
@@ -87,7 +102,10 @@ class _TarotScreenState extends State<TarotScreen> {
             child: Text(
               'Focus on a specific question or your current energy. Let the obsidian deck reveal the unseen paths before you.',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textMuted, fontSize: 18),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: AppTheme.textMuted,
+                fontSize: 18,
+              ),
             ),
           ),
           const SizedBox(height: 32),
@@ -102,8 +120,8 @@ class _TarotScreenState extends State<TarotScreen> {
               decoration: InputDecoration(
                 hintText: 'Enter your question (optional)...',
                 hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppTheme.textMuted.withOpacity(0.5),
-                    ),
+                  color: AppTheme.textMuted.withOpacity(0.5),
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(9999),
                   borderSide: const BorderSide(color: AppTheme.borderColor),
@@ -114,9 +132,15 @@ class _TarotScreenState extends State<TarotScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(9999),
-                  borderSide: const BorderSide(color: AppTheme.primary, width: 2),
+                  borderSide: const BorderSide(
+                    color: AppTheme.primary,
+                    width: 2,
+                  ),
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
               ),
             ),
           ),
@@ -146,7 +170,9 @@ class _TarotScreenState extends State<TarotScreen> {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.black,
+                          ),
                         ),
                       )
                     : const Icon(Symbols.auto_awesome),
@@ -154,7 +180,10 @@ class _TarotScreenState extends State<TarotScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primary,
                   foregroundColor: AppTheme.textMain,
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 20,
+                  ),
                   textStyle: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
@@ -165,7 +194,10 @@ class _TarotScreenState extends State<TarotScreen> {
                   label: const Text('View Reading'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppTheme.textMain,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 20,
+                    ),
                     textStyle: Theme.of(context).textTheme.titleMedium,
                     side: const BorderSide(color: AppTheme.borderColor),
                   ),
@@ -180,13 +212,20 @@ class _TarotScreenState extends State<TarotScreen> {
             builder: (context, provider, child) {
               final readings = provider.tarotReadings;
               if (readings.isEmpty) return const SizedBox.shrink();
-              
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Recent Readings', style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 24)),
+                  Text(
+                    'Recent Readings',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.headlineMedium?.copyWith(fontSize: 24),
+                  ),
                   const SizedBox(height: 16),
-                  ...readings.take(3).map((reading) => _buildReadingCard(context, reading)),
+                  ...readings
+                      .take(3)
+                      .map((reading) => _buildReadingCard(context, reading)),
                 ],
               );
             },
@@ -207,9 +246,9 @@ class _TarotScreenState extends State<TarotScreen> {
         const SizedBox(height: 24),
         Text(
           'Shuffling the deck...',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: AppTheme.textMuted,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge?.copyWith(color: AppTheme.textMuted),
         ),
       ],
     );
@@ -228,19 +267,39 @@ class _TarotScreenState extends State<TarotScreen> {
         if (isWide) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: cards.map((c) => Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: c)).toList(),
+            children: cards
+                .map(
+                  (c) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: c,
+                  ),
+                )
+                .toList(),
           );
         } else {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: cards.map((c) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: c))).toList(),
+            children: cards
+                .map(
+                  (c) => Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: c,
+                    ),
+                  ),
+                )
+                .toList(),
           );
         }
       },
     );
   }
 
-  Widget _buildEmptyCardSlot(BuildContext context, String label, IconData icon) {
+  Widget _buildEmptyCardSlot(
+    BuildContext context,
+    String label,
+    IconData icon,
+  ) {
     return Column(
       children: [
         Container(
@@ -252,18 +311,27 @@ class _TarotScreenState extends State<TarotScreen> {
             border: Border.all(color: AppTheme.borderColor, width: 2),
           ),
           child: Center(
-            child: Icon(icon, color: AppTheme.textMuted.withOpacity(0.3), size: 40),
+            child: Icon(
+              icon,
+              color: AppTheme.textMuted.withOpacity(0.3),
+              size: 40,
+            ),
           ),
         ),
         const SizedBox(height: 12),
-        Text(label, style: Theme.of(context).textTheme.labelMedium?.copyWith(color: AppTheme.textMuted)),
+        Text(
+          label,
+          style: Theme.of(
+            context,
+          ).textTheme.labelMedium?.copyWith(color: AppTheme.textMuted),
+        ),
       ],
     );
   }
 
   Widget _buildCardSpread() {
     final draws = _currentReading!.draws;
-    
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWide = constraints.maxWidth > 800;
@@ -274,12 +342,28 @@ class _TarotScreenState extends State<TarotScreen> {
         if (isWide) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: cards.map((c) => Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: c)).toList(),
+            children: cards
+                .map(
+                  (c) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: c,
+                  ),
+                )
+                .toList(),
           );
         } else {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: cards.map((c) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: c))).toList(),
+            children: cards
+                .map(
+                  (c) => Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: c,
+                    ),
+                  ),
+                )
+                .toList(),
           );
         }
       },
@@ -292,10 +376,7 @@ class _TarotScreenState extends State<TarotScreen> {
       duration: Duration(milliseconds: 600 + index * 200),
       curve: Curves.easeOutBack,
       builder: (context, value, child) {
-        return Transform.scale(
-          scale: value,
-          child: child,
-        );
+        return Transform.scale(scale: value, child: child);
       },
       child: Column(
         children: [
@@ -308,9 +389,9 @@ class _TarotScreenState extends State<TarotScreen> {
           Text(
             draw.positionName,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: AppTheme.primary,
-                  fontWeight: FontWeight.bold,
-                ),
+              color: AppTheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
@@ -321,9 +402,9 @@ class _TarotScreenState extends State<TarotScreen> {
           if (draw.position == TarotPosition.reversed)
             Text(
               'Reversed',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AppTheme.error,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.labelSmall?.copyWith(color: AppTheme.error),
             ),
         ],
       ),
@@ -355,7 +436,7 @@ class _TarotScreenState extends State<TarotScreen> {
 
   Widget _buildCardFront(TarotCard card, TarotPosition position) {
     final isReversed = position == TarotPosition.reversed;
-    
+
     return Transform.rotate(
       angle: isReversed ? 3.14159 : 0,
       child: Container(
@@ -369,10 +450,7 @@ class _TarotScreenState extends State<TarotScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              card.suitSymbol,
-              style: const TextStyle(fontSize: 32),
-            ),
+            Text(card.suitSymbol, style: const TextStyle(fontSize: 32)),
             const SizedBox(height: 8),
             Text(
               card.romanNumeral,
@@ -417,7 +495,9 @@ class _TarotScreenState extends State<TarotScreen> {
         ),
         subtitle: Text(
           '${reading.draws.length} cards • ${_formatDate(reading.createdAt)}',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppTheme.textMuted),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: AppTheme.textMuted),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -473,9 +553,9 @@ class _TarotScreenState extends State<TarotScreen> {
                 const SizedBox(height: 8),
                 Text(
                   _currentReading!.question,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppTheme.textMuted,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(color: AppTheme.textMuted),
                 ),
                 const SizedBox(height: 24),
                 ..._currentReading!.draws.asMap().entries.map((entry) {
@@ -521,30 +601,33 @@ class _TarotScreenState extends State<TarotScreen> {
               Text(
                 draw.positionName,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: AppTheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: AppTheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const Spacer(),
               Text(
                 draw.card.displayName,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               if (draw.position == TarotPosition.reversed)
                 Container(
                   margin: const EdgeInsets.only(left: 8),
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: AppTheme.error.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     'Reversed',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppTheme.error,
-                        ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(color: AppTheme.error),
                   ),
                 ),
             ],
@@ -552,16 +635,16 @@ class _TarotScreenState extends State<TarotScreen> {
           const SizedBox(height: 8),
           Text(
             draw.meaning,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppTheme.textMuted,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted),
           ),
           const SizedBox(height: 8),
           Text(
             'Keywords: ${draw.card.keywords}',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AppTheme.primary,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(color: AppTheme.primary),
           ),
         ],
       ),
@@ -590,7 +673,8 @@ class FlipCard extends StatefulWidget {
   State<FlipCard> createState() => _FlipCardState();
 }
 
-class _FlipCardState extends State<FlipCard> with SingleTickerProviderStateMixin {
+class _FlipCardState extends State<FlipCard>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   bool _isFlipped = false;
@@ -602,12 +686,10 @@ class _FlipCardState extends State<FlipCard> with SingleTickerProviderStateMixin
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    _animation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ),
-    );
+    _animation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -636,17 +718,19 @@ class _FlipCardState extends State<FlipCard> with SingleTickerProviderStateMixin
         builder: (context, child) {
           final angle = _animation.value * 3.14159;
           final isFront = angle < 1.5708;
-          
+
           return Transform(
             transform: Matrix4.identity()
               ..setEntry(3, 2, 0.001)
               ..rotateY(angle),
             alignment: Alignment.center,
-            child: isFront ? widget.front : Transform(
-              transform: Matrix4.identity()..rotateY(3.14159),
-              alignment: Alignment.center,
-              child: widget.back,
-            ),
+            child: isFront
+                ? widget.front
+                : Transform(
+                    transform: Matrix4.identity()..rotateY(3.14159),
+                    alignment: Alignment.center,
+                    child: widget.back,
+                  ),
           );
         },
       ),
@@ -694,10 +778,7 @@ class _CardShufflingAnimationState extends State<CardShufflingAnimation>
               child: _buildCard(AppTheme.surfaceContainerLow),
             ),
             Transform.translate(
-              offset: Offset(
-                math.sin(_controller.value * 3.14159 * 2) * 10,
-                0,
-              ),
+              offset: Offset(math.sin(_controller.value * 3.14159 * 2) * 10, 0),
               child: _buildCard(AppTheme.surfaceContainer),
             ),
             Transform.rotate(

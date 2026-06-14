@@ -34,21 +34,66 @@ class AppTheme {
         outlineVariant: Color(0xFF424941),
       ),
       textTheme: TextTheme(
-        displayLarge: GoogleFonts.publicSans(fontWeight: FontWeight.w900, color: const Color(0xFFFAFAFA)),
-        displayMedium: GoogleFonts.publicSans(fontWeight: FontWeight.w900, color: const Color(0xFFFAFAFA)),
-        displaySmall: GoogleFonts.publicSans(fontWeight: FontWeight.w900, color: const Color(0xFFFAFAFA)),
-        headlineLarge: GoogleFonts.publicSans(fontWeight: FontWeight.w900, color: const Color(0xFFFAFAFA)),
-        headlineMedium: GoogleFonts.publicSans(fontWeight: FontWeight.w900, color: const Color(0xFFFAFAFA)),
-        headlineSmall: GoogleFonts.publicSans(fontWeight: FontWeight.w700, color: const Color(0xFFFAFAFA)),
-        titleLarge: GoogleFonts.publicSans(fontWeight: FontWeight.w700, color: const Color(0xFFFAFAFA)),
-        titleMedium: GoogleFonts.publicSans(fontWeight: FontWeight.w700, color: const Color(0xFFFAFAFA)),
-        titleSmall: GoogleFonts.publicSans(fontWeight: FontWeight.w700, color: const Color(0xFFFAFAFA)),
-        bodyLarge: GoogleFonts.manrope(fontWeight: FontWeight.w400, color: const Color(0xFFFAFAFA)),
-        bodyMedium: GoogleFonts.manrope(fontWeight: FontWeight.w400, color: const Color(0xFFFAFAFA)),
-        bodySmall: GoogleFonts.manrope(fontWeight: FontWeight.w400, color: const Color(0xFFA1A1AA)),
-        labelLarge: GoogleFonts.publicSans(fontWeight: FontWeight.w700, color: const Color(0xFFA1A1AA)),
-        labelMedium: GoogleFonts.publicSans(fontWeight: FontWeight.w700, color: const Color(0xFFA1A1AA)),
-        labelSmall: GoogleFonts.publicSans(fontWeight: FontWeight.w700, color: const Color(0xFFA1A1AA)),
+        displayLarge: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w900,
+          color: const Color(0xFFFAFAFA),
+        ),
+        displayMedium: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w900,
+          color: const Color(0xFFFAFAFA),
+        ),
+        displaySmall: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w900,
+          color: const Color(0xFFFAFAFA),
+        ),
+        headlineLarge: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w900,
+          color: const Color(0xFFFAFAFA),
+        ),
+        headlineMedium: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w900,
+          color: const Color(0xFFFAFAFA),
+        ),
+        headlineSmall: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w700,
+          color: const Color(0xFFFAFAFA),
+        ),
+        titleLarge: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w700,
+          color: const Color(0xFFFAFAFA),
+        ),
+        titleMedium: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w700,
+          color: const Color(0xFFFAFAFA),
+        ),
+        titleSmall: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w700,
+          color: const Color(0xFFFAFAFA),
+        ),
+        bodyLarge: GoogleFonts.manrope(
+          fontWeight: FontWeight.w400,
+          color: const Color(0xFFFAFAFA),
+        ),
+        bodyMedium: GoogleFonts.manrope(
+          fontWeight: FontWeight.w400,
+          color: const Color(0xFFFAFAFA),
+        ),
+        bodySmall: GoogleFonts.manrope(
+          fontWeight: FontWeight.w400,
+          color: const Color(0xFFA1A1AA),
+        ),
+        labelLarge: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w700,
+          color: const Color(0xFFA1A1AA),
+        ),
+        labelMedium: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w700,
+          color: const Color(0xFFA1A1AA),
+        ),
+        labelSmall: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w700,
+          color: const Color(0xFFA1A1AA),
+        ),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Color(0xFF09090B),
@@ -86,9 +131,19 @@ class AppTheme {
           borderRadius: BorderRadius.circular(9999),
           borderSide: const BorderSide(color: Color(0xFF5A805B), width: 2),
         ),
-        labelStyle: GoogleFonts.publicSans(fontWeight: FontWeight.w600, color: const Color(0xFFA1A1AA), fontSize: 12),
-        hintStyle: GoogleFonts.manrope(fontWeight: FontWeight.w400, color: const Color(0xFFA1A1AA)),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        labelStyle: GoogleFonts.publicSans(
+          fontWeight: FontWeight.w600,
+          color: const Color(0xFFA1A1AA),
+          fontSize: 12,
+        ),
+        hintStyle: GoogleFonts.manrope(
+          fontWeight: FontWeight.w400,
+          color: const Color(0xFFA1A1AA),
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: 16,
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -96,7 +151,9 @@ class AppTheme {
           foregroundColor: const Color(0xFF09090B),
           textStyle: GoogleFonts.manrope(fontWeight: FontWeight.w700),
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9999)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(9999),
+          ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -105,7 +162,9 @@ class AppTheme {
           side: const BorderSide(color: Color(0xFF27272A)),
           textStyle: GoogleFonts.manrope(fontWeight: FontWeight.w700),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9999)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(9999),
+          ),
         ),
       ),
       dividerTheme: const DividerThemeData(

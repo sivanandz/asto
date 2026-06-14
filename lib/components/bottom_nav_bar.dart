@@ -36,7 +36,12 @@ class BottomNavBar extends StatelessWidget {
     );
   }
 
-  Widget _buildNavItem(int index, IconData icon, String label, {bool fill = false}) {
+  Widget _buildNavItem(
+    int index,
+    IconData icon,
+    String label, {
+    bool fill = false,
+  }) {
     final isSelected = currentIndex == index;
     final color = isSelected ? AppTheme.primary : AppTheme.textMuted;
 
@@ -76,10 +81,7 @@ class BottomNavBar extends StatelessWidget {
     return InkWell(
       onTap: () => onTap(index),
       borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: child,
-      ),
+      child: Padding(padding: const EdgeInsets.all(8.0), child: child),
     );
   }
 }

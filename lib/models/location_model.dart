@@ -19,10 +19,14 @@ class LocationModel {
 
   factory LocationModel.fromNominatimJson(Map<String, dynamic> json) {
     final address = json['address'] as Map<String, dynamic>? ?? {};
-    
+
     return LocationModel(
       displayName: json['display_name'] ?? '',
-      city: address['city'] ?? address['town'] ?? address['village'] ?? address['municipality'],
+      city:
+          address['city'] ??
+          address['town'] ??
+          address['village'] ??
+          address['municipality'],
       state: address['state'] ?? address['province'] ?? address['region'],
       country: address['country'],
       latitude: double.parse(json['lat'] ?? '0'),

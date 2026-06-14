@@ -46,7 +46,7 @@ class ChartRepository {
   ) async {
     // Delete old chart
     await deleteChart(oldChart.id);
-    
+
     // Create new chart with same settings
     return await createChart(
       user,
