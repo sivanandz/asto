@@ -207,6 +207,15 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Optimization: Bulk delete tarot history to avoid N+1 database queries
+  // and multiple UI rebuilds from successive notifyListeners() calls.
+  // Expected impact: Reduces database roundtrips from O(n) to O(1) and UI rebuilds to exactly 1.
+  Future<void> clearAllTarotReadings() async {
+    await _db.deleteAllTarotReadings();
+    _tarotReadings.clear();
+    notifyListeners();
+  }
+
   String _generateInterpretation(List<TarotDraw> draws) {
     if (draws.isEmpty) return '';
     
