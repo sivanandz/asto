@@ -1,0 +1,3 @@
+## 2024-05-15 - N+1 Query Anti-Pattern in SQLite Bulk Deletions
+**Learning:** Discovered an N+1 performance bottleneck in sqflite where deleting a user's entire history involved looping over an array and executing individual `DELETE` statements per record. This causes O(n) roundtrips to the database, locking it multiple times unnecessarily.
+**Action:** To prevent N+1 performance bottlenecks in SQLite, avoid looping over records to delete or update them individually. Instead, implement batch operations or bulk queries (e.g., `delete('table_name')`) in the `DatabaseHelper` to execute the operation in a single I/O bound roundtrip.
