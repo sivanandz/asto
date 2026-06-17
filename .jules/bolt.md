@@ -1,0 +1,3 @@
+## $(date +%Y-%m-%d) - O(N) to O(1) Local State Deletion Optimization
+**Learning:** In state management systems (like Flutter's `Provider`), executing a loop that contains both an I/O database operation (`db.delete()`) and a UI rebuild trigger (`notifyListeners()`) causes severe N+1 performance issues—triggering an avalanche of database roundtrips and cascading UI redraws.
+**Action:** When performing bulk operations (such as clearing history), always handle the I/O at the database layer using a batch query (`await db.delete('table_name')`), clear the local state array natively (`array.clear()`), and only call `notifyListeners()` once at the very end of the method.
