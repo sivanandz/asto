@@ -206,6 +206,11 @@ class DatabaseHelper {
     );
   }
 
+  Future<int> deleteAllTarotReadings() async {
+    final db = await database;
+    return await db.delete('tarot_readings');
+  }
+
   Future close() async {
     final db = await database;
     db.close();
