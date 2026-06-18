@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
 import 'planet_position.dart';
-import 'user_profile.dart';
+
 
 enum ChartType {
   western,

@@ -277,7 +277,7 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
     return DataRow(
       cells: [
         DataCell(Text(
-          position.planet.displayName,
+          position.planet.name,
           style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.textMain),
         )),
         DataCell(Text(

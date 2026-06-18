@@ -1,3 +1,5 @@
+import "package:uuid/uuid.dart";
+import "../data/tarot_deck.dart";
 enum TarotSuit {
   majorArcana,
   cups,
@@ -50,7 +52,7 @@ class TarotCard {
     if (number == null) return '';
     const numerals = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
       'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI'];
-    return numerals[number!] ?? number.toString();
+    return numerals[number!] ;
   }
 }
 

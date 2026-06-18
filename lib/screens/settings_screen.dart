@@ -3,7 +3,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import '../theme.dart';
 import '../models/birth_chart.dart';
-import '../models/user_profile.dart';
+
 import '../providers/app_provider.dart';
 import '../database/database_helper.dart';
 
