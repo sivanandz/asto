@@ -5,17 +5,20 @@ import '../models/birth_chart.dart';
 import '../models/tarot_card.dart';
 import '../services/astrology_calculator.dart';
 import '../data/tarot_deck.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../models/vedic_chart_style.dart';
 import 'dart:math' as math;
 
 class AppProvider extends ChangeNotifier {
   final DatabaseHelper _db = DatabaseHelper.instance;
-  
+
   // State
   UserProfile? _currentUser;
   BirthChart? _currentChart;
   List<TarotReading> _tarotReadings = [];
   bool _isLoading = false;
   String? _error;
+  VedicChartStyle _vedicChartStyle = VedicChartStyle.northIndian;
 
   // Getters
   UserProfile? get currentUser => _currentUser;
@@ -24,6 +27,7 @@ class AppProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasUser => _currentUser != null;
+  VedicChartStyle get vedicChartStyle => _vedicChartStyle;
 
   // Initialize - load default user
   Future<void> initialize() async {
@@ -34,6 +38,7 @@ class AppProvider extends ChangeNotifier {
         await _loadCurrentChart();
       }
       await _loadTarotReadings();
+      await _loadPreferences();
     } catch (e) {
       _error = e.toString();
     } finally {
@@ -104,7 +109,7 @@ class AppProvider extends ChangeNotifier {
   // Chart Methods
   Future<void> _loadCurrentChart() async {
     if (_currentUser == null) return;
-    
+
     final charts = await _db.getBirthChartsByUser(_currentUser!.id);
     if (charts.isNotEmpty) {
       _currentChart = charts.first;
@@ -151,35 +156,45 @@ class AppProvider extends ChangeNotifier {
     _tarotReadings = await _db.getAllTarotReadings();
   }
 
-  Future<TarotReading> drawTarotCards(String question, {int cardCount = 3}) async {
+  Future<TarotReading> drawTarotCards(
+    String question, {
+    int cardCount = 3,
+  }) async {
     _setLoading(true);
     try {
       // Use entropy random with sensors for magical feel
       final positions = ['Past', 'Present', 'Future'];
-      
+
       // Create a custom reading with sensor entropy
       final draws = <TarotDraw>[];
       final entropyRandom = EntropyRandom();
-      
+
       // Collect sensor data while showing animation
       entropyRandom.startCollecting();
-      
+
       // Wait a bit for sensor data collection
       await Future.delayed(const Duration(seconds: 2));
-      
-      final cardIndices = entropyRandom.nextUniqueInts(cardCount, tarotDeck.length);
-      
+
+      final cardIndices = entropyRandom.nextUniqueInts(
+        cardCount,
+        tarotDeck.length,
+      );
+
       for (int i = 0; i < cardIndices.length; i++) {
         final card = tarotDeck[cardIndices[i]];
         final isReversed = entropyRandom.nextInt(2) == 0;
-        
-        draws.add(TarotDraw(
-          card: card,
-          position: isReversed ? TarotPosition.reversed : TarotPosition.upright,
-          positionName: positions[i % positions.length],
-        ));
+
+        draws.add(
+          TarotDraw(
+            card: card,
+            position: isReversed
+                ? TarotPosition.reversed
+                : TarotPosition.upright,
+            positionName: positions[i % positions.length],
+          ),
+        );
       }
-      
+
       entropyRandom.stopCollecting();
 
       final reading = TarotReading(
@@ -191,7 +206,7 @@ class AppProvider extends ChangeNotifier {
       await _db.insertTarotReading(reading);
       _tarotReadings.insert(0, reading);
       notifyListeners();
-      
+
       return reading;
     } catch (e) {
       _error = e.toString();
@@ -209,20 +224,39 @@ class AppProvider extends ChangeNotifier {
 
   String _generateInterpretation(List<TarotDraw> draws) {
     if (draws.isEmpty) return '';
-    
+
     final buffer = StringBuffer();
     buffer.writeln('Your cards reveal a journey of transformation.');
     buffer.writeln();
-    
+
     for (final draw in draws) {
       buffer.writeln('${draw.positionName}: ${draw.card.displayName}');
-      buffer.writeln(draw.position == TarotPosition.upright 
-          ? draw.card.meaningUpright 
-          : draw.card.meaningReversed);
+      buffer.writeln(
+        draw.position == TarotPosition.upright
+            ? draw.card.meaningUpright
+            : draw.card.meaningReversed,
+      );
       buffer.writeln();
     }
-    
+
     return buffer.toString();
+  }
+
+  Future<void> _loadPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final styleIndex = prefs.getInt('vedicChartStyle');
+    if (styleIndex != null &&
+        styleIndex >= 0 &&
+        styleIndex < VedicChartStyle.values.length) {
+      _vedicChartStyle = VedicChartStyle.values[styleIndex];
+    }
+  }
+
+  Future<void> setVedicChartStyle(VedicChartStyle style) async {
+    _vedicChartStyle = style;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('vedicChartStyle', style.index);
   }
 
   // Utility Methods
@@ -247,7 +281,7 @@ class AppProvider extends ChangeNotifier {
   PlanetPosition? get ascendant => _currentChart?.ascendant;
   PlanetPosition? get sun => _currentChart?.sun;
   PlanetPosition? get moon => _currentChart?.moon;
-  
+
   String get sunSign => sun?.sign.name ?? '';
   String get moonSign => moon?.sign.name ?? '';
   String get risingSign => ascendant?.sign.name ?? '';

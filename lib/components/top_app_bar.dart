@@ -35,17 +35,15 @@ class TopAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Image.network(
               'https://lh3.googleusercontent.com/aida-public/AB6AXuBGbH5X0K6miAdgF5y1iSn-ge53Vc2YYVy9NsmmReLCwn9kA-HSpKesStzdV0X-gr0fuqoP-bIyq23vuVvD6SQvEWnpUmTQh2D9TXkBL16foE44TYWNKb7IbT_x7HpyMiG4IQpj9HgvruogGGQp0oVBN8RS-jbvW8eKjKRwz2dhD-9A-4U70uFT5zvXz_UVYfwcd8pIo-5aH41WBKQxY-qc4jDtE3iidOHSkDl6cVTkQT0jFZdqiKdvFXkibU0nCKXj-k__lg8CAT0',
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => const Icon(Symbols.person),
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Symbols.person),
             ),
           ),
         ),
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1.0),
-        child: Container(
-          color: AppTheme.borderColor,
-          height: 1.0,
-        ),
+        child: Container(color: AppTheme.borderColor, height: 1.0),
       ),
     );
   }

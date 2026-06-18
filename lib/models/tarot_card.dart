@@ -1,15 +1,6 @@
-enum TarotSuit {
-  majorArcana,
-  cups,
-  wands,
-  swords,
-  pentacles,
-}
+enum TarotSuit { majorArcana, cups, wands, swords, pentacles }
 
-enum TarotPosition {
-  upright,
-  reversed,
-}
+enum TarotPosition { upright, reversed }
 
 class TarotCard {
   final int id;
@@ -48,8 +39,30 @@ class TarotCard {
 
   String get romanNumeral {
     if (number == null) return '';
-    const numerals = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
-      'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI'];
+    const numerals = [
+      '0',
+      'I',
+      'II',
+      'III',
+      'IV',
+      'V',
+      'VI',
+      'VII',
+      'VIII',
+      'IX',
+      'X',
+      'XI',
+      'XII',
+      'XIII',
+      'XIV',
+      'XV',
+      'XVI',
+      'XVII',
+      'XVIII',
+      'XIX',
+      'XX',
+      'XXI',
+    ];
     return numerals[number!] ?? number.toString();
   }
 }
@@ -67,8 +80,8 @@ class TarotReading {
     required this.question,
     required this.draws,
     this.interpretation,
-  })  : id = id ?? DateTime.now().millisecondsSinceEpoch.toString(),
-        createdAt = createdAt ?? DateTime.now();
+  }) : id = id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+       createdAt = createdAt ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
     return {

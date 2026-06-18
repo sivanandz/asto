@@ -117,12 +117,12 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
         Text(
           widget.label,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppTheme.textMuted,
-                letterSpacing: 1.5,
-              ),
+            color: AppTheme.textMuted,
+            letterSpacing: 1.5,
+          ),
         ),
         const SizedBox(height: 8),
-        
+
         // Search Field
         CompositedTransformTarget(
           link: _layerLink,
@@ -132,10 +132,9 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
             style: Theme.of(context).textTheme.bodyLarge,
             decoration: InputDecoration(
               hintText: widget.hint,
-              hintStyle: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(color: AppTheme.textMuted.withOpacity(0.5)),
+              hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: AppTheme.textMuted.withOpacity(0.5),
+              ),
               prefixIcon: const Icon(
                 Symbols.location_on,
                 color: AppTheme.textMuted,
@@ -146,24 +145,25 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(AppTheme.primary),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppTheme.primary,
+                        ),
                       ),
                     )
                   : _controller.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(
-                            Symbols.close,
-                            color: AppTheme.textMuted,
-                          ),
-                          onPressed: _clearSelection,
-                        )
-                      : null,
+                  ? IconButton(
+                      icon: const Icon(
+                        Symbols.close,
+                        color: AppTheme.textMuted,
+                      ),
+                      onPressed: _clearSelection,
+                    )
+                  : null,
             ),
             onChanged: _onSearchChanged,
           ),
         ),
-        
+
         // Suggestions Dropdown
         if (_showSuggestions)
           Container(
@@ -201,22 +201,14 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
                             children: [
                               Text(
                                 location.shortName,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                style: Theme.of(context).textTheme.bodyLarge
+                                    ?.copyWith(fontWeight: FontWeight.w600),
                               ),
                               const SizedBox(height: 2),
                               Text(
                                 location.formattedAddress,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: AppTheme.textMuted,
-                                    ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: AppTheme.textMuted),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -225,10 +217,8 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
                         ),
                         Text(
                           '${location.latitude.toStringAsFixed(2)}, ${location.longitude.toStringAsFixed(2)}',
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: AppTheme.textMuted,
-                                  ),
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(color: AppTheme.textMuted),
                         ),
                       ],
                     ),
@@ -237,7 +227,7 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
               },
             ),
           ),
-        
+
         // Selected Location Info
         if (_selectedLocation != null && !_showSuggestions)
           Padding(
@@ -252,9 +242,9 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
                 const SizedBox(width: 8),
                 Text(
                   'Lat: ${_selectedLocation!.latitude.toStringAsFixed(4)}, Lon: ${_selectedLocation!.longitude.toStringAsFixed(4)}',
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppTheme.primary,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: AppTheme.primary),
                 ),
               ],
             ),

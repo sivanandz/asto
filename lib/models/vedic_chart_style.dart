@@ -1,0 +1,1 @@
+enum VedicChartStyle { northIndian, southIndian }
