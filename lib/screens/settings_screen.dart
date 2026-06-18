@@ -250,15 +250,17 @@ class SettingsScreen extends StatelessWidget {
                     ),
               ),
               value: type,
-              groupValue: AyanamsaType.lahiri, // Default, should come from settings
+              groupValue: context.watch<AppProvider>().ayanamsaType,
               onChanged: (value) {
-                // TODO: Save preference
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${_getAyanamsaName(value!)} selected'),
-                    backgroundColor: AppTheme.primary,
-                  ),
-                );
+                if (value != null) {
+                  context.read<AppProvider>().setAyanamsaType(value);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('${_getAyanamsaName(value)} selected'),
+                      backgroundColor: AppTheme.primary,
+                    ),
+                  );
+                }
               },
               activeColor: AppTheme.primary,
               contentPadding: EdgeInsets.zero,

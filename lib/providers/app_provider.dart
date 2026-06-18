@@ -6,6 +6,9 @@ import '../models/tarot_card.dart';
 import '../services/astrology_calculator.dart';
 import '../data/tarot_deck.dart';
 import 'dart:math' as math;
+import '../services/entropy_random.dart';
+import '../models/planet_position.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppProvider extends ChangeNotifier {
   final DatabaseHelper _db = DatabaseHelper.instance;
@@ -15,6 +18,7 @@ class AppProvider extends ChangeNotifier {
   BirthChart? _currentChart;
   List<TarotReading> _tarotReadings = [];
   bool _isLoading = false;
+  AyanamsaType _ayanamsaType = AyanamsaType.lahiri;
   String? _error;
 
   // Getters
@@ -23,12 +27,26 @@ class AppProvider extends ChangeNotifier {
   List<TarotReading> get tarotReadings => _tarotReadings;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  AyanamsaType get ayanamsaType => _ayanamsaType;
   bool get hasUser => _currentUser != null;
+
+  static const String _ayanamsaPrefKey = 'ayanamsa_preference';
 
   // Initialize - load default user
   Future<void> initialize() async {
     _setLoading(true);
     try {
+      // Load preferences
+      final prefs = await SharedPreferences.getInstance();
+      final savedAyanamsa = prefs.getString(_ayanamsaPrefKey);
+      if (savedAyanamsa != null) {
+        try {
+          _ayanamsaType = AyanamsaType.values.byName(savedAyanamsa);
+        } catch (_) {
+          // Fallback to default if invalid value is found
+        }
+      }
+
       _currentUser = await _db.getDefaultUserProfile();
       if (_currentUser != null) {
         await _loadCurrentChart();
@@ -39,6 +57,13 @@ class AppProvider extends ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  Future<void> setAyanamsaType(AyanamsaType type) async {
+    _ayanamsaType = type;
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_ayanamsaPrefKey, type.name);
   }
 
   // User Profile Methods
@@ -239,7 +264,7 @@ class AppProvider extends ChangeNotifier {
   // Get chart data for UI
   List<PlanetPosition> getPlanetsInHouse(int house) {
     if (_currentChart == null) return [];
-    return _currentChart!.positions
+    return _currentChart!.positions.cast<PlanetPosition>()
         .where((p) => p.house == house && p.planet != PlanetType.ascendant)
         .toList();
   }
