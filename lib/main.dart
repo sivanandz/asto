@@ -66,23 +66,21 @@ class _MainLayoutState extends State<MainLayout> {
   Widget build(BuildContext context) {
     // Determine screen title based on current index
     String title = 'Obsidian Astro';
-    if (_currentIndex == 1) title = 'Western Chart';
-    else if (_currentIndex == 2) title = 'Vedic Mode';
-    else if (_currentIndex == 3) title = 'Tarot Suite';
-    else if (_currentIndex == 4) title = 'Onboarding';
+    if (_currentIndex == 1)
+      title = 'Western Chart';
+    else if (_currentIndex == 2)
+      title = 'Vedic Mode';
+    else if (_currentIndex == 3)
+      title = 'Tarot Suite';
+    else if (_currentIndex == 4)
+      title = 'Onboarding';
 
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: AppTheme.darkTheme.scaffoldBackgroundColor,
       drawer: const SideDrawer(),
-      appBar: TopAppBar(
-        onMenuPressed: _openDrawer,
-        title: title,
-      ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
+      appBar: TopAppBar(onMenuPressed: _openDrawer, title: title),
+      body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,

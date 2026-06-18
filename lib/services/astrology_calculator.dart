@@ -49,40 +49,47 @@ class AstrologyCalculator {
 
     // Sun position (simplified - actual position based on date)
     final sunLongitude = _calculateSunLongitude(jd);
-    positions.add(PlanetPosition(
-      planet: PlanetType.sun,
-      sign: _longitudeToSign(sunLongitude),
-      degree: sunLongitude % 30,
-      house: _calculateHouse(sunLongitude, sunLongitude),
-    ));
+    positions.add(
+      PlanetPosition(
+        planet: PlanetType.sun,
+        sign: _longitudeToSign(sunLongitude),
+        degree: sunLongitude % 30,
+        house: _calculateHouse(sunLongitude, sunLongitude),
+      ),
+    );
 
     // Moon position
     final moonLongitude = _calculateMoonLongitude(jd);
-    positions.add(PlanetPosition(
-      planet: PlanetType.moon,
-      sign: _longitudeToSign(moonLongitude),
-      degree: moonLongitude % 30,
-      house: _calculateHouse(moonLongitude, sunLongitude),
-    ));
+    positions.add(
+      PlanetPosition(
+        planet: PlanetType.moon,
+        sign: _longitudeToSign(moonLongitude),
+        degree: moonLongitude % 30,
+        house: _calculateHouse(moonLongitude, sunLongitude),
+      ),
+    );
 
     // Calculate other planets
     for (final entry in _orbitalPeriods.entries) {
       if (entry.key == PlanetType.sun) continue;
-      
+
       final longitude = _calculatePlanetLongitude(jd, entry.key, entry.value);
-      final adjustedLongitude = type == ChartType.vedicNorthIndian || 
-                                type == ChartType.vedicSouthIndian
+      final adjustedLongitude =
+          type == ChartType.vedicNorthIndian ||
+              type == ChartType.vedicSouthIndian
           ? _applyAyanamsa(longitude, ayanamsa ?? AyanamsaType.lahiri)
           : longitude;
 
-      positions.add(PlanetPosition(
-        planet: entry.key,
-        sign: _longitudeToSign(adjustedLongitude),
-        degree: adjustedLongitude % 30,
-        house: _calculateHouse(adjustedLongitude, sunLongitude),
-        speed: _calculateRetrograde(jd, entry.key),
-        isRetrograde: _calculateRetrograde(jd, entry.key) < 0,
-      ));
+      positions.add(
+        PlanetPosition(
+          planet: entry.key,
+          sign: _longitudeToSign(adjustedLongitude),
+          degree: adjustedLongitude % 30,
+          house: _calculateHouse(adjustedLongitude, sunLongitude),
+          speed: _calculateRetrograde(jd, entry.key),
+          isRetrograde: _calculateRetrograde(jd, entry.key) < 0,
+        ),
+      );
     }
 
     // Ascendant calculation (simplified)
@@ -91,41 +98,47 @@ class AstrologyCalculator {
       user.latitude ?? 0,
       user.longitude ?? 0,
     );
-    final adjustedAscendant = type == ChartType.vedicNorthIndian || 
-                              type == ChartType.vedicSouthIndian
+    final adjustedAscendant =
+        type == ChartType.vedicNorthIndian || type == ChartType.vedicSouthIndian
         ? _applyAyanamsa(ascendantLongitude, ayanamsa ?? AyanamsaType.lahiri)
         : ascendantLongitude;
 
-    positions.add(PlanetPosition(
-      planet: PlanetType.ascendant,
-      sign: _longitudeToSign(adjustedAscendant),
-      degree: adjustedAscendant % 30,
-      house: 1,
-    ));
+    positions.add(
+      PlanetPosition(
+        planet: PlanetType.ascendant,
+        sign: _longitudeToSign(adjustedAscendant),
+        degree: adjustedAscendant % 30,
+        house: 1,
+      ),
+    );
 
     // Rahu and Ketu (simplified - always opposite)
     final rahuLongitude = (moonLongitude + 180) % 360;
-    final adjustedRahu = type == ChartType.vedicNorthIndian || 
-                         type == ChartType.vedicSouthIndian
+    final adjustedRahu =
+        type == ChartType.vedicNorthIndian || type == ChartType.vedicSouthIndian
         ? _applyAyanamsa(rahuLongitude, ayanamsa ?? AyanamsaType.lahiri)
         : rahuLongitude;
 
-    positions.add(PlanetPosition(
-      planet: PlanetType.rahu,
-      sign: _longitudeToSign(adjustedRahu),
-      degree: adjustedRahu % 30,
-      house: _calculateHouse(adjustedRahu, sunLongitude),
-      isRetrograde: true,
-    ));
+    positions.add(
+      PlanetPosition(
+        planet: PlanetType.rahu,
+        sign: _longitudeToSign(adjustedRahu),
+        degree: adjustedRahu % 30,
+        house: _calculateHouse(adjustedRahu, sunLongitude),
+        isRetrograde: true,
+      ),
+    );
 
     final ketuLongitude = (adjustedRahu + 180) % 360;
-    positions.add(PlanetPosition(
-      planet: PlanetType.ketu,
-      sign: _longitudeToSign(ketuLongitude),
-      degree: ketuLongitude % 30,
-      house: _calculateHouse(ketuLongitude, sunLongitude),
-      isRetrograde: true,
-    ));
+    positions.add(
+      PlanetPosition(
+        planet: PlanetType.ketu,
+        sign: _longitudeToSign(ketuLongitude),
+        degree: ketuLongitude % 30,
+        house: _calculateHouse(ketuLongitude, sunLongitude),
+        isRetrograde: true,
+      ),
+    );
 
     return BirthChart(
       userId: user.id,
@@ -144,8 +157,11 @@ class AstrologyCalculator {
     final a = (year / 100).floor();
     final b = 2 - a + (a / 4).floor();
     return (365.25 * (year + 4716)).floor() +
-           (30.6001 * (month + 1)).floor() +
-           day + hour / 24.0 + b - 1524.5;
+        (30.6001 * (month + 1)).floor() +
+        day +
+        hour / 24.0 +
+        b -
+        1524.5;
   }
 
   /// Calculate Sun's ecliptic longitude (simplified)
@@ -183,7 +199,7 @@ class AstrologyCalculator {
     // Use base longitude with orbital period
     final daysSinceEpoch = jd - 2451545.0;
     final meanLongitude = (daysSinceEpoch / (period * 365.25) * 360) % 360;
-    
+
     // Add some variation based on planet
     final variation = planet.hashCode % 30;
     return (meanLongitude + variation) % 360;
@@ -206,14 +222,16 @@ class AstrologyCalculator {
     // Simplified ascendant calculation
     final lst = _calculateLocalSiderealTime(jd, longitude);
     final obliquity = 23.44; // Earth's axial tilt
-    
+
     // Simplified formula
-    var asc = math.degrees(math.atan2(
-      -math.cos(math.radians(lst)),
-      math.tan(math.radians(latitude)) * math.sin(math.radians(obliquity)) -
-      math.sin(math.radians(lst)) * math.cos(math.radians(obliquity)),
-    ));
-    
+    var asc = math.degrees(
+      math.atan2(
+        -math.cos(math.radians(lst)),
+        math.tan(math.radians(latitude)) * math.sin(math.radians(obliquity)) -
+            math.sin(math.radians(lst)) * math.cos(math.radians(obliquity)),
+      ),
+    );
+
     if (asc < 0) asc += 360;
     return asc;
   }
@@ -251,18 +269,18 @@ class AstrologyCalculator {
   /// Get house lord for a given house number
   static PlanetType? getHouseLord(int house) {
     final signLords = {
-      0: PlanetType.mars,      // Aries
-      1: PlanetType.venus,     // Taurus
-      2: PlanetType.mercury,   // Gemini
-      3: PlanetType.moon,      // Cancer
-      4: PlanetType.sun,       // Leo
-      5: PlanetType.mercury,   // Virgo
-      6: PlanetType.venus,     // Libra
-      7: PlanetType.mars,      // Scorpio
-      8: PlanetType.jupiter,   // Sagittarius
-      9: PlanetType.saturn,    // Capricorn
-      10: PlanetType.saturn,   // Aquarius
-      11: PlanetType.jupiter,  // Pisces
+      0: PlanetType.mars, // Aries
+      1: PlanetType.venus, // Taurus
+      2: PlanetType.mercury, // Gemini
+      3: PlanetType.moon, // Cancer
+      4: PlanetType.sun, // Leo
+      5: PlanetType.mercury, // Virgo
+      6: PlanetType.venus, // Libra
+      7: PlanetType.mars, // Scorpio
+      8: PlanetType.jupiter, // Sagittarius
+      9: PlanetType.saturn, // Capricorn
+      10: PlanetType.saturn, // Aquarius
+      11: PlanetType.jupiter, // Pisces
     };
     return signLords[(house - 1) % 12];
   }

@@ -20,7 +20,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final _nameController = TextEditingController();
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
-  
+
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   LocationModel? _selectedLocation;
@@ -53,7 +53,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         );
       },
     );
-    
+
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
@@ -81,7 +81,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         );
       },
     );
-    
+
     if (picked != null && picked != _selectedTime) {
       setState(() {
         _selectedTime = picked;
@@ -95,7 +95,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
-    if (_selectedDate == null || _selectedTime == null || _selectedLocation == null) {
+    if (_selectedDate == null ||
+        _selectedTime == null ||
+        _selectedLocation == null) {
       setState(() {
         _errorMessage = 'Please fill in all fields including location';
       });
@@ -109,7 +111,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     try {
       final timeString = _timeController.text;
-      
+
       final userProfile = UserProfile(
         name: _nameController.text.trim(),
         birthDate: _selectedDate!,
@@ -163,15 +165,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             children: [
               Text(
                 'Initialize Your Soul Map',
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 36, letterSpacing: -1.0),
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  fontSize: 36,
+                  letterSpacing: -1.0,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Precision is required for the celestial alignment. Enter your birth parameters below.',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppTheme.textMuted, fontWeight: FontWeight.w300),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: AppTheme.textMuted,
+                  fontWeight: FontWeight.w300,
+                ),
               ),
               const SizedBox(height: 32),
-              
+
               // Error message
               if (_errorMessage != null)
                 Container(
@@ -184,7 +192,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Symbols.error, color: AppTheme.error, size: 20),
+                      const Icon(
+                        Symbols.error,
+                        color: AppTheme.error,
+                        size: 20,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -195,7 +207,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ],
                   ),
                 ),
-              
+
               Container(
                 decoration: BoxDecoration(
                   color: const Color(0xFF1E201D).withOpacity(0.4),
@@ -208,17 +220,42 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   children: [
                     Row(
                       children: [
-                        Container(width: 48, height: 4, decoration: BoxDecoration(color: AppTheme.primary, borderRadius: BorderRadius.circular(2))),
+                        Container(
+                          width: 48,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: AppTheme.primary,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
                         const SizedBox(width: 8),
-                        Container(width: 48, height: 4, decoration: BoxDecoration(color: AppTheme.surfaceContainerLow, borderRadius: BorderRadius.circular(2))),
+                        Container(
+                          width: 48,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: AppTheme.surfaceContainerLow,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
                         const SizedBox(width: 8),
-                        Container(width: 48, height: 4, decoration: BoxDecoration(color: AppTheme.surfaceContainerLow, borderRadius: BorderRadius.circular(2))),
+                        Container(
+                          width: 48,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: AppTheme.surfaceContainerLow,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
                         const SizedBox(width: 16),
-                        Text('STEP 1 OF 3', style: Theme.of(context).textTheme.labelSmall?.copyWith(fontSize: 10, letterSpacing: 1.5)),
+                        Text(
+                          'STEP 1 OF 3',
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(fontSize: 10, letterSpacing: 1.5),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 32),
-                    
+
                     // Full Name
                     _buildInput(
                       controller: _nameController,
@@ -232,21 +269,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       },
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Date and Time
                     Row(
                       children: [
-                        Expanded(
-                          child: _buildDateInput(context),
-                        ),
+                        Expanded(child: _buildDateInput(context)),
                         const SizedBox(width: 16),
-                        Expanded(
-                          child: _buildTimeInput(context),
-                        ),
+                        Expanded(child: _buildTimeInput(context)),
                       ],
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Location Search
                     LocationSearchField(
                       initialLocation: _selectedLocation,
@@ -257,9 +290,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         });
                       },
                     ),
-                    
+
                     const SizedBox(height: 32),
-                    
+
                     // Submit Button
                     SizedBox(
                       width: double.infinity,
@@ -271,20 +304,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.black,
+                                  ),
                                 ),
                               )
                             : const Icon(Symbols.arrow_forward),
-                        label: Text(_isLoading ? 'Creating...' : 'Generate Cosmic Profile'),
+                        label: Text(
+                          _isLoading
+                              ? 'Creating...'
+                              : 'Generate Cosmic Profile',
+                        ),
                         iconAlignment: IconAlignment.end,
                       ),
                     ),
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Info Card
               Container(
                 decoration: BoxDecoration(
@@ -310,11 +349,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Text(
                       'Your birth chart is a snapshot of the sky at the moment you were born. The exact time and location determine your rising sign and house placements, which are essential for accurate astrological readings.',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppTheme.textMuted,
-                          ),
+                        color: AppTheme.textMuted,
+                      ),
                     ),
                     const SizedBox(height: 16),
-                    _buildInfoItem('Your data is stored locally on your device'),
+                    _buildInfoItem(
+                      'Your data is stored locally on your device',
+                    ),
                     _buildInfoItem('We never share your birth information'),
                     _buildInfoItem('You can delete your data at any time'),
                   ],
@@ -339,9 +380,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         Text(
           label,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppTheme.textMuted,
-                letterSpacing: 1.5,
-              ),
+            color: AppTheme.textMuted,
+            letterSpacing: 1.5,
+          ),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -349,10 +390,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           style: Theme.of(context).textTheme.bodyLarge,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(color: AppTheme.textMuted.withOpacity(0.5)),
+            hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: AppTheme.textMuted.withOpacity(0.5),
+            ),
           ),
           validator: validator,
         ),
@@ -367,9 +407,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         Text(
           'BIRTH DATE',
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppTheme.textMuted,
-                letterSpacing: 1.5,
-              ),
+            color: AppTheme.textMuted,
+            letterSpacing: 1.5,
+          ),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -379,11 +419,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           onTap: () => _selectDate(context),
           decoration: InputDecoration(
             hintText: 'MM/DD/YYYY',
-            hintStyle: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(color: AppTheme.textMuted.withOpacity(0.5)),
-            suffixIcon: const Icon(Symbols.calendar_today, color: AppTheme.textMuted),
+            hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: AppTheme.textMuted.withOpacity(0.5),
+            ),
+            suffixIcon: const Icon(
+              Symbols.calendar_today,
+              color: AppTheme.textMuted,
+            ),
           ),
           validator: (value) {
             if (_selectedDate == null) {
@@ -403,9 +445,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         Text(
           'EXACT TIME',
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppTheme.textMuted,
-                letterSpacing: 1.5,
-              ),
+            color: AppTheme.textMuted,
+            letterSpacing: 1.5,
+          ),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -415,10 +457,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           onTap: () => _selectTime(context),
           decoration: InputDecoration(
             hintText: 'HH:MM AM',
-            hintStyle: Theme.of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(color: AppTheme.textMuted.withOpacity(0.5)),
+            hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: AppTheme.textMuted.withOpacity(0.5),
+            ),
             suffixIcon: const Icon(Symbols.schedule, color: AppTheme.textMuted),
           ),
           validator: (value) {
@@ -438,18 +479,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Symbols.check_circle,
-            color: AppTheme.primary,
-            size: 16,
-          ),
+          const Icon(Symbols.check_circle, color: AppTheme.primary, size: 16),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppTheme.textMuted,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppTheme.textMuted),
             ),
           ),
         ],

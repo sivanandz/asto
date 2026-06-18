@@ -8,11 +8,7 @@ class WesternChartWidget extends StatelessWidget {
   final BirthChart chart;
   final double size;
 
-  const WesternChartWidget({
-    super.key,
-    required this.chart,
-    this.size = 300,
-  });
+  const WesternChartWidget({super.key, required this.chart, this.size = 300});
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +39,13 @@ class WesternChartPainter extends CustomPainter {
 
     // Draw zodiac wheel
     _drawZodiacWheel(canvas, center, radius);
-    
+
     // Draw houses
     _drawHouses(canvas, center, radius);
-    
+
     // Draw planets
     _drawPlanets(canvas, center, radius * 0.75);
-    
+
     // Draw center info
     _drawCenterInfo(canvas, center);
   }
@@ -62,14 +58,14 @@ class WesternChartPainter extends CustomPainter {
 
     // Outer circle
     canvas.drawCircle(center, radius, paint);
-    
+
     // Inner circle
     canvas.drawCircle(center, radius * 0.85, paint);
     canvas.drawCircle(center, radius * 0.6, paint);
 
     // Draw zodiac divisions (12 segments)
     final ascendant = chart.ascendant;
-    final ascendantDegree = ascendant != null 
+    final ascendantDegree = ascendant != null
         ? (ascendant.sign.index * 30 + ascendant.degree)
         : 0;
 
@@ -133,19 +129,19 @@ class WesternChartPainter extends CustomPainter {
 
   void _drawPlanets(Canvas canvas, Offset center, double radius) {
     final ascendant = chart.ascendant;
-    final ascendantDegree = ascendant != null 
+    final ascendantDegree = ascendant != null
         ? (ascendant.sign.index * 30 + ascendant.degree)
         : 0;
 
     // Group planets by position to avoid overlap
     final Map<double, List<PlanetPosition>> planetGroups = {};
-    
+
     for (final position in chart.positions) {
       if (position.planet == PlanetType.ascendant) continue;
-      
+
       final longitude = position.sign.index * 30 + position.degree;
       final adjustedLon = (longitude - ascendantDegree + 360) % 360;
-      
+
       // Round to nearest 5 degrees for grouping
       final groupKey = (adjustedLon / 5).round() * 5.0;
       planetGroups.putIfAbsent(groupKey, () => []).add(position);
@@ -166,8 +162,13 @@ class WesternChartPainter extends CustomPainter {
           basePos.dx + offset * math.cos(angle + math.pi / 2),
           basePos.dy + offset * math.sin(angle + math.pi / 2),
         );
-        
-        _drawPlanetSymbol(canvas, planet.planet, planetPos, planet.isRetrograde);
+
+        _drawPlanetSymbol(
+          canvas,
+          planet.planet,
+          planetPos,
+          planet.isRetrograde,
+        );
       }
     }
   }
@@ -220,7 +221,12 @@ class WesternChartPainter extends CustomPainter {
     _drawText(canvas, symbols[sign] ?? '', position, 14, AppTheme.primary);
   }
 
-  void _drawPlanetSymbol(Canvas canvas, PlanetType planet, Offset position, bool retrograde) {
+  void _drawPlanetSymbol(
+    Canvas canvas,
+    PlanetType planet,
+    Offset position,
+    bool retrograde,
+  ) {
     final symbols = {
       PlanetType.sun: '☉',
       PlanetType.moon: '☽',
@@ -250,7 +256,13 @@ class WesternChartPainter extends CustomPainter {
     }
   }
 
-  void _drawText(Canvas canvas, String text, Offset position, double fontSize, Color color) {
+  void _drawText(
+    Canvas canvas,
+    String text,
+    Offset position,
+    double fontSize,
+    Color color,
+  ) {
     final textPainter = TextPainter(
       text: TextSpan(
         text: text,

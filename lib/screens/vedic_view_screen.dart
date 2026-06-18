@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../theme.dart';
 import '../providers/app_provider.dart';
 import '../components/vedic_chart_widget.dart';
+import '../models/vedic_chart_style.dart';
 import '../models/planet_position.dart';
 
 class VedicViewScreen extends StatefulWidget {
@@ -14,7 +15,13 @@ class VedicViewScreen extends StatefulWidget {
 }
 
 class _VedicViewScreenState extends State<VedicViewScreen> {
-  VedicChartStyle _selectedStyle = VedicChartStyle.northIndian;
+  VedicChartStyle? _selectedStyle;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _selectedStyle ??= context.read<AppProvider>().vedicChartStyle;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +64,11 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Symbols.brightness_7, size: 64, color: AppTheme.textMuted.withOpacity(0.5)),
+          Icon(
+            Symbols.brightness_7,
+            size: 64,
+            color: AppTheme.textMuted.withOpacity(0.5),
+          ),
           const SizedBox(height: 16),
           Text(
             'No Vedic Chart Available',
@@ -66,7 +77,9 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
           const SizedBox(height: 8),
           Text(
             'Generate a Vedic chart in settings to view it here',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: AppTheme.textMuted),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -89,7 +102,9 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
       children: [
         Text(
           'Vedic Mode'.toUpperCase(),
-          style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 36, letterSpacing: -1.0),
+          style: Theme.of(
+            context,
+          ).textTheme.displaySmall?.copyWith(fontSize: 36, letterSpacing: -1.0),
         ),
         const SizedBox(height: 8),
         Text(
@@ -117,12 +132,14 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
           _buildToggleButton(
             label: 'North Indian',
             isSelected: _selectedStyle == VedicChartStyle.northIndian,
-            onPressed: () => setState(() => _selectedStyle = VedicChartStyle.northIndian),
+            onPressed: () =>
+                setState(() => _selectedStyle = VedicChartStyle.northIndian),
           ),
           _buildToggleButton(
             label: 'South Indian',
             isSelected: _selectedStyle == VedicChartStyle.southIndian,
-            onPressed: () => setState(() => _selectedStyle = VedicChartStyle.southIndian),
+            onPressed: () =>
+                setState(() => _selectedStyle = VedicChartStyle.southIndian),
           ),
         ],
       ),
@@ -169,7 +186,11 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
           Positioned(
             top: 16,
             right: 16,
-            child: Icon(icon, size: 120, color: AppTheme.textMuted.withOpacity(0.1)),
+            child: Icon(
+              icon,
+              size: 120,
+              color: AppTheme.textMuted.withOpacity(0.1),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(32.0),
@@ -181,12 +202,17 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
                     Container(
                       width: 8,
                       height: 8,
-                      decoration: BoxDecoration(color: badgeColor, shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                        color: badgeColor,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       styleName.toUpperCase(),
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(letterSpacing: 2.0),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.labelSmall?.copyWith(letterSpacing: 2.0),
                     ),
                   ],
                 ),
@@ -198,7 +224,7 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
                       aspectRatio: 1.0,
                       child: VedicChartWidget(
                         chart: chart,
-                        style: _selectedStyle,
+                        style: _selectedStyle ?? VedicChartStyle.northIndian,
                         size: 400,
                       ),
                     ),
@@ -233,7 +259,9 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
               children: [
                 Text(
                   'Planetary Positions',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 20),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontSize: 20),
                 ),
                 Text(
                   'DOWNLOAD PDF',
@@ -248,10 +276,8 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
-              headingTextStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AppTheme.textMuted,
-                letterSpacing: 1.5,
-              ),
+              headingTextStyle: Theme.of(context).textTheme.labelSmall
+                  ?.copyWith(color: AppTheme.textMuted, letterSpacing: 1.5),
               dataTextStyle: Theme.of(context).textTheme.bodyMedium,
               columns: const [
                 DataColumn(label: Text('PLANET')),
@@ -260,9 +286,12 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
                 DataColumn(label: Text('HOUSE')),
                 DataColumn(label: Text('STATUS')),
               ],
-              rows: positions.where((p) => p.planet != PlanetType.ascendant).map((p) {
-                return _buildTableRow(p);
-              }).toList(),
+              rows: positions
+                  .where((p) => p.planet != PlanetType.ascendant)
+                  .map((p) {
+                    return _buildTableRow(p);
+                  })
+                  .toList(),
             ),
           ),
         ],
@@ -276,23 +305,29 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
 
     return DataRow(
       cells: [
-        DataCell(Text(
-          position.planet.displayName,
-          style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.textMain),
-        )),
-        DataCell(Text(
-          position.sign.name.capitalize(),
-          style: const TextStyle(color: AppTheme.primary),
-        )),
-        DataCell(Text(
-          "${position.degree.toStringAsFixed(1)}°",
-          style: const TextStyle(fontFamily: 'monospace'),
-        )),
+        DataCell(
+          Text(
+            position.planet.displayName,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textMain,
+            ),
+          ),
+        ),
+        DataCell(
+          Text(
+            position.sign.name.capitalize(),
+            style: const TextStyle(color: AppTheme.primary),
+          ),
+        ),
+        DataCell(
+          Text(
+            "${position.degree.toStringAsFixed(1)}°",
+            style: const TextStyle(fontFamily: 'monospace'),
+          ),
+        ),
         DataCell(Text('${position.house}')),
-        DataCell(Text(
-          status,
-          style: TextStyle(color: statusColor),
-        )),
+        DataCell(Text(status, style: TextStyle(color: statusColor))),
       ],
     );
   }

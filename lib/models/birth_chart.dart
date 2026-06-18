@@ -2,17 +2,9 @@ import 'package:uuid/uuid.dart';
 import 'planet_position.dart';
 import 'user_profile.dart';
 
-enum ChartType {
-  western,
-  vedicNorthIndian,
-  vedicSouthIndian,
-}
+enum ChartType { western, vedicNorthIndian, vedicSouthIndian }
 
-enum AyanamsaType {
-  lahiri,
-  raman,
-  krishnamurti,
-}
+enum AyanamsaType { lahiri, raman, krishnamurti }
 
 class BirthChart {
   final String id;
@@ -31,8 +23,8 @@ class BirthChart {
     required this.positions,
     DateTime? calculatedAt,
     this.additionalData,
-  })  : id = id ?? const Uuid().v4(),
-        calculatedAt = calculatedAt ?? DateTime.now();
+  }) : id = id ?? const Uuid().v4(),
+       calculatedAt = calculatedAt ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
     return {
@@ -42,7 +34,9 @@ class BirthChart {
       'ayanamsa': ayanamsa?.name,
       'positions': positions.map((p) => p.toMap()).toList(),
       'calculatedAt': calculatedAt.toIso8601String(),
-      'additionalData': additionalData != null ? additionalData.toString() : null,
+      'additionalData': additionalData != null
+          ? additionalData.toString()
+          : null,
     };
   }
 
@@ -51,7 +45,9 @@ class BirthChart {
       id: map['id'],
       userId: map['userId'],
       type: ChartType.values.byName(map['type']),
-      ayanamsa: map['ayanamsa'] != null ? AyanamsaType.values.byName(map['ayanamsa']) : null,
+      ayanamsa: map['ayanamsa'] != null
+          ? AyanamsaType.values.byName(map['ayanamsa'])
+          : null,
       positions: (map['positions'] as List)
           .map((p) => PlanetPosition.fromMap(p as Map<String, dynamic>))
           .toList(),
