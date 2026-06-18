@@ -14,7 +14,6 @@ class VedicViewScreen extends StatefulWidget {
 }
 
 class _VedicViewScreenState extends State<VedicViewScreen> {
-  VedicChartStyle _selectedStyle = VedicChartStyle.northIndian;
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +39,9 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
             children: [
               _buildHeader(context, user, chart),
               const SizedBox(height: 24),
-              _buildStyleToggle(context),
+              _buildStyleToggle(context, provider),
               const SizedBox(height: 48),
-              _buildChartDisplay(context, chart),
+              _buildChartDisplay(context, chart, provider),
               const SizedBox(height: 48),
               _buildPlanetaryTable(context, chart),
             ],
@@ -103,7 +102,7 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
     );
   }
 
-  Widget _buildStyleToggle(BuildContext context) {
+  Widget _buildStyleToggle(BuildContext context, AppProvider provider) {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -116,13 +115,13 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
         children: [
           _buildToggleButton(
             label: 'North Indian',
-            isSelected: _selectedStyle == VedicChartStyle.northIndian,
-            onPressed: () => setState(() => _selectedStyle = VedicChartStyle.northIndian),
+            isSelected: provider.vedicChartStyle == VedicChartStyle.northIndian,
+            onPressed: () => provider.setVedicChartStyle(VedicChartStyle.northIndian),
           ),
           _buildToggleButton(
             label: 'South Indian',
-            isSelected: _selectedStyle == VedicChartStyle.southIndian,
-            onPressed: () => setState(() => _selectedStyle = VedicChartStyle.southIndian),
+            isSelected: provider.vedicChartStyle == VedicChartStyle.southIndian,
+            onPressed: () => provider.setVedicChartStyle(VedicChartStyle.southIndian),
           ),
         ],
       ),
@@ -146,14 +145,14 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
     );
   }
 
-  Widget _buildChartDisplay(BuildContext context, dynamic chart) {
-    final styleName = _selectedStyle == VedicChartStyle.northIndian
+  Widget _buildChartDisplay(BuildContext context, dynamic chart, AppProvider provider) {
+    final styleName = provider.vedicChartStyle == VedicChartStyle.northIndian
         ? 'North Indian Style (Diamond)'
         : 'South Indian Style (Square)';
-    final badgeColor = _selectedStyle == VedicChartStyle.northIndian
+    final badgeColor = provider.vedicChartStyle == VedicChartStyle.northIndian
         ? AppTheme.primary
         : const Color(0xFF5A805B);
-    final icon = _selectedStyle == VedicChartStyle.northIndian
+    final icon = provider.vedicChartStyle == VedicChartStyle.northIndian
         ? Symbols.brightness_7
         : Symbols.wb_sunny;
 
@@ -198,7 +197,7 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
                       aspectRatio: 1.0,
                       child: VedicChartWidget(
                         chart: chart,
-                        style: _selectedStyle,
+                        style: provider.vedicChartStyle,
                         size: 400,
                       ),
                     ),

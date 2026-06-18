@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import '../theme.dart';
+import '../components/vedic_chart_widget.dart';
 import '../models/birth_chart.dart';
-import '../models/user_profile.dart';
 import '../providers/app_provider.dart';
 import '../database/database_helper.dart';
 
@@ -287,6 +287,9 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _buildChartStyleSelector(BuildContext context) {
+    final provider = context.watch<AppProvider>();
+    final currentStyle = provider.vedicChartStyle;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -325,17 +328,29 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             title: const Text('North Indian'),
             subtitle: const Text('Diamond-style chart'),
-            trailing: const Icon(Icons.check, color: AppTheme.primary),
+            trailing: Icon(currentStyle == VedicChartStyle.northIndian ? Icons.check : Icons.radio_button_unchecked, color: currentStyle == VedicChartStyle.northIndian ? AppTheme.primary : AppTheme.textMuted),
             onTap: () {
-              // TODO: Set preference
+              provider.setVedicChartStyle(VedicChartStyle.northIndian);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('North Indian style selected'),
+                  backgroundColor: AppTheme.primary,
+                ),
+              );
             },
           ),
           ListTile(
             title: const Text('South Indian'),
             subtitle: const Text('Square-style chart'),
-            trailing: const Icon(Icons.radio_button_unchecked, color: AppTheme.textMuted),
+            trailing: Icon(currentStyle == VedicChartStyle.southIndian ? Icons.check : Icons.radio_button_unchecked, color: currentStyle == VedicChartStyle.southIndian ? AppTheme.primary : AppTheme.textMuted),
             onTap: () {
-              // TODO: Set preference
+              provider.setVedicChartStyle(VedicChartStyle.southIndian);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('South Indian style selected'),
+                  backgroundColor: AppTheme.primary,
+                ),
+              );
             },
           ),
         ],
