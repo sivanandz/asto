@@ -331,7 +331,7 @@ class WesternViewScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  position.planet.displayName,
+                  position.planet.name,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(fontSize: 14),
                 ),
                 Text(
