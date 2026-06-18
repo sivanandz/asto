@@ -3,9 +3,9 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import '../theme.dart';
 import '../models/birth_chart.dart';
-import '../models/user_profile.dart';
 import '../providers/app_provider.dart';
 import '../database/database_helper.dart';
+import 'legal_policies_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -487,18 +487,14 @@ class SettingsScreen extends StatelessWidget {
           const Divider(color: AppTheme.borderColor),
           ListTile(
             contentPadding: EdgeInsets.zero,
-            title: const Text('Privacy Policy'),
-            trailing: const Icon(Symbols.open_in_new, size: 16),
+            title: const Text('Legal Policies'),
+            trailing: const Icon(Symbols.chevron_right, size: 16),
             onTap: () {
-              // TODO: Open privacy policy
-            },
-          ),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('Terms of Service'),
-            trailing: const Icon(Symbols.open_in_new, size: 16),
-            onTap: () {
-              // TODO: Open terms
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const LegalPoliciesScreen(),
+                ),
+              );
             },
           ),
         ],
