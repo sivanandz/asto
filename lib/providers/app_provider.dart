@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import '../database/database_helper.dart';
 import '../models/user_profile.dart';
 import '../models/birth_chart.dart';
+import '../models/planet_position.dart';
+import '../utils/entropy_random.dart';
+import '../models/planet_position.dart';
+import '../utils/entropy_random.dart';
 import '../models/tarot_card.dart';
 import '../services/astrology_calculator.dart';
 import '../data/tarot_deck.dart';
 import 'dart:math' as math;
 
 class AppProvider extends ChangeNotifier {
-  final DatabaseHelper _db = DatabaseHelper.instance;
+  final DatabaseHelper _db;
+
+  AppProvider({DatabaseHelper? db}) : _db = db ?? DatabaseHelper.instance;
   
   // State
   UserProfile? _currentUser;
