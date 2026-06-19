@@ -2,13 +2,24 @@ import 'package:flutter/material.dart';
 import '../database/database_helper.dart';
 import '../models/user_profile.dart';
 import '../models/birth_chart.dart';
+import '../models/planet_position.dart';
+
+
+
 import '../models/tarot_card.dart';
 import '../services/astrology_calculator.dart';
 import '../data/tarot_deck.dart';
 import 'dart:math' as math;
 
+import '../services/entropy_random.dart';
+
 class AppProvider extends ChangeNotifier {
-  final DatabaseHelper _db = DatabaseHelper.instance;
+  final DatabaseHelper _db;
+  final EntropyRandom _entropyRandom;
+
+  AppProvider({DatabaseHelper? db, EntropyRandom? entropyRandom})
+      : _db = db ?? DatabaseHelper.instance,
+        _entropyRandom = entropyRandom ?? EntropyRandom();
   
   // State
   UserProfile? _currentUser;
@@ -159,7 +170,7 @@ class AppProvider extends ChangeNotifier {
       
       // Create a custom reading with sensor entropy
       final draws = <TarotDraw>[];
-      final entropyRandom = EntropyRandom();
+      final entropyRandom = _entropyRandom;
       
       // Collect sensor data while showing animation
       entropyRandom.startCollecting();
