@@ -157,6 +157,7 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
                             color: AppTheme.textMuted,
                           ),
                           onPressed: _clearSelection,
+                          tooltip: 'Clear selection',
                         )
                       : null,
             ),
