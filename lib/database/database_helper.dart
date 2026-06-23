@@ -5,6 +5,8 @@ import '../models/birth_chart.dart';
 import '../models/tarot_card.dart';
 
 class DatabaseHelper {
+  static const String tarotReadingsTable = 'tarot_readings';
+
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
 
@@ -56,7 +58,7 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE tarot_readings (
+      CREATE TABLE $tarotReadingsTable (
         id TEXT PRIMARY KEY,
         createdAt TEXT NOT NULL,
         question TEXT NOT NULL,
@@ -170,14 +172,14 @@ class DatabaseHelper {
   // Tarot Reading CRUD
   Future<String> insertTarotReading(TarotReading reading) async {
     final db = await database;
-    await db.insert('tarot_readings', reading.toMap());
+    await db.insert(tarotReadingsTable, reading.toMap());
     return reading.id;
   }
 
   Future<List<TarotReading>> getAllTarotReadings() async {
     final db = await database;
     final maps = await db.query(
-      'tarot_readings',
+      tarotReadingsTable,
       orderBy: 'createdAt DESC',
     );
     return maps.map((map) => TarotReading.fromMap(map)).toList();
@@ -186,7 +188,7 @@ class DatabaseHelper {
   Future<TarotReading?> getTarotReading(String id) async {
     final db = await database;
     final maps = await db.query(
-      'tarot_readings',
+      tarotReadingsTable,
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -200,10 +202,15 @@ class DatabaseHelper {
   Future<int> deleteTarotReading(String id) async {
     final db = await database;
     return await db.delete(
-      'tarot_readings',
+      tarotReadingsTable,
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<int> deleteAllTarotReadings() async {
+    final db = await database;
+    return await db.delete(tarotReadingsTable);
   }
 
   Future close() async {
