@@ -1,0 +1,3 @@
+## 2024-05-24 - Dart/Flutter Maps in Build & Paint Methods
+**Learning:** In Dart, declaring a map with `final` inside a method or loop (e.g., `final myMap = {Key: Value}`) causes a new Map object to be allocated and garbage-collected every time the method is executed. This is particularly problematic in Flutter's `build` methods or `CustomPainter.paint` calls, leading to unnecessary memory churn and potential frame drops.
+**Action:** When a local Map consists only of compile-time constants (like enums and strings), always use `const` (e.g., `const myMap = {Key: Value}`) instead of `final`. This forces compile-time canonicalization, ensuring the Map is allocated only once in memory regardless of how many times the method runs.
