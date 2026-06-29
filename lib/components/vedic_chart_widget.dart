@@ -285,7 +285,8 @@ class VedicChartPainter extends CustomPainter {
   }
 
   void _drawPlanetSymbol(Canvas canvas, PlanetType planet, Offset position, bool retrograde) {
-    final symbols = {
+    // ⚡ Bolt: Use const instead of final to prevent repeated memory allocations during paint
+    const symbols = {
       PlanetType.sun: '☉',
       PlanetType.moon: '☽',
       PlanetType.mercury: '☿',
