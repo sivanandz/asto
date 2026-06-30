@@ -203,7 +203,8 @@ class WesternChartPainter extends CustomPainter {
   }
 
   void _drawZodiacSymbol(Canvas canvas, ZodiacSign sign, Offset position) {
-    final symbols = {
+    // ⚡ Bolt optimization: Use const for compile-time canonicalization
+    const symbols = {
       ZodiacSign.aries: '♈',
       ZodiacSign.taurus: '♉',
       ZodiacSign.gemini: '♊',
@@ -221,7 +222,8 @@ class WesternChartPainter extends CustomPainter {
   }
 
   void _drawPlanetSymbol(Canvas canvas, PlanetType planet, Offset position, bool retrograde) {
-    final symbols = {
+    // ⚡ Bolt optimization: Use const for compile-time canonicalization
+    const symbols = {
       PlanetType.sun: '☉',
       PlanetType.moon: '☽',
       PlanetType.mercury: '☿',
