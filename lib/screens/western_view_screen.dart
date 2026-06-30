@@ -302,7 +302,8 @@ class WesternViewScreen extends StatelessWidget {
   }
 
   Widget _buildPlanetRow(BuildContext context, PlanetPosition position) {
-    final planetSymbols = {
+    // ⚡ Bolt optimization: Use const for compile-time canonicalization
+    const planetSymbols = {
       PlanetType.sun: '☉',
       PlanetType.moon: '☽',
       PlanetType.mercury: '☿',
