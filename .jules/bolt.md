@@ -1,0 +1,3 @@
+## $(date +%Y-%m-%d) - Optimize Map Allocations in Chart Rendering
+**Learning:** Static maps in Dart defined with `final` inside frequently called methods (like `build` or `CustomPainter.paint`) are re-allocated on every invocation, leading to unnecessary garbage collection overhead during rapid UI rebuilds. The `PlanetType` and `ZodiacSign` enums contain only compile-time constants.
+**Action:** Always use `const` instead of `final` when declaring static maps mapping compile-time constants (like enums to strings) within frequently called UI and rendering methods to ensure compile-time canonicalization and avoid runtime memory allocations.

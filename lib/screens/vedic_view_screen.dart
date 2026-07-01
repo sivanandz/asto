@@ -301,7 +301,7 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
     if (position.isRetrograde) return 'Retrograde';
 
     // Simplified dignity logic
-    final exalted = {
+    const exalted = {
       PlanetType.sun: ZodiacSign.aries,
       PlanetType.moon: ZodiacSign.taurus,
       PlanetType.mars: ZodiacSign.capricorn,

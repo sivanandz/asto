@@ -302,7 +302,7 @@ class WesternViewScreen extends StatelessWidget {
   }
 
   Widget _buildPlanetRow(BuildContext context, PlanetPosition position) {
-    final planetSymbols = {
+    const planetSymbols = {
       PlanetType.sun: '☉',
       PlanetType.moon: '☽',
       PlanetType.mercury: '☿',
