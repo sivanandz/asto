@@ -1,0 +1,3 @@
+## 2024-07-08 - Accessibility of Icon-Only Buttons in Flutter
+**Learning:** In Flutter apps, `IconButton` widgets without a `tooltip` property lack semantic labels, making them inaccessible to screen readers (equivalent to missing ARIA labels on the web). Additionally, running standard Flutter commands (like `flutter test`) in the environment may implicitly modify `pubspec.lock`.
+**Action:** Always verify that every `IconButton` serving a standalone action has an explicit `tooltip` defined. Furthermore, when verifying these UX changes, always double-check the Git staging area to ensure `pubspec.lock` was not inadvertently modified and included in the commit.
