@@ -302,7 +302,8 @@ class WesternViewScreen extends StatelessWidget {
   }
 
   Widget _buildPlanetRow(BuildContext context, PlanetPosition position) {
-    final planetSymbols = {
+    // ⚡ Bolt: Use const for static maps in build methods to prevent memory reallocation on every rebuild.
+    const planetSymbols = {
       PlanetType.sun: '☉',
       PlanetType.moon: '☽',
       PlanetType.mercury: '☿',
