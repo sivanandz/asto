@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import '../models/user_profile.dart';
@@ -208,6 +209,15 @@ class DatabaseHelper {
 
   Future close() async {
     final db = await database;
-    db.close();
+    await db.close();
+    _database = null;
+  }
+  @visibleForTesting
+  Future<void> initInMemoryDbForTesting() async {
+    _database = await openDatabase(
+      inMemoryDatabasePath,
+      version: 1,
+      onCreate: _createDB,
+    );
   }
 }
