@@ -1,3 +1,5 @@
+import '../data/tarot_deck.dart';
+
 enum TarotSuit {
   majorArcana,
   cups,
@@ -50,7 +52,7 @@ class TarotCard {
     if (number == null) return '';
     const numerals = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
       'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI'];
-    return numerals[number!] ?? number.toString();
+    return numerals[number!];
   }
 }
 
@@ -81,15 +83,19 @@ class TarotReading {
   }
 
   factory TarotReading.fromMap(Map<String, dynamic> map) {
-    return TarotReading(
-      id: map['id'],
-      createdAt: DateTime.parse(map['createdAt']),
-      question: map['question'],
-      draws: (map['draws'] as List)
-          .map((d) => TarotDraw.fromMap(d as Map<String, dynamic>))
-          .toList(),
-      interpretation: map['interpretation'],
-    );
+    try {
+      return TarotReading(
+        id: map['id'],
+        createdAt: DateTime.parse(map['createdAt']),
+        question: map['question'],
+        draws: (map['draws'] as List)
+            .map((d) => TarotDraw.fromMap(d as Map<String, dynamic>))
+            .toList(),
+        interpretation: map['interpretation'],
+      );
+    } catch (e) {
+      throw const FormatException('Invalid TarotReading data');
+    }
   }
 }
 
