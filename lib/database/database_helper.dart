@@ -10,6 +10,10 @@ class DatabaseHelper {
 
   DatabaseHelper._init();
 
+  static void resetDatabaseForTest() {
+    _database = null;
+  }
+
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDB('obsidian_astro.db');
@@ -207,7 +211,9 @@ class DatabaseHelper {
   }
 
   Future close() async {
-    final db = await database;
-    db.close();
+    if (_database != null) {
+      await _database!.close();
+      _database = null;
+    }
   }
 }

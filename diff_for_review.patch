@@ -1,0 +1,523 @@
+diff --git a/fix_import.patch b/fix_import.patch
+new file mode 100644
+index 0000000..9a454fe
+--- /dev/null
++++ b/fix_import.patch
+@@ -0,0 +1,7 @@
++<<<<<<< SEARCH
++enum TarotSuit {
++=======
++import '../data/tarot_deck.dart';
++
++enum TarotSuit {
++>>>>>>> REPLACE
+diff --git a/lib/database/database_helper.dart b/lib/database/database_helper.dart
+index 73eb574..a52a0a3 100644
+--- a/lib/database/database_helper.dart
++++ b/lib/database/database_helper.dart
+@@ -10,6 +10,10 @@ class DatabaseHelper {
+
+   DatabaseHelper._init();
+
++  static void resetDatabaseForTest() {
++    _database = null;
++  }
++
+   Future<Database> get database async {
+     if (_database != null) return _database!;
+     _database = await _initDB('obsidian_astro.db');
+@@ -207,7 +211,9 @@ class DatabaseHelper {
+   }
+
+   Future close() async {
+-    final db = await database;
+-    db.close();
++    if (_database != null) {
++      await _database!.close();
++      _database = null;
++    }
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/lib/models/birth_chart.dart b/lib/models/birth_chart.dart
+index 99f5e29..7c0b252 100644
+--- a/lib/models/birth_chart.dart
++++ b/lib/models/birth_chart.dart
+@@ -1,6 +1,7 @@
+ import 'package:uuid/uuid.dart';
++import 'dart:convert';
++
+ import 'planet_position.dart';
+-import 'user_profile.dart';
+
+ enum ChartType {
+   western,
+@@ -40,23 +41,39 @@ class BirthChart {
+       'userId': userId,
+       'type': type.name,
+       'ayanamsa': ayanamsa?.name,
+-      'positions': positions.map((p) => p.toMap()).toList(),
++      'positions': jsonEncode(positions.map((p) => p.toMap()).toList()),
+       'calculatedAt': calculatedAt.toIso8601String(),
+-      'additionalData': additionalData != null ? additionalData.toString() : null,
++      'additionalData': additionalData != null ? jsonEncode(additionalData) : null,
+     };
+   }
+
+   factory BirthChart.fromMap(Map<String, dynamic> map) {
++    List<dynamic> parsedPositions = [];
++    if (map['positions'] is String) {
++      parsedPositions = jsonDecode(map['positions']);
++    } else if (map['positions'] is List) {
++      parsedPositions = map['positions'];
++    }
++
++    Map<String, dynamic>? parsedAdditionalData;
++    if (map['additionalData'] is String) {
++      try {
++        parsedAdditionalData = jsonDecode(map['additionalData']);
++      } catch (_) {}
++    } else if (map['additionalData'] is Map) {
++      parsedAdditionalData = map['additionalData'];
++    }
++
+     return BirthChart(
+       id: map['id'],
+       userId: map['userId'],
+       type: ChartType.values.byName(map['type']),
+       ayanamsa: map['ayanamsa'] != null ? AyanamsaType.values.byName(map['ayanamsa']) : null,
+-      positions: (map['positions'] as List)
++      positions: parsedPositions
+           .map((p) => PlanetPosition.fromMap(p as Map<String, dynamic>))
+           .toList(),
+       calculatedAt: DateTime.parse(map['calculatedAt']),
+-      additionalData: map['additionalData'],
++      additionalData: parsedAdditionalData,
+     );
+   }
+
+diff --git a/lib/models/tarot_card.dart b/lib/models/tarot_card.dart
+index 4bf5aa2..7058bc3 100644
+--- a/lib/models/tarot_card.dart
++++ b/lib/models/tarot_card.dart
+@@ -1,3 +1,6 @@
++import 'dart:convert';
++import '../data/tarot_deck.dart';
++
+ enum TarotSuit {
+   majorArcana,
+   cups,
+@@ -50,7 +53,10 @@ class TarotCard {
+     if (number == null) return '';
+     const numerals = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
+       'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI'];
+-    return numerals[number!] ?? number.toString();
++    if (number! >= 0 && number! < numerals.length) {
++      return numerals[number!];
++    }
++    return number.toString();
+   }
+ }
+
+@@ -75,17 +81,24 @@ class TarotReading {
+       'id': id,
+       'createdAt': createdAt.toIso8601String(),
+       'question': question,
+-      'draws': draws.map((d) => d.toMap()).toList(),
++      'draws': jsonEncode(draws.map((d) => d.toMap()).toList()),
+       'interpretation': interpretation,
+     };
+   }
+
+   factory TarotReading.fromMap(Map<String, dynamic> map) {
++    List<dynamic> parsedDraws = [];
++    if (map['draws'] is String) {
++      parsedDraws = jsonDecode(map['draws']);
++    } else if (map['draws'] is List) {
++      parsedDraws = map['draws'];
++    }
++
+     return TarotReading(
+       id: map['id'],
+       createdAt: DateTime.parse(map['createdAt']),
+       question: map['question'],
+-      draws: (map['draws'] as List)
++      draws: parsedDraws
+           .map((d) => TarotDraw.fromMap(d as Map<String, dynamic>))
+           .toList(),
+       interpretation: map['interpretation'],
+diff --git a/pubspec.lock b/pubspec.lock
+index 2d2c649..2e901a5 100644
+--- a/pubspec.lock
++++ b/pubspec.lock
+@@ -97,6 +97,14 @@ packages:
+       url: "https://pub.dev"
+     source: hosted
+     version: "7.0.1"
++  fixnum:
++    dependency: transitive
++    description:
++      name: fixnum
++      sha256: b6dc7065e46c974bc7c5f143080a6764ec7a4be6da1285ececdc37be96de53be
++      url: "https://pub.dev"
++    source: hosted
++    version: "1.1.1"
+   flutter:
+     dependency: "direct main"
+     description: flutter
+@@ -123,6 +131,11 @@ packages:
+     description: flutter
+     source: sdk
+     version: "0.0.0"
++  flutter_web_plugins:
++    dependency: transitive
++    description: flutter
++    source: sdk
++    version: "0.0.0"
+   glob:
+     dependency: transitive
+     description:
+@@ -148,7 +161,7 @@ packages:
+     source: hosted
+     version: "1.0.2"
+   http:
+-    dependency: transitive
++    dependency: "direct main"
+     description:
+       name: http
+       sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
+@@ -163,6 +176,14 @@ packages:
+       url: "https://pub.dev"
+     source: hosted
+     version: "4.1.2"
++  intl:
++    dependency: "direct main"
++    description:
++      name: intl
++      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
++      url: "https://pub.dev"
++    source: hosted
++    version: "0.19.0"
+   leak_tracker:
+     dependency: transitive
+     description:
+@@ -243,6 +264,14 @@ packages:
+       url: "https://pub.dev"
+     source: hosted
+     version: "0.17.6"
++  nested:
++    dependency: transitive
++    description:
++      name: nested
++      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
++      url: "https://pub.dev"
++    source: hosted
++    version: "1.0.0"
+   objective_c:
+     dependency: transitive
+     description:
+@@ -252,7 +281,7 @@ packages:
+     source: hosted
+     version: "9.3.0"
+   path:
+-    dependency: transitive
++    dependency: "direct main"
+     description:
+       name: path
+       sha256: "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"
+@@ -339,6 +368,14 @@ packages:
+       url: "https://pub.dev"
+     source: hosted
+     version: "2.1.8"
++  provider:
++    dependency: "direct main"
++    description:
++      name: provider
++      sha256: "4e82183fa20e5ca25703ead7e05de9e4cceed1fbd1eadc1ac3cb6f565a09f272"
++      url: "https://pub.dev"
++    source: hosted
++    version: "6.1.5+1"
+   pub_semver:
+     dependency: transitive
+     description:
+@@ -347,6 +384,22 @@ packages:
+       url: "https://pub.dev"
+     source: hosted
+     version: "2.2.0"
++  sensors_plus:
++    dependency: "direct main"
++    description:
++      name: sensors_plus
++      sha256: "6898cd4490ffc27fea4de5976585e92fae55355175d46c6c3b3d719d42f9e230"
++      url: "https://pub.dev"
++    source: hosted
++    version: "5.0.1"
++  sensors_plus_platform_interface:
++    dependency: transitive
++    description:
++      name: sensors_plus_platform_interface
++      sha256: bc472d6cfd622acb4f020e726433ee31788b038056691ba433fec80e448a094f
++      url: "https://pub.dev"
++    source: hosted
++    version: "1.2.0"
+   sky_engine:
+     dependency: transitive
+     description: flutter
+@@ -360,6 +413,62 @@ packages:
+       url: "https://pub.dev"
+     source: hosted
+     version: "1.10.2"
++  sqflite:
++    dependency: "direct main"
++    description:
++      name: sqflite
++      sha256: "564cfed0746fe53140c23b70b308e045c3b31f17778f2f326ccb7d804ea0250a"
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.4.2+1"
++  sqflite_android:
++    dependency: transitive
++    description:
++      name: sqflite_android
++      sha256: "881e28efdcc9950fd8e9bb42713dcf1103e62a2e7168f23c9338d82db13dec40"
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.4.2+3"
++  sqflite_common:
++    dependency: transitive
++    description:
++      name: sqflite_common
++      sha256: "1581ffbf7a0e333b380d6a30737d78516b826cb35beb7fb0bf8a3ea0c678b465"
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.5.8"
++  sqflite_common_ffi:
++    dependency: "direct dev"
++    description:
++      name: sqflite_common_ffi
++      sha256: cd0c7f7de39a08f2d54ef144d9058c46eca8461879aaa648025643455c1e5a20
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.4.0+3"
++  sqflite_darwin:
++    dependency: transitive
++    description:
++      name: sqflite_darwin
++      sha256: "279832e5cde3fe99e8571879498c9211f3ca6391b0d818df4e17d9fff5c6ccb3"
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.4.2"
++  sqflite_platform_interface:
++    dependency: transitive
++    description:
++      name: sqflite_platform_interface
++      sha256: "8dd4515c7bdcae0a785b0062859336de775e8c65db81ae33dd5445f35be61920"
++      url: "https://pub.dev"
++    source: hosted
++    version: "2.4.0"
++  sqlite3:
++    dependency: transitive
++    description:
++      name: sqlite3
++      sha256: c73fd75df1332d76a6257f4823ae4df9c791f522b97e4a60cbcad214de1becf4
++      url: "https://pub.dev"
++    source: hosted
++    version: "3.5.0"
+   stack_trace:
+     dependency: transitive
+     description:
+@@ -384,6 +493,14 @@ packages:
+       url: "https://pub.dev"
+     source: hosted
+     version: "1.4.1"
++  synchronized:
++    dependency: transitive
++    description:
++      name: synchronized
++      sha256: "63896c27e81b28f8cb4e69ead0d3e8f03f1d1e5fc531a3e579cabed6a2c7c9e5"
++      url: "https://pub.dev"
++    source: hosted
++    version: "3.4.0+1"
+   term_glyph:
+     dependency: transitive
+     description:
+@@ -408,6 +525,14 @@ packages:
+       url: "https://pub.dev"
+     source: hosted
+     version: "1.4.0"
++  uuid:
++    dependency: "direct main"
++    description:
++      name: uuid
++      sha256: "9b129329f58692f6e6578329498a8fe9fbe98f090beb764ffbb8ee2eadd01dcd"
++      url: "https://pub.dev"
++    source: hosted
++    version: "4.6.0"
+   vector_graphics:
+     dependency: transitive
+     description:
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 230f74b..a38ca17 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -55,6 +55,7 @@ dev_dependencies:
+   # package. See that file for information about deactivating specific lint
+   # rules and activating additional ones.
+   flutter_lints: ^6.0.0
++  sqflite_common_ffi: ^2.4.0+3
+
+ # For information on the generic Dart part of this file, see the
+ # following page: https://dart.dev/tools/pub/pubspec
+diff --git a/test/database/database_helper_test.dart b/test/database/database_helper_test.dart
+new file mode 100644
+index 0000000..cb24e0f
+--- /dev/null
++++ b/test/database/database_helper_test.dart
+@@ -0,0 +1,146 @@
++import 'package:flutter_test/flutter_test.dart';
++import 'package:sqflite_common_ffi/sqflite_ffi.dart';
++import '../../lib/database/database_helper.dart';
++import '../../lib/models/user_profile.dart';
++import '../../lib/models/birth_chart.dart';
++import '../../lib/models/planet_position.dart';
++import '../../lib/models/tarot_card.dart';
++import '../../lib/data/tarot_deck.dart';
++
++void main() {
++  // Initialize sqflite ffi for desktop/testing
++  setUpAll(() {
++    sqfliteFfiInit();
++    databaseFactory = databaseFactoryFfi;
++  });
++
++  group('DatabaseHelper CRUD Tests', () {
++    late DatabaseHelper dbHelper;
++
++    setUp(() async {
++      dbHelper = DatabaseHelper.instance;
++      // We clear the database by closing and deleting the file or just use in memory if we modify helper.
++      // But currently it's hardcoded to 'obsidian_astro.db'. We can delete it.
++      final dbPath = await getDatabasesPath();
++      final path = '$dbPath/obsidian_astro.db';
++      await databaseFactory.deleteDatabase(path);
++    });
++
++    tearDown(() async {
++      await dbHelper.close();
++      DatabaseHelper.resetDatabaseForTest();
++    });
++
++    test('UserProfile CRUD operations', () async {
++      // Create
++      final profile = UserProfile(
++        name: 'Test User',
++        birthDate: DateTime(1990, 1, 1),
++        birthTime: '12:00',
++        birthLocation: 'Test City',
++        latitude: 0.0,
++        longitude: 0.0,
++      );
++
++      final id = await dbHelper.insertUserProfile(profile);
++      expect(id, isNotEmpty);
++
++      // Read
++      final fetchedProfile = await dbHelper.getUserProfile(id);
++      expect(fetchedProfile, isNotNull);
++      expect(fetchedProfile!.name, 'Test User');
++
++      // Update
++      final updatedProfile = fetchedProfile.copyWith(name: 'Updated User');
++      await dbHelper.updateUserProfile(updatedProfile);
++
++      final refetchedProfile = await dbHelper.getUserProfile(id);
++      expect(refetchedProfile!.name, 'Updated User');
++
++      // Delete
++      await dbHelper.deleteUserProfile(id);
++      final deletedProfile = await dbHelper.getUserProfile(id);
++      expect(deletedProfile, isNull);
++    });
++
++    test('BirthChart CRUD operations', () async {
++      // First create a user since BirthChart has a foreign key constraint
++      final profile = UserProfile(
++        name: 'Test User',
++        birthDate: DateTime(1990, 1, 1),
++        birthTime: '12:00',
++        birthLocation: 'Test City',
++      );
++      final userId = await dbHelper.insertUserProfile(profile);
++
++      // Create Chart
++      final chart = BirthChart(
++        userId: userId,
++        type: ChartType.western,
++        positions: [
++          PlanetPosition(
++            planet: PlanetType.sun,
++            sign: ZodiacSign.aries,
++            degree: 15.5,
++            house: 1,
++          )
++        ],
++      );
++
++      final chartId = await dbHelper.insertBirthChart(chart);
++      expect(chartId, isNotEmpty);
++
++      // Read Chart
++      final fetchedChart = await dbHelper.getBirthChart(chartId);
++      expect(fetchedChart, isNotNull);
++      expect(fetchedChart!.userId, userId);
++      expect(fetchedChart.type, ChartType.western);
++      expect(fetchedChart.positions.length, 1);
++      expect(fetchedChart.positions.first.planet, PlanetType.sun);
++
++      // Get Charts by User
++      final chartsByUser = await dbHelper.getBirthChartsByUser(userId);
++      expect(chartsByUser.length, 1);
++
++      // Delete Chart
++      await dbHelper.deleteBirthChart(chartId);
++      final deletedChart = await dbHelper.getBirthChart(chartId);
++      expect(deletedChart, isNull);
++    });
++
++    test('TarotReading CRUD operations', () async {
++      // Create Reading
++      final reading = TarotReading(
++        question: 'Will I pass the test?',
++        draws: [
++          TarotDraw(
++            card: tarotDeck.first,
++            position: TarotPosition.upright,
++            positionName: 'Past',
++          )
++        ],
++        interpretation: 'Yes.',
++      );
++
++      final readingId = await dbHelper.insertTarotReading(reading);
++      expect(readingId, isNotEmpty);
++
++      // Read Reading
++      final fetchedReading = await dbHelper.getTarotReading(readingId);
++      expect(fetchedReading, isNotNull);
++      expect(fetchedReading!.question, 'Will I pass the test?');
++      expect(fetchedReading.interpretation, 'Yes.');
++      expect(fetchedReading.draws.length, 1);
++      expect(fetchedReading.draws.first.positionName, 'Past');
++
++      // Get All Readings
++      final allReadings = await dbHelper.getAllTarotReadings();
++      expect(allReadings.length, 1);
++
++      // Delete Reading
++      await dbHelper.deleteTarotReading(readingId);
++      final deletedReading = await dbHelper.getTarotReading(readingId);
++      expect(deletedReading, isNull);
++    });
++  });
++}
