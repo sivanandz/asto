@@ -14,7 +14,13 @@ class VedicViewScreen extends StatefulWidget {
 }
 
 class _VedicViewScreenState extends State<VedicViewScreen> {
-  VedicChartStyle _selectedStyle = VedicChartStyle.northIndian;
+  VedicChartStyle? _selectedStyle;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _selectedStyle ??= context.read<AppProvider>().vedicChartStyle;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,12 +123,18 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
           _buildToggleButton(
             label: 'North Indian',
             isSelected: _selectedStyle == VedicChartStyle.northIndian,
-            onPressed: () => setState(() => _selectedStyle = VedicChartStyle.northIndian),
+            onPressed: () {
+              setState(() => _selectedStyle = VedicChartStyle.northIndian);
+              context.read<AppProvider>().setVedicChartStyle(VedicChartStyle.northIndian);
+            },
           ),
           _buildToggleButton(
             label: 'South Indian',
             isSelected: _selectedStyle == VedicChartStyle.southIndian,
-            onPressed: () => setState(() => _selectedStyle = VedicChartStyle.southIndian),
+            onPressed: () {
+              setState(() => _selectedStyle = VedicChartStyle.southIndian);
+              context.read<AppProvider>().setVedicChartStyle(VedicChartStyle.southIndian);
+            },
           ),
         ],
       ),
@@ -198,7 +210,7 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
                       aspectRatio: 1.0,
                       child: VedicChartWidget(
                         chart: chart,
-                        style: _selectedStyle,
+                        style: _selectedStyle!,
                         size: 400,
                       ),
                     ),
@@ -277,7 +289,7 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
     return DataRow(
       cells: [
         DataCell(Text(
-          position.planet.displayName,
+          position.planet.name.capitalize(),
           style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.textMain),
         )),
         DataCell(Text(
