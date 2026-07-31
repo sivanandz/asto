@@ -4,8 +4,10 @@ import '../models/user_profile.dart';
 import '../models/birth_chart.dart';
 import '../models/tarot_card.dart';
 import '../services/astrology_calculator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../data/tarot_deck.dart';
-import 'dart:math' as math;
+import '../services/entropy_random.dart';
+import '../models/planet_position.dart';
 
 class AppProvider extends ChangeNotifier {
   final DatabaseHelper _db = DatabaseHelper.instance;
@@ -14,6 +16,7 @@ class AppProvider extends ChangeNotifier {
   UserProfile? _currentUser;
   BirthChart? _currentChart;
   List<TarotReading> _tarotReadings = [];
+  AyanamsaType _preferredAyanamsa = AyanamsaType.lahiri;
   bool _isLoading = false;
   String? _error;
 
@@ -21,6 +24,7 @@ class AppProvider extends ChangeNotifier {
   UserProfile? get currentUser => _currentUser;
   BirthChart? get currentChart => _currentChart;
   List<TarotReading> get tarotReadings => _tarotReadings;
+  AyanamsaType get preferredAyanamsa => _preferredAyanamsa;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasUser => _currentUser != null;
@@ -29,6 +33,14 @@ class AppProvider extends ChangeNotifier {
   Future<void> initialize() async {
     _setLoading(true);
     try {
+      final prefs = await SharedPreferences.getInstance();
+      final ayanamsaPref = prefs.getString('preferredAyanamsa');
+      if (ayanamsaPref != null) {
+        try {
+          _preferredAyanamsa = AyanamsaType.values.byName(ayanamsaPref);
+        } catch (_) {}
+      }
+
       _currentUser = await _db.getDefaultUserProfile();
       if (_currentUser != null) {
         await _loadCurrentChart();
@@ -144,6 +156,13 @@ class AppProvider extends ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  Future<void> setPreferredAyanamsa(AyanamsaType type) async {
+    _preferredAyanamsa = type;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('preferredAyanamsa', type.name);
+    notifyListeners();
   }
 
   // Tarot Methods
