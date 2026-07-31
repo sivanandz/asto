@@ -1,3 +1,4 @@
+import '../data/tarot_deck.dart';
 enum TarotSuit {
   majorArcana,
   cups,
