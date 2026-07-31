@@ -3,7 +3,6 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import '../theme.dart';
 import '../models/birth_chart.dart';
-import '../models/user_profile.dart';
 import '../providers/app_provider.dart';
 import '../database/database_helper.dart';
 
@@ -250,12 +249,12 @@ class SettingsScreen extends StatelessWidget {
                     ),
               ),
               value: type,
-              groupValue: AyanamsaType.lahiri, // Default, should come from settings
+              groupValue: context.watch<AppProvider>().preferredAyanamsa,
               onChanged: (value) {
-                // TODO: Save preference
+                context.read<AppProvider>().setPreferredAyanamsa(value!);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('${_getAyanamsaName(value!)} selected'),
+                    content: Text('${_getAyanamsaName(value)} selected'),
                     backgroundColor: AppTheme.primary,
                   ),
                 );
