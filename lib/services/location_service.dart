@@ -11,19 +11,22 @@ class LocationService {
   static Future<List<LocationModel>> searchLocations(
     String query, {
     int limit = 5,
+    http.Client? client,
   }) async {
     if (query.trim().length < 2) return [];
 
     try {
-      final response = await http.get(
-        Uri.parse(
-          '$_baseUrl/search?q=${Uri.encodeComponent(query)}&format=json&addressdetails=1&limit=$limit',
-        ),
-        headers: {
-          'User-Agent': _userAgent,
-          'Accept': 'application/json',
-        },
+      final url = Uri.parse(
+        '$_baseUrl/search?q=${Uri.encodeComponent(query)}&format=json&addressdetails=1&limit=$limit',
       );
+      final headers = {
+        'User-Agent': _userAgent,
+        'Accept': 'application/json',
+      };
+
+      final response = await (client != null
+          ? client.get(url, headers: headers)
+          : http.get(url, headers: headers));
 
       if (response.statusCode == 200) {
         final List<dynamic> results = json.decode(response.body);
@@ -41,18 +44,21 @@ class LocationService {
   /// Reverse geocoding - get location name from coordinates
   static Future<LocationModel?> getLocationFromCoordinates(
     double latitude,
-    double longitude,
-  ) async {
+    double longitude, {
+    http.Client? client,
+  }) async {
     try {
-      final response = await http.get(
-        Uri.parse(
-          '$_baseUrl/reverse?lat=$latitude&lon=$longitude&format=json&addressdetails=1',
-        ),
-        headers: {
-          'User-Agent': _userAgent,
-          'Accept': 'application/json',
-        },
+      final url = Uri.parse(
+        '$_baseUrl/reverse?lat=$latitude&lon=$longitude&format=json&addressdetails=1',
       );
+      final headers = {
+        'User-Agent': _userAgent,
+        'Accept': 'application/json',
+      };
+
+      final response = await (client != null
+          ? client.get(url, headers: headers)
+          : http.get(url, headers: headers));
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
