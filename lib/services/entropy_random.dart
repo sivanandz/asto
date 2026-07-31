@@ -57,13 +57,8 @@ class EntropyRandom {
   /// Generate a random number using sensor entropy + time
   /// Returns a value between 0 (inclusive) and max (exclusive)
   int nextInt(int max) {
-    // Combine multiple entropy sources
-    final timeEntropy = _getTimeEntropy();
-    final sensorEntropy = _getSensorEntropy();
-    final mixedEntropy = _mixEntropy(timeEntropy, sensorEntropy);
-    
-    // Create random from mixed entropy
-    final random = math.Random(mixedEntropy);
+    // Create random from secure source
+    final random = math.Random.secure();
     return random.nextInt(max);
   }
 
@@ -75,18 +70,11 @@ class EntropyRandom {
     }
 
     final result = <int>{};
-    final timeEntropy = _getTimeEntropy();
-    var sensorEntropy = _getSensorEntropy();
+    final random = math.Random.secure();
     
     while (result.length < count) {
-      final mixedEntropy = _mixEntropy(timeEntropy + result.length, sensorEntropy);
-      final random = math.Random(mixedEntropy);
       final value = random.nextInt(max);
-      
       result.add(value);
-      
-      // Mix in more sensor data for next iteration
-      sensorEntropy = _mixEntropy(sensorEntropy, timeEntropy + value);
     }
     
     return result.toList();
@@ -117,11 +105,6 @@ class EntropyRandom {
     return (sum * 1000000).toInt().abs();
   }
 
-  /// Mix two entropy sources using a simple hash combination
-  int _mixEntropy(int a, int b) {
-    // Based on boost::hash_combine
-    return a ^ (b + 0x9e3779b9 + (a << 6) + (a >> 2));
-  }
 
   /// Collect entropy for a specified duration then stop
   /// Returns a Future that completes after the duration
