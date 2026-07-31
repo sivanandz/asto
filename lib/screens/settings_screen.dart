@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
+import 'privacy_policy_screen.dart';
 import '../theme.dart';
 import '../models/birth_chart.dart';
 import '../models/user_profile.dart';
@@ -488,9 +489,14 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: const Text('Privacy Policy'),
-            trailing: const Icon(Symbols.open_in_new, size: 16),
+            trailing: const Icon(Symbols.arrow_forward_ios, size: 16),
             onTap: () {
-              // TODO: Open privacy policy
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PrivacyPolicyScreen(),
+                ),
+              );
             },
           ),
           ListTile(
