@@ -14,7 +14,13 @@ class VedicViewScreen extends StatefulWidget {
 }
 
 class _VedicViewScreenState extends State<VedicViewScreen> {
-  VedicChartStyle _selectedStyle = VedicChartStyle.northIndian;
+  VedicChartStyle? _selectedStyle;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _selectedStyle ??= context.read<AppProvider>().vedicChartStyle;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +204,7 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
                       aspectRatio: 1.0,
                       child: VedicChartWidget(
                         chart: chart,
-                        style: _selectedStyle,
+                        style: _selectedStyle!,
                         size: 400,
                       ),
                     ),
