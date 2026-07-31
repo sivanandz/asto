@@ -1,3 +1,5 @@
+import 'dart:convert';
+import '../data/tarot_deck.dart';
 enum TarotSuit {
   majorArcana,
   cups,
@@ -50,7 +52,7 @@ class TarotCard {
     if (number == null) return '';
     const numerals = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
       'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX', 'XXI'];
-    return numerals[number!] ?? number.toString();
+    return numerals[number!];
   }
 }
 
@@ -75,7 +77,7 @@ class TarotReading {
       'id': id,
       'createdAt': createdAt.toIso8601String(),
       'question': question,
-      'draws': draws.map((d) => d.toMap()).toList(),
+      'draws': jsonEncode(draws.map((d) => d.toMap()).toList()),
       'interpretation': interpretation,
     };
   }
@@ -85,7 +87,7 @@ class TarotReading {
       id: map['id'],
       createdAt: DateTime.parse(map['createdAt']),
       question: map['question'],
-      draws: (map['draws'] as List)
+      draws: (jsonDecode(map['draws']) as List)
           .map((d) => TarotDraw.fromMap(d as Map<String, dynamic>))
           .toList(),
       interpretation: map['interpretation'],

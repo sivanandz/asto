@@ -1,0 +1,4 @@
+## 2024-05-24 - SQLite Serialization Testing
+
+**Learning:** When using SQLite in Dart (sqflite), complex types like Lists or Maps cannot be stored directly in columns even though `toMap()` maps them successfully in memory. The testing process exposed that attempting to insert a `List<Map<String, dynamic>>` for the `draws` property in `TarotReading` or `positions` in `BirthChart` fails during the SQL execution phase.
+**Action:** When creating tests for data models, always ensure nested collections (Lists/Maps) are serialized to Strings using `jsonEncode` in the `toMap` method, and deserialized using `jsonDecode` in the `fromMap` factory before interacting with a SQLite database. Write CRUD unit tests using `sqflite_common_ffi` to catch serialization errors that the compiler alone cannot detect.
