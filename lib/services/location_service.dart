@@ -11,11 +11,13 @@ class LocationService {
   static Future<List<LocationModel>> searchLocations(
     String query, {
     int limit = 5,
+    http.Client? client,
   }) async {
     if (query.trim().length < 2) return [];
 
     try {
-      final response = await http.get(
+      final httpClient = client ?? http.Client();
+      final response = await httpClient.get(
         Uri.parse(
           '$_baseUrl/search?q=${Uri.encodeComponent(query)}&format=json&addressdetails=1&limit=$limit',
         ),
@@ -41,10 +43,12 @@ class LocationService {
   /// Reverse geocoding - get location name from coordinates
   static Future<LocationModel?> getLocationFromCoordinates(
     double latitude,
-    double longitude,
-  ) async {
+    double longitude, {
+    http.Client? client,
+  }) async {
     try {
-      final response = await http.get(
+      final httpClient = client ?? http.Client();
+      final response = await httpClient.get(
         Uri.parse(
           '$_baseUrl/reverse?lat=$latitude&lon=$longitude&format=json&addressdetails=1',
         ),
