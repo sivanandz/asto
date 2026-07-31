@@ -1,11 +1,13 @@
 import os
 import math
+import concurrent.futures
 
 SVG_WIDTH = 700
 SVG_HEIGHT = 1200
 BG_COLOR = "#09090b"
 PRIMARY_COLOR = "#5a805b"
 TEXT_COLOR = "#fafafa"
+
 
 def generate_base_svg_structure(title, number_text, inner_content):
     # Common border elements
@@ -308,32 +310,48 @@ def generate_minor_arcana(suit, num):
     full_title = f"{roman_num} OF {suit}" if num > 1 else f"ACE OF {suit}"
     return generate_base_svg_structure(full_title, roman_num, content)
 
+def _process_major_card(card_info, out_dir):
+    card_num, title = card_info
+    svg_content = generate_major_arcana(card_num, title)
+    filename = f"major_{card_num:02d}_{title.lower().replace(' ', '_')}.svg"
+    with open(os.path.join(out_dir, filename), "w") as f:
+        f.write(svg_content)
+    print(f"Generated {filename}")
+
+def _process_minor_card(suit_info, out_dir):
+    suit, num = suit_info
+    if num == 1: name = "ace"
+    elif num == 11: name = "page"
+    elif num == 12: name = "knight"
+    elif num == 13: name = "queen"
+    elif num == 14: name = "king"
+    else: name = f"{num:02d}"
+
+    svg_content = generate_minor_arcana(suit, num)
+    filename = f"minor_{suit.lower()}_{name}.svg"
+    with open(os.path.join(out_dir, filename), "w") as f:
+        f.write(svg_content)
+    print(f"Generated {filename}")
+
+def _process_major_wrapper(args):
+    return _process_major_card(args[0], args[1])
+
+def _process_minor_wrapper(args):
+    return _process_minor_card(args[0], args[1])
+
 def main():
     out_dir = "assets/tarot_cards"
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
 
-    for card_num, title in major_arcana:
-        svg_content = generate_major_arcana(card_num, title)
-        filename = f"major_{card_num:02d}_{title.lower().replace(' ', '_')}.svg"
-        with open(os.path.join(out_dir, filename), "w") as f:
-            f.write(svg_content)
-        print(f"Generated {filename}")
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        # Process major arcana
+        major_tasks = [(card, out_dir) for card in major_arcana]
+        executor.map(_process_major_wrapper, major_tasks)
 
-    for suit in suits:
-        for num in range(1, 15):
-            if num == 1: name = "ace"
-            elif num == 11: name = "page"
-            elif num == 12: name = "knight"
-            elif num == 13: name = "queen"
-            elif num == 14: name = "king"
-            else: name = f"{num:02d}"
-
-            svg_content = generate_minor_arcana(suit, num)
-            filename = f"minor_{suit.lower()}_{name}.svg"
-            with open(os.path.join(out_dir, filename), "w") as f:
-                f.write(svg_content)
-            print(f"Generated {filename}")
+        # Process minor arcana
+        minor_tasks = [((suit, num), out_dir) for suit in suits for num in range(1, 15)]
+        executor.map(_process_minor_wrapper, minor_tasks)
 
 if __name__ == "__main__":
     main()

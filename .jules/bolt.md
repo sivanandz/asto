@@ -1,0 +1,3 @@
+## 2024-05-24 - File IO Optimization
+**Learning:** Sequential synchronous file I/O operations inside a tight loop can be optimized with ProcessPoolExecutor or ThreadPoolExecutor, but the initialization overhead of the pools can eclipse the benefits for extremely fast operations like writing tiny SVG files to a local SSD.
+**Action:** When parallelizing very small/fast loops, always benchmark the overall execution time first. On fast hardware the loop overhead can dominate the parallel execution gains. ProcessPoolExecutor remains the preferred structural choice for CPU-bound generation with file I/O to avoid GIL blocking and prepare for heavier generation tasks or slower network/disk environments.
