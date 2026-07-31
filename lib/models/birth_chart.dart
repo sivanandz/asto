@@ -1,6 +1,6 @@
+import 'dart:convert';
 import 'package:uuid/uuid.dart';
 import 'planet_position.dart';
-import 'user_profile.dart';
 
 enum ChartType {
   western,
@@ -40,9 +40,9 @@ class BirthChart {
       'userId': userId,
       'type': type.name,
       'ayanamsa': ayanamsa?.name,
-      'positions': positions.map((p) => p.toMap()).toList(),
+      'positions': jsonEncode(positions.map((p) => p.toMap()).toList()),
       'calculatedAt': calculatedAt.toIso8601String(),
-      'additionalData': additionalData != null ? additionalData.toString() : null,
+      'additionalData': additionalData != null ? jsonEncode(additionalData) : null,
     };
   }
 
@@ -52,11 +52,11 @@ class BirthChart {
       userId: map['userId'],
       type: ChartType.values.byName(map['type']),
       ayanamsa: map['ayanamsa'] != null ? AyanamsaType.values.byName(map['ayanamsa']) : null,
-      positions: (map['positions'] as List)
+      positions: (jsonDecode(map['positions']) as List)
           .map((p) => PlanetPosition.fromMap(p as Map<String, dynamic>))
           .toList(),
       calculatedAt: DateTime.parse(map['calculatedAt']),
-      additionalData: map['additionalData'],
+      additionalData: map['additionalData'] != null ? jsonDecode(map['additionalData']) as Map<String, dynamic> : null,
     );
   }
 
