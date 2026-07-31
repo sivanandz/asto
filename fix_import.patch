@@ -1,0 +1,7 @@
+<<<<<<< SEARCH
+enum TarotSuit {
+=======
+import '../data/tarot_deck.dart';
+
+enum TarotSuit {
+>>>>>>> REPLACE

@@ -1,6 +1,7 @@
 import 'package:uuid/uuid.dart';
+import 'dart:convert';
+
 import 'planet_position.dart';
-import 'user_profile.dart';
 
 enum ChartType {
   western,
@@ -40,23 +41,39 @@ class BirthChart {
       'userId': userId,
       'type': type.name,
       'ayanamsa': ayanamsa?.name,
-      'positions': positions.map((p) => p.toMap()).toList(),
+      'positions': jsonEncode(positions.map((p) => p.toMap()).toList()),
       'calculatedAt': calculatedAt.toIso8601String(),
-      'additionalData': additionalData != null ? additionalData.toString() : null,
+      'additionalData': additionalData != null ? jsonEncode(additionalData) : null,
     };
   }
 
   factory BirthChart.fromMap(Map<String, dynamic> map) {
+    List<dynamic> parsedPositions = [];
+    if (map['positions'] is String) {
+      parsedPositions = jsonDecode(map['positions']);
+    } else if (map['positions'] is List) {
+      parsedPositions = map['positions'];
+    }
+
+    Map<String, dynamic>? parsedAdditionalData;
+    if (map['additionalData'] is String) {
+      try {
+        parsedAdditionalData = jsonDecode(map['additionalData']);
+      } catch (_) {}
+    } else if (map['additionalData'] is Map) {
+      parsedAdditionalData = map['additionalData'];
+    }
+
     return BirthChart(
       id: map['id'],
       userId: map['userId'],
       type: ChartType.values.byName(map['type']),
       ayanamsa: map['ayanamsa'] != null ? AyanamsaType.values.byName(map['ayanamsa']) : null,
-      positions: (map['positions'] as List)
+      positions: parsedPositions
           .map((p) => PlanetPosition.fromMap(p as Map<String, dynamic>))
           .toList(),
       calculatedAt: DateTime.parse(map['calculatedAt']),
-      additionalData: map['additionalData'],
+      additionalData: parsedAdditionalData,
     );
   }
 
