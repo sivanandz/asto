@@ -1,0 +1,3 @@
+## 2024-05-24 - Bulk Delete for Tarot Readings
+**Learning:** Looping over database records sequentially and executing `db.delete` one-by-one results in massive N+1 overhead, primarily due to the transaction instantiation per query and synchronous I/O waiting time (375-390ms for 100 records).
+**Action:** When performing clear/delete-all operations, always implement a single bulk database command (`db.delete('table_name')`) at the helper level. Also, ensure the local memory state clears as a single batch operation rather than iterating and removing iteratively to avoid compounding `notifyListeners()` issues in state management.
