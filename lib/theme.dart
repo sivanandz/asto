@@ -117,6 +117,7 @@ class AppTheme {
   }
 
   // Common Colors
+  static const Color background = Color(0xFF09090B);
   static const Color surfaceContainer = Color(0xFF1E201D);
   static const Color surfaceContainerLow = Color(0xFF1A1C19);
   static const Color surfaceContainerLowest = Color(0xFF0C0F0C);

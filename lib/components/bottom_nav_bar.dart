@@ -17,7 +17,7 @@ class BottomNavBar extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         border: Border(top: BorderSide(color: AppTheme.borderColor)),
-        color: Color(0xFF09090B),
+        color: AppTheme.background,
       ),
       child: SafeArea(
         child: Padding(
