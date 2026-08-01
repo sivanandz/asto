@@ -5,7 +5,8 @@ import '../models/birth_chart.dart';
 import '../models/tarot_card.dart';
 import '../services/astrology_calculator.dart';
 import '../data/tarot_deck.dart';
-import 'dart:math' as math;
+import '../services/entropy_random.dart';
+import '../models/planet_position.dart';
 
 class AppProvider extends ChangeNotifier {
   final DatabaseHelper _db = DatabaseHelper.instance;
@@ -204,6 +205,12 @@ class AppProvider extends ChangeNotifier {
   Future<void> deleteTarotReading(String readingId) async {
     await _db.deleteTarotReading(readingId);
     _tarotReadings.removeWhere((r) => r.id == readingId);
+    notifyListeners();
+  }
+
+  Future<void> clearAllTarotReadings() async {
+    await _db.deleteAllTarotReadings();
+    _tarotReadings.clear();
     notifyListeners();
   }
 
