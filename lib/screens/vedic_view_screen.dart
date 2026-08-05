@@ -301,7 +301,8 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
     if (position.isRetrograde) return 'Retrograde';
 
     // Simplified dignity logic
-    final exalted = {
+    // Optimization: Use const map to avoid allocating a new Map on every build call
+    const exalted = {
       PlanetType.sun: ZodiacSign.aries,
       PlanetType.moon: ZodiacSign.taurus,
       PlanetType.mars: ZodiacSign.capricorn,
@@ -314,7 +315,8 @@ class _VedicViewScreenState extends State<VedicViewScreen> {
     if (exalted[position.planet] == position.sign) return 'Exalted';
 
     // Debilitated positions
-    final debilitated = {
+    // Optimization: Use const map to avoid allocating a new Map on every build call
+    const debilitated = {
       PlanetType.sun: ZodiacSign.libra,
       PlanetType.moon: ZodiacSign.scorpio,
       PlanetType.mars: ZodiacSign.cancer,

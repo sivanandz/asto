@@ -250,7 +250,8 @@ class AstrologyCalculator {
 
   /// Get house lord for a given house number
   static PlanetType? getHouseLord(int house) {
-    final signLords = {
+    // Optimization: Use const map to avoid allocating a new Map on every calculation call
+    const signLords = {
       0: PlanetType.mars,      // Aries
       1: PlanetType.venus,     // Taurus
       2: PlanetType.mercury,   // Gemini

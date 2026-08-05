@@ -203,7 +203,8 @@ class WesternChartPainter extends CustomPainter {
   }
 
   void _drawZodiacSymbol(Canvas canvas, ZodiacSign sign, Offset position) {
-    final symbols = {
+    // Optimization: Use const map to avoid allocating a new Map on every frame paint
+    const symbols = {
       ZodiacSign.aries: '♈',
       ZodiacSign.taurus: '♉',
       ZodiacSign.gemini: '♊',
@@ -221,7 +222,8 @@ class WesternChartPainter extends CustomPainter {
   }
 
   void _drawPlanetSymbol(Canvas canvas, PlanetType planet, Offset position, bool retrograde) {
-    final symbols = {
+    // Optimization: Use const map to avoid allocating a new Map on every frame paint
+    const symbols = {
       PlanetType.sun: '☉',
       PlanetType.moon: '☽',
       PlanetType.mercury: '☿',
