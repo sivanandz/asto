@@ -119,7 +119,7 @@ class VedicChartPainter extends CustomPainter {
     final ascendantHouse = ascendant?.house ?? 1;
 
     // House positions in 3x3 grid for North Indian
-    final housePositions = [
+    const housePositions = [
       [12, 1, 2],
       [11, null, 3],
       [10, 9, 8],
@@ -195,14 +195,14 @@ class VedicChartPainter extends CustomPainter {
   void _drawSouthIndianZodiac(Canvas canvas, Size size, double padding, double cellSize) {
     // South Indian has fixed zodiac positions
     // Pisces (12) is top-left, Aries (1) is top-middle, etc.
-    final signPositions = [
+    const signPositions = [
       [11, 12, 1, 2],
       [10, null, null, 3],
       [9, null, null, 4],
       [8, 7, 6, 5],
     ];
 
-    final signSymbols = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
+    const signSymbols = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
 
     for (int row = 0; row < 4; row++) {
       for (int col = 0; col < 4; col++) {
@@ -285,7 +285,7 @@ class VedicChartPainter extends CustomPainter {
   }
 
   void _drawPlanetSymbol(Canvas canvas, PlanetType planet, Offset position, bool retrograde) {
-    final symbols = {
+    const symbols = {
       PlanetType.sun: '☉',
       PlanetType.moon: '☽',
       PlanetType.mercury: '☿',
