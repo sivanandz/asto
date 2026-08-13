@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../models/location_model.dart';
@@ -41,8 +42,11 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
     _focusNode.addListener(_onFocusChange);
   }
 
+  Timer? _debounce;
+
   @override
   void dispose() {
+    _debounce?.cancel();
     _controller.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
@@ -58,6 +62,8 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
   }
 
   Future<void> _onSearchChanged(String query) async {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
     if (query.length < 2) {
       setState(() {
         _suggestions = [];
@@ -66,26 +72,31 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    // Debounce the API call by 500ms to reduce unnecessary requests and avoid rate limiting
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      if (!mounted) return;
 
-    try {
-      final results = await LocationService.searchLocations(query);
-      if (mounted) {
-        setState(() {
-          _suggestions = results;
-          _showSuggestions = results.isNotEmpty;
-          _isLoading = false;
-        });
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        final results = await LocationService.searchLocations(query);
+        if (mounted) {
+          setState(() {
+            _suggestions = results;
+            _showSuggestions = results.isNotEmpty;
+            _isLoading = false;
+          });
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+    });
   }
 
   void _onLocationSelected(LocationModel location) {
@@ -135,7 +146,7 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
               hintStyle: Theme.of(context)
                   .textTheme
                   .bodyLarge
-                  ?.copyWith(color: AppTheme.textMuted.withOpacity(0.5)),
+                  ?.copyWith(color: AppTheme.textMuted.withValues(alpha: 0.5)),
               prefixIcon: const Icon(
                 Symbols.location_on,
                 color: AppTheme.textMuted,
