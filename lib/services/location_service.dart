@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/location_model.dart';
 
@@ -15,6 +16,7 @@ class LocationService {
     if (query.trim().length < 2) return [];
 
     try {
+      // SECURITY: Added timeout to prevent resource exhaustion from hanging connections
       final response = await http.get(
         Uri.parse(
           '$_baseUrl/search?q=${Uri.encodeComponent(query)}&format=json&addressdetails=1&limit=$limit',
@@ -23,7 +25,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final List<dynamic> results = json.decode(response.body);
@@ -31,10 +33,14 @@ class LocationService {
             .map((json) => LocationModel.fromNominatimJson(json))
             .toList();
       } else {
-        throw Exception('Failed to search locations: ${response.statusCode}');
+        // SECURITY: Internally log the error but do not leak details in the exception
+        debugPrint('Failed to search locations: ${response.statusCode}');
+        throw Exception('Failed to search locations');
       }
     } catch (e) {
-      throw Exception('Location search error: $e');
+      // SECURITY: Internally log the error but do not leak details in the exception
+      debugPrint('Location search error: $e');
+      throw Exception('Location search error occurred');
     }
   }
 
@@ -44,6 +50,7 @@ class LocationService {
     double longitude,
   ) async {
     try {
+      // SECURITY: Added timeout to prevent resource exhaustion from hanging connections
       final response = await http.get(
         Uri.parse(
           '$_baseUrl/reverse?lat=$latitude&lon=$longitude&format=json&addressdetails=1',
@@ -52,17 +59,22 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         if (result['error'] == null) {
           return LocationModel.fromNominatimJson(result);
         }
+      } else {
+        // SECURITY: Internally log the error but do not leak details in the exception
+        debugPrint('Failed to reverse geocode: ${response.statusCode}');
       }
       return null;
     } catch (e) {
-      throw Exception('Reverse geocoding error: $e');
+      // SECURITY: Internally log the error but do not leak details in the exception
+      debugPrint('Reverse geocoding error: $e');
+      throw Exception('Reverse geocoding error occurred');
     }
   }
 
