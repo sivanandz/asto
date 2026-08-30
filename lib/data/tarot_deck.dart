@@ -871,11 +871,8 @@ const List<TarotCard> tarotDeck = [
 ];
 
 TarotCard? getCardById(int id) {
-  try {
-    return tarotDeck.firstWhere((card) => card.id == id);
-  } catch (_) {
-    return null;
-  }
+  // Optimization: Avoid try-catch for control flow. Exception handling in Dart incurs significant performance overhead.
+  return tarotDeck.where((card) => card.id == id).firstOrNull;
 }
 
 List<TarotCard> getCardsBySuit(TarotSuit suit) {
