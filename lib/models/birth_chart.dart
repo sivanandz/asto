@@ -61,11 +61,8 @@ class BirthChart {
   }
 
   PlanetPosition? getPlanet(PlanetType planet) {
-    try {
-      return positions.firstWhere((p) => p.planet == planet);
-    } catch (_) {
-      return null;
-    }
+    // Optimization: Avoid try-catch for control flow. Exception handling in Dart incurs significant performance overhead.
+    return positions.where((p) => p.planet == planet).firstOrNull;
   }
 
   PlanetPosition? get ascendant => getPlanet(PlanetType.ascendant);
