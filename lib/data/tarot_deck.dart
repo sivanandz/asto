@@ -871,11 +871,9 @@ const List<TarotCard> tarotDeck = [
 ];
 
 TarotCard? getCardById(int id) {
-  try {
-    return tarotDeck.firstWhere((card) => card.id == id);
-  } catch (_) {
-    return null;
-  }
+  // ⚡ Performance optimization: Using .where().firstOrNull avoids
+  // expensive StateError exceptions thrown by .firstWhere() on misses.
+  return tarotDeck.where((card) => card.id == id).firstOrNull;
 }
 
 List<TarotCard> getCardsBySuit(TarotSuit suit) {
