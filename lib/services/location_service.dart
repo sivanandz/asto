@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/location_model.dart';
 
@@ -15,6 +16,7 @@ class LocationService {
     if (query.trim().length < 2) return [];
 
     try {
+      // 🛡️ Security: Add timeout to prevent resource exhaustion
       final response = await http.get(
         Uri.parse(
           '$_baseUrl/search?q=${Uri.encodeComponent(query)}&format=json&addressdetails=1&limit=$limit',
@@ -23,7 +25,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final List<dynamic> results = json.decode(response.body);
@@ -31,10 +33,14 @@ class LocationService {
             .map((json) => LocationModel.fromNominatimJson(json))
             .toList();
       } else {
-        throw Exception('Failed to search locations: ${response.statusCode}');
+        // 🛡️ Security: Log error internally and throw sanitized message
+        debugPrint('Location search HTTP error: ${response.statusCode}');
+        throw Exception('Failed to search locations');
       }
     } catch (e) {
-      throw Exception('Location search error: $e');
+      // 🛡️ Security: Log original error and throw generic error message
+      debugPrint('Location search exception: $e');
+      throw Exception('Location search failed');
     }
   }
 
@@ -44,6 +50,7 @@ class LocationService {
     double longitude,
   ) async {
     try {
+      // 🛡️ Security: Add timeout to prevent resource exhaustion
       final response = await http.get(
         Uri.parse(
           '$_baseUrl/reverse?lat=$latitude&lon=$longitude&format=json&addressdetails=1',
@@ -52,7 +59,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
@@ -62,7 +69,9 @@ class LocationService {
       }
       return null;
     } catch (e) {
-      throw Exception('Reverse geocoding error: $e');
+      // 🛡️ Security: Log original error and throw generic error message
+      debugPrint('Reverse geocoding exception: $e');
+      throw Exception('Reverse geocoding failed');
     }
   }
 
