@@ -871,11 +871,11 @@ const List<TarotCard> tarotDeck = [
 ];
 
 TarotCard? getCardById(int id) {
-  try {
-    return tarotDeck.firstWhere((card) => card.id == id);
-  } catch (_) {
-    return null;
+  // ⚡ Bolt: Avoid costly try-catch for control flow
+  for (final card in tarotDeck) {
+    if (card.id == id) return card;
   }
+  return null;
 }
 
 List<TarotCard> getCardsBySuit(TarotSuit suit) {
