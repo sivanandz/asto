@@ -61,11 +61,10 @@ class BirthChart {
   }
 
   PlanetPosition? getPlanet(PlanetType planet) {
-    try {
-      return positions.firstWhere((p) => p.planet == planet);
-    } catch (_) {
-      return null;
-    }
+    // ⚡ Bolt: Removed expensive try-catch for control flow.
+    // Using .where().firstOrNull avoids the overhead of exception handling
+    // when a planet is not found, making chart lookups significantly faster.
+    return positions.where((p) => p.planet == planet).firstOrNull;
   }
 
   PlanetPosition? get ascendant => getPlanet(PlanetType.ascendant);
