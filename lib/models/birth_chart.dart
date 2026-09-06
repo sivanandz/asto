@@ -61,11 +61,12 @@ class BirthChart {
   }
 
   PlanetPosition? getPlanet(PlanetType planet) {
-    try {
-      return positions.firstWhere((p) => p.planet == planet);
-    } catch (_) {
-      return null;
+    // Using an explicit for-loop instead of try-catch with firstWhere
+    // to avoid the significant performance overhead of exception handling
+    for (final p in positions) {
+      if (p.planet == planet) return p;
     }
+    return null;
   }
 
   PlanetPosition? get ascendant => getPlanet(PlanetType.ascendant);
