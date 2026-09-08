@@ -1,0 +1,3 @@
+## 2024-09-08 - Dart Performance Anti-Pattern: try-catch with firstWhere
+**Learning:** Using `try-catch` blocks around `Iterable.firstWhere` (to catch a StateError when no element is found) is a major performance anti-pattern in Dart. Exception instantiation and throwing incurs significant execution overhead compared to simple control flow or conditional checks, especially in element lookups that are frequently expected to yield no results.
+**Action:** Always prefer `.where(...).firstOrNull` (natively available in Dart 3.0+) or explicit iterative loops for control flow instead of relying on `try-catch` blocks to handle missing elements.
