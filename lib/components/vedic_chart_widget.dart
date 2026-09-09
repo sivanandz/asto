@@ -335,5 +335,7 @@ class VedicChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant VedicChartPainter oldDelegate) {
+    return oldDelegate.chart.id != chart.id || oldDelegate.style != style;
+  }
 }
