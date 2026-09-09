@@ -271,5 +271,7 @@ class WesternChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant WesternChartPainter oldDelegate) {
+    return oldDelegate.chart.id != chart.id;
+  }
 }
