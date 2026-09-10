@@ -61,11 +61,10 @@ class BirthChart {
   }
 
   PlanetPosition? getPlanet(PlanetType planet) {
-    try {
-      return positions.firstWhere((p) => p.planet == planet);
-    } catch (_) {
-      return null;
+    for (final p in positions) {
+      if (p.planet == planet) return p;
     }
+    return null;
   }
 
   PlanetPosition? get ascendant => getPlanet(PlanetType.ascendant);
