@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/location_model.dart';
 
@@ -23,7 +24,7 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final List<dynamic> results = json.decode(response.body);
@@ -31,10 +32,14 @@ class LocationService {
             .map((json) => LocationModel.fromNominatimJson(json))
             .toList();
       } else {
-        throw Exception('Failed to search locations: ${response.statusCode}');
+        // Secure error handling: log actual error internally, throw generic exception
+        debugPrint('Failed to search locations: HTTP ${response.statusCode}');
+        throw Exception('Failed to search locations. Please try again later.');
       }
     } catch (e) {
-      throw Exception('Location search error: $e');
+      // Secure error handling: log actual error internally, throw generic exception
+      debugPrint('Location search error: $e');
+      throw Exception('Failed to search locations. Please try again later.');
     }
   }
 
@@ -52,17 +57,20 @@ class LocationService {
           'User-Agent': _userAgent,
           'Accept': 'application/json',
         },
-      );
+      ).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         if (result['error'] == null) {
           return LocationModel.fromNominatimJson(result);
         }
+      } else {
+        debugPrint('Reverse geocoding failed: HTTP ${response.statusCode}');
       }
       return null;
     } catch (e) {
-      throw Exception('Reverse geocoding error: $e');
+      debugPrint('Reverse geocoding error: $e');
+      throw Exception('Failed to get location from coordinates.');
     }
   }
 
